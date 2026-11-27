@@ -169,6 +169,10 @@ class YouTubeModel(
     }
 }
 
+/** The watched fraction Play resumes the video at; null when Play starts it from the top. */
+fun YouTubeVideo.resumeProgress(): Double? =
+    durationMs?.takeIf { it > 0 && positionMs > 0 }?.let { minOf(1.0, positionMs.toDouble() / it) }
+
 /** When a video came out, as the boards say it: `today`, `3 days ago`, `last month`. */
 fun Format.published(day: LocalDate, today: LocalDate = LocalDate.now()): String {
     val days = ChronoUnit.DAYS.between(day, today)

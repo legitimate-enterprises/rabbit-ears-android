@@ -42,6 +42,7 @@ import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.Resumable
 import enterprises.legitimate.rabbitears.kit.placeholderKind
+import enterprises.legitimate.rabbitears.kit.resumeProgress
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 import java.time.Duration
 import java.time.LocalDate
@@ -146,8 +147,7 @@ fun Home() {
                             pick.caption,
                             pick.open,
                             Modifier.width(tileWidth),
-                            pick.progress,
-                            pick.kind,
+                            kind = pick.kind,
                         )
                     }
                 }
@@ -249,7 +249,6 @@ private class Pick(
     val art: String,
     val title: String,
     val caption: String,
-    val progress: Double?,
     val open: () -> Unit,
     val kind: PlaceholderKind,
 )
@@ -262,7 +261,6 @@ private fun Resumable.pick(c: Catalog, nav: Navigator): Pick =
                 art(item),
                 c.heading(item),
                 c.leftCaption(item),
-                c.progress(item.id),
                 { nav.open(Route.Details(item.id)) },
                 placeholderKind(item.kind.value),
             )
@@ -272,7 +270,6 @@ private fun Resumable.pick(c: Catalog, nav: Navigator): Pick =
                 ArtworkStore.item(video.id),
                 video.title,
                 caption(video),
-                progress(video),
                 { nav.open(Route.Video(video.id)) },
                 PlaceholderKind.Video,
             )
@@ -296,9 +293,6 @@ private fun caption(video: YouTubeVideo) =
             video.durationMs?.let { Format.remaining(maxOf(0, it - video.positionMs)) },
         )
         .joinToString(" · ")
-
-private fun progress(video: YouTubeVideo) =
-    video.durationMs?.takeIf { it > 0 }?.let { minOf(1.0, video.positionMs.toDouble() / it) }
 
 @Composable
 private fun TitleHero(c: Catalog, item: Item, wide: Boolean) {
@@ -327,7 +321,7 @@ private fun VideoHero(video: YouTubeVideo, wide: Boolean) {
         ArtworkStore.item(video.id),
         video.title,
         caption(video),
-        progress(video),
+        video.resumeProgress(),
         wide,
         details = { nav.open(Route.Video(video.id)) },
         play = { nav.play(video.id, video.positionMs, title = video.title) },

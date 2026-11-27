@@ -11,6 +11,7 @@ import enterprises.legitimate.rabbitears.api.models.Item
 import enterprises.legitimate.rabbitears.api.models.YouTubeVideo
 import enterprises.legitimate.rabbitears.kit.Selection
 import enterprises.legitimate.rabbitears.kit.TitleKind
+import enterprises.legitimate.rabbitears.kit.resumeProgress
 
 /** A movie, show, season, episode or video that a tile or row stands for. */
 sealed interface Held {
@@ -31,6 +32,15 @@ sealed interface Held {
             get() = video.id
     }
 }
+
+/** The watched fraction its tile or row shows, as its menu's Play would resume. */
+@Composable
+fun Held.progress(): Double? =
+    when (this) {
+        is Held.Title ->
+            LocalNav.current.catalog.catalog.let { it.resumeProgress(it.item(id) ?: item) }
+        is Held.Video -> video.resumeProgress()
+    }
 
 /**
  * A tile or row's long press opens the menu of what [held] offers, anchored to it: Select where the

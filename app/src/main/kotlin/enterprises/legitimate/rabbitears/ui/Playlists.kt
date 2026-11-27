@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -681,7 +682,13 @@ fun MediaRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                art()
+                val progress = held?.progress()
+                if (progress == null) art()
+                else
+                    Box(Modifier.clip(RoundedCornerShape(6.dp))) {
+                        art()
+                        TileBar(progress)
+                    }
                 Column(Modifier.weight(1f)) {
                     Text(
                         title,

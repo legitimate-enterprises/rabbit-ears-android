@@ -166,7 +166,7 @@ fun StationTile(station: Station, modifier: Modifier = Modifier, onNow: Boolean 
             StationArt(station, Modifier.matchParentSize())
             if (onNow) {
                 PlayMark()
-                Stations.onNowFraction(station.onAir)?.let { TileBar(it) }
+                Stations.onNowFraction(station.onAir)?.let { TileBar(it, label = null) }
             }
         }
         DropdownMenu(menu, { menu = false }) {

@@ -4,6 +4,7 @@ import enterprises.legitimate.rabbitears.api.infrastructure.Serializer
 import enterprises.legitimate.rabbitears.api.models.PlaylistEntry
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
 import enterprises.legitimate.rabbitears.api.models.PlaylistPlayOrderItem
+import enterprises.legitimate.rabbitears.api.models.YouTubeVideo
 import java.time.LocalDate
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -317,6 +318,18 @@ class YouTubeTest {
         server.error("PUT /youtube/channels/30/for-kids", 403, "forbidden")
         assertFalse(model.setForKids("30", false))
         assertEquals("forbidden", model.error)
+    }
+
+    @Test
+    fun aVideoBarIsItsWatchedFractionOnlyWhilePlayResumes() {
+        fun decoded(json: String) =
+            Serializer.kotlinxSerializationJson.decodeFromString(YouTubeVideo.serializer(), json)
+        val unstarted = decoded(video("1"))
+        val started = decoded(video("1").replace(""""positionMs":0""", """"positionMs":630000"""))
+        val unknownLength = decoded(video("1").replace(""","durationMs":2520000""", ""))
+        assertNull(unstarted.resumeProgress())
+        assertEquals(0.25, started.resumeProgress()!!, 1e-9)
+        assertNull(unknownLength.resumeProgress())
     }
 
     @Test

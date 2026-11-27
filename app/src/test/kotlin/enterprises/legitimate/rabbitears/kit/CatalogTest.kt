@@ -252,6 +252,35 @@ class CatalogTest {
     }
 
     @Test
+    fun theBarIsTheFractionOfWhatPlayResumes() {
+        val c =
+            catalog(
+                Json.watch(1, position = 83 * 60_000L),
+                Json.watch(3, watched = true),
+                Json.watch(102, position = 1_590_000),
+                Json.watch(401, watched = true),
+            )
+        assertEquals(0.5, c.resumeProgress(c.item("1")!!)!!, 1e-9)
+        assertEquals(0.5, c.resumeProgress(c.item("102")!!)!!, 1e-9)
+        // The show and its first season resume S1 E2.
+        assertEquals(0.5, c.resumeProgress(c.item("10")!!)!!, 1e-9)
+        assertEquals(0.5, c.resumeProgress(c.item("11")!!)!!, 1e-9)
+        // Season 2 and the finished Bluey start an episode from the beginning.
+        assertNull(c.resumeProgress(c.item("12")!!))
+        assertNull(c.resumeProgress(c.item("20")!!))
+        assertNull(c.resumeProgress(c.item("3")!!))
+        assertNull(c.resumeProgress(c.item("2")!!))
+    }
+
+    @Test
+    fun aShowWhoseNextEpisodeIsUnstartedHasNoBar() {
+        val c = catalog(Json.watch(101, watched = true))
+        assertEquals("102", c.start(c.item("10")!!)?.itemId)
+        assertNull(c.resumeProgress(c.item("10")!!))
+        assertNull(c.resumeProgress(c.item("101")!!))
+    }
+
+    @Test
     fun gridFiltersSortsAndCounts() {
         val c = catalog(Json.watch(1, watched = true), Json.watch(101, position = 1000))
         assertEquals(listOf("1", "2", "3"), c.grid(ItemKind.movie).map { it.id })

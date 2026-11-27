@@ -58,6 +58,7 @@ import enterprises.legitimate.rabbitears.kit.Selection
 import enterprises.legitimate.rabbitears.kit.VideoSort
 import enterprises.legitimate.rabbitears.kit.channelParts
 import enterprises.legitimate.rabbitears.kit.published
+import enterprises.legitimate.rabbitears.kit.resumeProgress
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -249,10 +250,7 @@ private fun VideoTile(
                 video.durationMs?.let(Format::minutes),
                 video.publishedOn?.let { Format.published(it) },
             )
-    val progress =
-        video.durationMs
-            ?.takeIf { it > 0 && video.positionMs > 0 }
-            ?.let { video.positionMs.toDouble() / it }
+    val progress = video.resumeProgress()
     Hold(Held.Video(video, changed), selection, { nav.open(Route.Video(video.id)) }) { gesture ->
         Column(gesture) {
             Art(
@@ -391,9 +389,7 @@ fun VideoScreen(id: String) {
                     .clip(RoundedCornerShape(16.dp)),
                 PlaceholderKind.Video,
             ) {
-                v.durationMs
-                    ?.takeIf { it > 0 && v.positionMs > 0 }
-                    ?.let { TileBar(v.positionMs.toDouble() / it) }
+                v.resumeProgress()?.let { TileBar(it) }
             }
         }
         item {

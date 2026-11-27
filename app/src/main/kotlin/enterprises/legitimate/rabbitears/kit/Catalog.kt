@@ -214,6 +214,12 @@ class Catalog(
         return Start(target.id, watch?.positionMs ?: 0, watch?.editionId)
     }
 
+    /**
+     * The watched fraction a tile of [item] shows: that of what its Play resumes, null when Play
+     * starts from the beginning.
+     */
+    fun resumeProgress(item: Item): Double? = start(item)?.let { progress(it.itemId) }
+
     fun grid(
         kind: ItemKind,
         filter: GridFilter = GridFilter.All,

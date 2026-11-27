@@ -81,6 +81,7 @@ import enterprises.legitimate.rabbitears.kit.ProfileColors
 import enterprises.legitimate.rabbitears.kit.Selection
 import enterprises.legitimate.rabbitears.kit.adminUrl
 import enterprises.legitimate.rabbitears.ui.theme.Palette
+import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
 
 /** The boards' pill buttons: goldenrod for the main action, tonal for the rest. */
@@ -139,14 +140,20 @@ fun Tag(text: String) {
     )
 }
 
-/** The watched fraction along the bottom of a tile. */
+/** The watched fraction along the bottom of a tile; [label] is what a screen reader says of it. */
 @Composable
-fun BoxScope.TileBar(fraction: Double) {
+fun BoxScope.TileBar(
+    fraction: Double,
+    label: String? = "${(fraction.coerceIn(0.0, 1.0) * 100).roundToInt()} percent watched",
+) {
     Box(
         Modifier.align(Alignment.BottomStart)
             .fillMaxWidth()
             .height(4.dp)
-            .background(Color.Black.copy(alpha = 0.45f)),
+            .background(Color.Black.copy(alpha = 0.45f))
+            .then(
+                if (label == null) Modifier else Modifier.semantics { contentDescription = label },
+            ),
     ) {
         Box(
             Modifier.fillMaxWidth(fraction.toFloat().coerceIn(0f, 1f))
@@ -310,7 +317,9 @@ fun PosterTile(
     kind: PlaceholderKind? = null,
     overlay: @Composable BoxScope.() -> Unit = {},
 ) {
-    Hold(Held.Title(item), selection, onClick, modifier) { gesture ->
+    val held = Held.Title(item)
+    val progress = held.progress()
+    Hold(held, selection, onClick, modifier) { gesture ->
         Column(gesture) {
             Art(
                 ArtworkStore.item(item.id),
@@ -319,7 +328,8 @@ fun PosterTile(
                 kind,
             ) {
                 overlay()
-                StatusBadges(isDownloaded(item.id))
+                progress?.let { TileBar(it) }
+                StatusBadges(isDownloaded(item.id), overBar = progress != null)
             }
             TileText(Catalog.title(item), caption)
         }
@@ -339,7 +349,7 @@ fun WideTile(
     caption: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    progress: Double? = null,
+    progress: Double? = held.progress(),
     kind: PlaceholderKind? = null,
     plays: String? = null,
     details: (() -> Unit)? = null,

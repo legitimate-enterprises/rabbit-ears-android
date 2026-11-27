@@ -175,13 +175,15 @@ private val Wide: Boolean
     @Composable get() = LocalWidth.current != WidthClass.Compact
 
 @Composable
-private fun Poster(item: Item, width: Dp, radius: Dp = 12.dp) {
+private fun Poster(item: Item, width: Dp, radius: Dp = 12.dp, progress: Double? = null) {
     Art(
         ArtworkStore.item(item.id),
         artColor(item.id),
         Modifier.width(width).height(width * 1.5f).clip(RoundedCornerShape(radius)),
         placeholderKind(item.kind.value),
-    )
+    ) {
+        progress?.let { TileBar(it) }
+    }
 }
 
 /** Title block beside the poster: an optional goldenrod kicker, the title, the meta line. */
@@ -445,6 +447,7 @@ private fun Movie(item: Item, editions: List<Edition>) {
     var audio by remember(item.id, fileId) { mutableStateOf<String?>(null) }
     val resuming = Editions.resumes(editions, edition, watch)
     val position = watch?.positionMs ?: 0
+    val progress = c.progress(item.id).takeIf { resuming }
     val scope = rememberCoroutineScope()
     var collected by remember { mutableStateOf(0) }
     val inCollections by
@@ -525,7 +528,7 @@ private fun Movie(item: Item, editions: List<Edition>) {
         if (wide)
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
-                    Poster(item, 240.dp, 16.dp)
+                    Poster(item, 240.dp, 16.dp, progress)
                     Column(
                         Modifier.widthIn(max = 680.dp),
                         verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -551,7 +554,7 @@ private fun Movie(item: Item, editions: List<Edition>) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalAlignment = Alignment.Bottom,
                 ) {
-                    Poster(item, 112.dp)
+                    Poster(item, 112.dp, progress = progress)
                     Titles(null, {}, Catalog.title(item), meta, big = false)
                 }
             }
@@ -610,7 +613,7 @@ private fun Show(item: Item) {
                 horizontalArrangement = Arrangement.spacedBy(if (wide) 32.dp else 16.dp),
                 verticalAlignment = if (wide) Alignment.Top else Alignment.Bottom,
             ) {
-                Poster(item, if (wide) 200.dp else 112.dp)
+                Poster(item, if (wide) 200.dp else 112.dp, progress = c.resumeProgress(item))
                 Column(
                     Modifier.widthIn(max = 680.dp),
                     verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -730,7 +733,7 @@ private fun Season(item: Item) {
                     Modifier.width(340.dp).verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    Poster(item, 180.dp, 16.dp)
+                    Poster(item, 180.dp, 16.dp, c.resumeProgress(item))
                     heading()
                     actions()
                     Overview(item)
@@ -751,7 +754,7 @@ private fun Season(item: Item) {
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.Bottom,
             ) {
-                Poster(item, 80.dp, 8.dp)
+                Poster(item, 80.dp, 8.dp, c.resumeProgress(item))
                 heading()
             }
         }
