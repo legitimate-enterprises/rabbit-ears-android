@@ -47,6 +47,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param modifiedAt
  * @param parentId
  * @param path The base name unless the caller is an admin.
+ * @param sortTitle Movies and shows only: what they sort and file letters by. It is the title shown (metadata.title, else parsedTitle) less one leading English article (\"the\", \"a\" or \"an\", in any case) followed by whitespace and more text, so \"The Matrix\" files under M and \"A Quiet Place\" under Q, and changes with it. Clients sort by it ignoring case, file one starting with anything but a letter A to Z under #, and show the title.
  * @param parsedYear
  * @param seasonNumber Season 0 holds specials.
  * @param episodeNumber
@@ -90,6 +91,10 @@ data class Item (
     /* The base name unless the caller is an admin. */
     @SerialName(value = "path")
     val path: kotlin.String? = null,
+
+    /* Movies and shows only: what they sort and file letters by. It is the title shown (metadata.title, else parsedTitle) less one leading English article (\"the\", \"a\" or \"an\", in any case) followed by whitespace and more text, so \"The Matrix\" files under M and \"A Quiet Place\" under Q, and changes with it. Clients sort by it ignoring case, file one starting with anything but a letter A to Z under #, and show the title. */
+    @SerialName(value = "sortTitle")
+    val sortTitle: kotlin.String? = null,
 
     @SerialName(value = "parsedYear")
     val parsedYear: kotlin.Int? = null,

@@ -1837,7 +1837,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
 
     /**
      * GET /profiles/{profileId}/show-progress
-     * The profile&#39;s progress through each show it may see, by title.
+     * The profile&#39;s progress through each show it may see, by Item.sortTitle.
      * Counts and the next episode cover only the seasons and episodes the profile may see. Episodes play in season order, specials (season 0 or none) last, then by episode number. An adult with hideKidsContent is not listed kids&#39; content (Item.kidsContent, YouTubeChannel.forKids).
      * @param profileId 
      * @param limit  (optional, default to 50)
@@ -1871,7 +1871,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
 
     /**
      * GET /profiles/{profileId}/show-progress
-     * The profile&#39;s progress through each show it may see, by title.
+     * The profile&#39;s progress through each show it may see, by Item.sortTitle.
      * Counts and the next episode cover only the seasons and episodes the profile may see. Episodes play in season order, specials (season 0 or none) last, then by episode number. An adult with hideKidsContent is not listed kids&#39; content (Item.kidsContent, YouTubeChannel.forKids).
      * @param profileId 
      * @param limit  (optional, default to 50)

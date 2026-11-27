@@ -29,7 +29,7 @@ import kotlinx.serialization.Serializable
 
 
 /**
- * title (the default) is by title, episodes and seasons by number; added is newest first, as Recently added. 
+ * title (the default) is by title, movies and shows by Item.sortTitle, episodes and seasons by number; added is newest first, as Recently added. 
  *
  * Values: title,added
  */
