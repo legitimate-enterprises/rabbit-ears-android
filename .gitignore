@@ -1,0 +1,11 @@
+build/
+.gradle/
+.kotlin/
+local.properties
+.DS_Store
+
+# Working notes, never committed.
+notes.md
+plan.md
+memory.md
+release-setup.md

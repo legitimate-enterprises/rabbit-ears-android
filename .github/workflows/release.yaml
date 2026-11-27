@@ -1,0 +1,42 @@
+name: release
+
+# An `android-v<versionCode>` tag, which `make deploy` pushes, sends the App
+# Bundle to Google Play's Internal testing track and keeps it as the run's
+# artifact, for the first upload, which only Play Console takes. Play takes a
+# versionCode once only, so a run that committed cannot be run again.
+on:
+  push:
+    tags: ['android-v*']
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  android:
+    runs-on: macos-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/verify-release-preconditions
+        with:
+          github-token: ${{ github.token }}
+      - name: Tag must state the version in the files
+        run: scripts/cut-release.sh --check "$GITHUB_REF_NAME"
+      - run: make deps
+      - run: make release
+        env:
+          ANDROID_UPLOAD_KEYSTORE: ${{ secrets.ANDROID_UPLOAD_KEYSTORE }}
+          ANDROID_UPLOAD_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_UPLOAD_KEYSTORE_PASSWORD }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+      # Also when Play refused it, as it refuses an app's first upload.
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ github.ref_name }}
+          path: app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: ignore

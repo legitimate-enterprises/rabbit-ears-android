@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rabbit Ears</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_tv">TV</string>
+    <string name="tab_movies">Movies</string>
+    <string name="tab_music">Music</string>
+    <string name="tab_youtube">YouTube</string>
+    <string name="downloads_channel">Downloads</string>
+    <string name="downloads_notification">Downloading</string>
+    <plurals name="downloads_waiting">
+        <item quantity="one">%d to download</item>
+        <item quantity="other">%d to download</item>
+    </plurals>
+</resources>
