@@ -6,6 +6,7 @@ class MemoryCredentialStore : CredentialStore {
     override var server: String? = null
     override var serverName: String? = null
     override var token: String? = null
+    override var dataSchema: Int? = null
     private val memories = mutableMapOf<String, ProfileMemory>()
 
     override fun profileMemory(key: String) = memories[key] ?: ProfileMemory()

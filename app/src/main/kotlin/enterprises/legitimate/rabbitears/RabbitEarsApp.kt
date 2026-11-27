@@ -13,6 +13,7 @@ import enterprises.legitimate.rabbitears.kit.AppModel
 import enterprises.legitimate.rabbitears.kit.DownloadStore
 import enterprises.legitimate.rabbitears.kit.Downloads
 import enterprises.legitimate.rabbitears.kit.HttpTransfer
+import enterprises.legitimate.rabbitears.kit.LocalData
 import enterprises.legitimate.rabbitears.kit.MusicPlayer
 import enterprises.legitimate.rabbitears.kit.QualityChoice
 import enterprises.legitimate.rabbitears.kit.ResponseCache
@@ -39,10 +40,14 @@ class RabbitEarsApp : Application() {
 
     private val credentials by lazy { KeystoreCredentialStore(this) }
 
+    private val downloadsDir by lazy { File(filesDir, "downloads") }
+    private val responsesDir by lazy { File(cacheDir, "responses") }
+    private val httpDir by lazy { File(cacheDir, "http") }
+
     /** This device's downloads, in the app's own files, which no backup takes. */
     val downloads: Downloads by lazy {
         Downloads(
-            DownloadStore(File(filesDir, "downloads"), ::freeBytes),
+            DownloadStore(downloadsDir, ::freeBytes),
             HttpTransfer { downloadApi()?.http ?: Api.shared },
             WorkDownloadScheduler(this) { downloads.store },
             { api ->
@@ -60,6 +65,10 @@ class RabbitEarsApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        LocalData.migrate(
+            credentials,
+            listOf(downloadsDir, responsesDir, httpDir),
+        )
         // The name the owner gave the phone, as the server's device list shows it.
         val name =
             Settings.Global.getString(contentResolver, Settings.Global.DEVICE_NAME) ?: Build.MODEL
@@ -69,9 +78,9 @@ class RabbitEarsApp : Application() {
             AppModel(
                 credentials,
                 name,
-                Api.cached(File(cacheDir, "http")),
+                Api.cached(httpDir),
                 downloads = downloads.store,
-                cache = ResponseCache(File(cacheDir, "responses"), downloads.store),
+                cache = ResponseCache(responsesDir, downloads.store),
             )
     }
 

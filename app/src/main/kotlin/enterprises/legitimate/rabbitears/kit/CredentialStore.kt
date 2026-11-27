@@ -12,6 +12,9 @@ interface CredentialStore {
     var serverName: String?
     var token: String?
 
+    /** The [LocalData.SCHEMA] of what this device keeps; null before any was recorded. */
+    var dataSchema: Int?
+
     /** [key] names one signed-in adult on one server. */
     fun profileMemory(key: String): ProfileMemory
 

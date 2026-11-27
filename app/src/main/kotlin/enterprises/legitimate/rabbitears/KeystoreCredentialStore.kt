@@ -37,6 +37,12 @@ class KeystoreCredentialStore(context: Context) : CredentialStore {
             putString("token", value?.let { runCatching { seal(it) }.getOrNull() })
         }
 
+    override var dataSchema: Int?
+        get() = prefs.getInt("dataSchema", 0).takeIf { it > 0 }
+        set(value) = prefs.edit {
+            if (value == null) remove("dataSchema") else putInt("dataSchema", value)
+        }
+
     override fun profileMemory(key: String) =
         ProfileMemory(
             prefs.getBoolean("remember:$key", true),
