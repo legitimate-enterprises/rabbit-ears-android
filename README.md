@@ -17,7 +17,8 @@ Ears server or is invited to one, on a phone or a tablet.
   `openapi.yaml`'s version, cloned under `build/`. Set
   `RABBIT_EARS_SERVER_SRC` to a checkout of that repository to use it
   instead.
-- `make deploy` tags `main` `v<version>` once CI is green there. The tag's
+- `make deploy` tags `main` `v<M.m.N>` once CI is green there: `M.m` as
+  `app/build.gradle.kts` states it, `N` the commit count of `main`. The tag's
   release job signs the App Bundle with the upload key and sends it to
   Google Play's Internal testing track.
 

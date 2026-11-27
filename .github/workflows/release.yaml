@@ -25,7 +25,7 @@ jobs:
       - uses: ./.github/actions/verify-release-preconditions
         with:
           github-token: ${{ github.token }}
-      - name: Tag must state the version in the files
+      - name: Tag must be the version of its commit
         run: scripts/cut-release.sh --check "$GITHUB_REF_NAME"
       - run: make deps
       - run: make release

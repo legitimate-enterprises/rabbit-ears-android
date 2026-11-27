@@ -13,12 +13,17 @@ android {
         applicationId = "enterprises.legitimate.rabbitears"
         minSdk = 26
         targetSdk = 37
-        versionName = "12.0.0"
-        // Play orders uploads by versionCode alone, so it is versionName as one number.
+        // The commit count of HEAD; a shallow clone builds with a count that is not main's.
         versionCode =
-            versionName!!.split(".").map(String::toInt).let { (major, minor, patch) ->
-                (major * 1_000 + minor) * 1_000 + patch
-            }
+            providers
+                .exec { commandLine("git", "rev-list", "--count", "HEAD") }
+                .standardOutput
+                .asText
+                .get()
+                .trim()
+                .toInt()
+        // M.m is the owner's to set, here alone; scripts/cut-release.sh reads it from this line.
+        versionName = "1.0.$versionCode"
     }
 
     // The upload key reaches the build only from the release job's environment, through

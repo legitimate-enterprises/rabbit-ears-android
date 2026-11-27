@@ -130,16 +130,22 @@ out="$(release CI=true "${secrets[@]}" FAKE_GRADLE_FAIL=1)" && fail "a failed bu
 
 echo "release.sh: all checks passed"
 
-# cut-release.sh --check, which release.yaml runs on the tag: v<versionName> of HEAD, nothing else.
+# cut-release.sh --check, which release.yaml runs on the tag: v<M.m>.<commit count of HEAD>, nothing else.
 mkdir -p "$tmp/repo/scripts" "$tmp/repo/app"
 cp "$here/cut-release.sh" "$tmp/repo/scripts/"
-printf '        versionName = "1.20.3"\n' > "$tmp/repo/app/build.gradle.kts"
+# shellcheck disable=SC2016 # $versionCode is Kotlin's, not the shell's
+printf '        versionName = "1.20.$versionCode"\n' > "$tmp/repo/app/build.gradle.kts"
 git -C "$tmp/repo" init --quiet
 git -C "$tmp/repo" add .
-git -C "$tmp/repo" -c user.name=t -c user.email=t@example.com commit --quiet -m t
-check() { "$tmp/repo/scripts/cut-release.sh" --check "$1" >/dev/null 2>&1; }
-check v1.20.3 || fail "v1.20.3 refused on a commit stating 1.20.3"
-for tag in v1.20.4 1.20.3 android-v1.20.3 v1.20; do
-    check "$tag" && fail "$tag passed on a commit stating 1.20.3"
+for n in 1 2 3; do
+    git -C "$tmp/repo" -c user.name=t -c user.email=t@example.com commit --quiet --allow-empty -m "t$n"
 done
+check() { "$tmp/repo/scripts/cut-release.sh" --check "$1" >/dev/null 2>&1; }
+check v1.20.3 || fail "v1.20.3 refused on the third commit of a tree stating 1.20"
+for tag in v1.20.4 v1.20.2 1.20.3 android-v1.20.3 v1.20 v1.21.3; do
+    check "$tag" && fail "$tag passed on the third commit of a tree stating 1.20"
+done
+git clone --quiet --depth 1 "file://$tmp/repo" "$tmp/shallow"
+out="$("$tmp/shallow/scripts/cut-release.sh" --check v1.20.1 2>&1)" && fail "a shallow clone passed --check"
+[[ "$out" == *"shallow"* ]] || fail "shallow clone: $out"
 echo "cut-release.sh: all checks passed"

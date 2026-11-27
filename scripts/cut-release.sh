@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# Tags a release. The version is the versionName app/build.gradle.kts states
-# on origin/main, so there is no bump to choose here: the tag is v<version>,
-# cut on origin/main once ci is green there, and pushing it starts
-# release.yaml. `make deploy` runs this with --yes.
+# Tags a release. The version is M.m.N: M.m as app/build.gradle.kts states it
+# on origin/main, N the commit count of origin/main. There is no bump to
+# choose here: the tag is v<version>, cut on origin/main once ci is green
+# there, and pushing it starts release.yaml. `make deploy` runs this with
+# --yes.
 #
 # Usage: cut-release.sh                  the version and whether it can be tagged
 #        cut-release.sh --yes            tag and push it
-#        cut-release.sh --check <tag>    fail unless HEAD states the tag's version
+#        cut-release.sh --check <tag>    fail unless the tag is HEAD's version
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -16,13 +17,16 @@ PATHS="app api gradle build.gradle.kts settings.gradle.kts gradle.properties"
 
 die() { echo "error: $*" >&2; exit 1; }
 
-# version_at <ref>. Minor and patch stay below 1000, as the versionCode
-# derived from them requires.
+# version_at <ref>: M.m from SOURCE, N as Gradle counts it for versionCode.
 version_at() {
-    local v form='^[0-9]+\.[0-9]{1,3}\.[0-9]{1,3}$'
-    v="$(git show "$1:$SOURCE" | sed -n 's/^ *versionName = "\(.*\)"$/\1/p')"
-    [[ "$v" =~ $form ]] || die "$SOURCE at $1 states no versionName of the form $form (got '$v')"
-    echo "$v"
+    local v form='^[0-9]+\.[0-9]+$'
+    [ "$(git rev-parse --is-shallow-repository)" = false ] ||
+        die "a shallow clone cannot count commits; fetch with full history"
+    # shellcheck disable=SC2016 # $versionCode is Kotlin's, not the shell's
+    v="$(git show "$1:$SOURCE" | sed -n 's/^ *versionName = "\(.*\)\.\$versionCode"$/\1/p')"
+    [[ "$v" =~ $form ]] ||
+        die "$SOURCE at $1 states no versionName = \"<M.m>.\$versionCode\" with M.m of the form $form (got '$v')"
+    echo "$v.$(git rev-list --count "$1")"
 }
 
 # state_of: one line saying whether origin/main can be tagged. Returns 0 when
@@ -33,18 +37,22 @@ state_of() {
     v="$(version_at origin/main)" || return 2
     tag="v$v"
     if git rev-parse --quiet --verify "refs/tags/$tag" >/dev/null; then
-        # shellcheck disable=SC2086 # the paths are separate arguments
-        if git diff --quiet "$tag" origin/main -- $PATHS; then
-            echo "$v is released and nothing in it has changed"
+        if [ "$(git rev-parse "$tag^{commit}")" = "$(git rev-parse origin/main)" ]; then
+            echo "$v is released"
             return 1
         fi
-        echo "changed since $tag but still says $v: raise the version in $SOURCE"
+        echo "$tag tags a commit origin/main no longer has"
         return 2
     fi
     newest="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' | sed 's/^v//' | sort -V | tail -1)"
     if [ -n "$newest" ] && [ "$(printf '%s\n%s\n' "$newest" "$v" | sort -V | tail -1)" != "$v" ]; then
-        echo "says $v, below the released $newest: raise the version in $SOURCE"
+        echo "says $v, below the released $newest: only the owner sets M.m in $SOURCE"
         return 2
+    fi
+    # shellcheck disable=SC2086 # the paths are separate arguments
+    if [ -n "$newest" ] && git diff --quiet "v$newest" origin/main -- $PATHS; then
+        echo "nothing in the App Bundle has changed since v$newest"
+        return 1
     fi
     echo "$v is ready: $tag"
 }
