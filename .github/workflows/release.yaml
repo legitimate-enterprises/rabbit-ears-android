@@ -1,12 +1,12 @@
 name: release
 
-# An `android-v<versionCode>` tag, which `make deploy` pushes, sends the App
+# A `v<version>` tag, which `make deploy` pushes, sends the App
 # Bundle to Google Play's Internal testing track and keeps it as the run's
 # artifact, for the first upload, which only Play Console takes. Play takes a
 # versionCode once only, so a run that committed cannot be run again.
 on:
   push:
-    tags: ['android-v*']
+    tags: ['v*']
 
 concurrency:
   group: release-${{ github.ref_name }}

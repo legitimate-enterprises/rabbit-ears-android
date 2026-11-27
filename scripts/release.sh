@@ -2,7 +2,7 @@
 # Builds the release App Bundle signed with the upload key and sends it to
 # Google Play's Internal testing track; promotion to closed testing and
 # production is done by hand in Play Console. CI only: it is what a release
-# job for an `android-v<versionCode>` tag runs, with these in its environment:
+# job for a `v<version>` tag runs, with these in its environment:
 #
 #   ANDROID_UPLOAD_KEYSTORE           the upload keystore, PKCS12, base64; key alias "upload"
 #   ANDROID_UPLOAD_KEYSTORE_PASSWORD  its password, which is also the key's
@@ -10,7 +10,7 @@
 #   RUNNER_TEMP                       a directory the job's runner empties at its end
 #
 # Play takes a versionCode once only, so a run that committed cannot be run
-# again; the next release is the next versionCode.
+# again; the next release is the next version.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 

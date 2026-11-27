@@ -17,8 +17,8 @@ Ears server or is invited to one, on a phone or a tablet.
   `openapi.yaml`'s version, cloned under `build/`. Set
   `RABBIT_EARS_SERVER_SRC` to a checkout of that repository to use it
   instead.
-- `make deploy` tags `android-v<versionCode>` once CI is green on `main`. The
-  tag's release job signs the App Bundle with the upload key and sends it to
+- `make deploy` tags `main` `v<version>` once CI is green there. The tag's
+  release job signs the App Bundle with the upload key and sends it to
   Google Play's Internal testing track.
 
 Limitations: promotion beyond Internal testing is done by hand in Play

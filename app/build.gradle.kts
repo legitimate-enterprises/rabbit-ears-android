@@ -13,8 +13,12 @@ android {
         applicationId = "enterprises.legitimate.rabbitears"
         minSdk = 26
         targetSdk = 37
-        versionCode = 12
-        versionName = "$versionCode"
+        versionName = "12.0.0"
+        // Play orders uploads by versionCode alone, so it is versionName as one number.
+        versionCode =
+            versionName!!.split(".").map(String::toInt).let { (major, minor, patch) ->
+                (major * 1_000 + minor) * 1_000 + patch
+            }
     }
 
     // The upload key reaches the build only from the release job's environment, through

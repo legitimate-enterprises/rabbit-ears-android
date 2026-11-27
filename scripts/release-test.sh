@@ -2,7 +2,8 @@
 # Runs release.sh in a scratch copy of the stack against fakes of gradlew
 # and curl: its CI and secret guards, the signed assertion Google verifies,
 # the order and shape of the Play Developer API calls, that no credential
-# reaches a process's arguments, and that the keystore does not outlive it.
+# reaches a process's arguments, and that the keystore does not outlive it;
+# and the tag cut-release.sh --check lets release.yaml ship.
 set -euo pipefail
 here="$(cd "$(dirname "$0")" && pwd)"
 tmp="$(mktemp -d)"
@@ -128,3 +129,17 @@ out="$(release CI=true "${secrets[@]}" FAKE_GRADLE_FAIL=1)" && fail "a failed bu
 [ "$(cat "$tmp/log")" = "POST https://oauth2.googleapis.com/token" ] || fail "a failed build reached Google: $(cat "$tmp/log")"
 
 echo "release.sh: all checks passed"
+
+# cut-release.sh --check, which release.yaml runs on the tag: v<versionName> of HEAD, nothing else.
+mkdir -p "$tmp/repo/scripts" "$tmp/repo/app"
+cp "$here/cut-release.sh" "$tmp/repo/scripts/"
+printf '        versionName = "1.20.3"\n' > "$tmp/repo/app/build.gradle.kts"
+git -C "$tmp/repo" init --quiet
+git -C "$tmp/repo" add .
+git -C "$tmp/repo" -c user.name=t -c user.email=t@example.com commit --quiet -m t
+check() { "$tmp/repo/scripts/cut-release.sh" --check "$1" >/dev/null 2>&1; }
+check v1.20.3 || fail "v1.20.3 refused on a commit stating 1.20.3"
+for tag in v1.20.4 1.20.3 android-v1.20.3 v1.20; do
+    check "$tag" && fail "$tag passed on a commit stating 1.20.3"
+done
+echo "cut-release.sh: all checks passed"

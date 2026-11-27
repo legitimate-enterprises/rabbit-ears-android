@@ -74,8 +74,8 @@ release: ## CI only: the App Bundle signed with the upload key, sent to Google P
 	scripts/release.sh
 
 # There is no local publish path.
-deploy: ## Tag origin/main android-v<versionCode> once CI is green there, and push the tag
-	scripts/cut-release.sh android
+deploy: ## Tag origin/main v<version> once CI is green there, and push the tag
+	scripts/cut-release.sh --yes
 
 clean: ## Remove build products, the server's source and Gradle's project cache
 	rm -rf build app/build api/build .gradle .kotlin
