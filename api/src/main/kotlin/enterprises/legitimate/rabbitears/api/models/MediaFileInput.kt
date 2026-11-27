@@ -32,7 +32,7 @@ import kotlinx.serialization.Contextual
  * @param itemId The file joins this item's first untagged edition and leaves any other item's.
  * @param path
  * @param sizeBytes
- * @param modifiedAt
+ * @param fileModifiedAt The file's modification time on disk.
  * @param container
  * @param durationMs
  * @param bitrate
@@ -43,7 +43,7 @@ data class MediaFileInput (
 
     /* The file joins this item's first untagged edition and leaves any other item's. */
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "path")
     val path: kotlin.String,
@@ -51,8 +51,9 @@ data class MediaFileInput (
     @SerialName(value = "sizeBytes")
     val sizeBytes: kotlin.Long,
 
-    @Contextual @SerialName(value = "modifiedAt")
-    val modifiedAt: java.time.OffsetDateTime,
+    /* The file's modification time on disk. */
+    @Contextual @SerialName(value = "fileModifiedAt")
+    val fileModifiedAt: java.time.OffsetDateTime,
 
     @SerialName(value = "container")
     val container: kotlin.String? = null,

@@ -33,17 +33,17 @@ enum class TitleState {
 @Serializable
 data class DownloadRequest(
     val id: Long,
-    val profileId: Long,
+    val profileId: String,
     val target: DownloadTarget,
     val name: String,
     val quality: DownloadQuality,
     val container: Boolean,
-    val titles: List<Long>,
+    val titles: List<String>,
 )
 
 @Serializable
 data class StoredSubtitle(
-    val trackId: Long,
+    val trackId: String,
     val language: String? = null,
     val title: String? = null,
     val forced: Boolean,
@@ -51,7 +51,7 @@ data class StoredSubtitle(
 )
 
 /** The server's claim on a title's file, made as [profileId], the only profile that may use it. */
-@Serializable data class Claim(val id: Long, val profileId: Long)
+@Serializable data class Claim(val id: String, val profileId: String)
 
 /**
  * The one copy of a title on this device, whichever requests and profiles cover it. [file] is the
@@ -60,11 +60,11 @@ data class StoredSubtitle(
  */
 @Serializable
 data class StoredTitle(
-    val itemId: Long,
+    val itemId: String,
     val kind: DownloadTitle.Kind,
-    val libraryId: Long,
+    val libraryId: String,
     val quality: DownloadQuality,
-    val editionId: Long? = null,
+    val editionId: String? = null,
     val runtimeMs: Long? = null,
     val sizeBytes: Long = 0,
     val receivedBytes: Long = 0,
@@ -82,19 +82,19 @@ data class StoredTitle(
 /** A profile's watch state as this device last knew it, [synced] once the server has it. */
 @Serializable
 data class LocalWatch(
-    val itemId: Long,
+    val itemId: String,
     val positionMs: Long,
     val watched: Boolean,
     val atMs: Long,
     val synced: Boolean,
-    val editionId: Long? = null,
+    val editionId: String? = null,
 )
 
 /** One profile's downloads settings on this device; [keep] is keep-after-watched by library. */
 @Serializable
 data class ProfileDownloadSettings(
     val preferLocal: Boolean = true,
-    val keep: Map<Long, Boolean> = emptyMap(),
+    val keep: Map<String, Boolean> = emptyMap(),
     val dontAskBig: Boolean = false,
 )
 
@@ -108,9 +108,9 @@ data class DeviceDownloadSettings(
 @Serializable
 data class DownloadState(
     val requests: List<DownloadRequest> = emptyList(),
-    val titles: Map<Long, StoredTitle> = emptyMap(),
-    val watch: Map<Long, Map<Long, LocalWatch>> = emptyMap(),
-    val profiles: Map<Long, ProfileDownloadSettings> = emptyMap(),
+    val titles: Map<String, StoredTitle> = emptyMap(),
+    val watch: Map<String, Map<String, LocalWatch>> = emptyMap(),
+    val profiles: Map<String, ProfileDownloadSettings> = emptyMap(),
     val device: DeviceDownloadSettings = DeviceDownloadSettings(),
     /** The signed-in household as last read, for browsing with no server; JSON of a Me. */
     val me: String? = null,
@@ -203,26 +203,26 @@ class DownloadStore(
     val device: DeviceDownloadSettings
         get() = state.device
 
-    fun settings(profileId: Long) = state.profiles[profileId] ?: ProfileDownloadSettings()
+    fun settings(profileId: String) = state.profiles[profileId] ?: ProfileDownloadSettings()
 
     fun setDevice(settings: DeviceDownloadSettings) = update { it.copy(device = settings) }
 
-    fun setSettings(profileId: Long, settings: ProfileDownloadSettings) = update {
+    fun setSettings(profileId: String, settings: ProfileDownloadSettings) = update {
         it.copy(profiles = it.profiles + (profileId to settings))
     }
 
-    fun requests(profileId: Long) = state.requests.filter { it.profileId == profileId }
+    fun requests(profileId: String) = state.requests.filter { it.profileId == profileId }
 
-    fun request(profileId: Long, target: DownloadTarget) =
+    fun request(profileId: String, target: DownloadTarget) =
         state.requests.firstOrNull { it.profileId == profileId && it.target == target }
 
-    fun title(itemId: Long) = state.titles[itemId]
+    fun title(itemId: String) = state.titles[itemId]
 
-    fun titles(profileId: Long): List<StoredTitle> =
+    fun titles(profileId: String): List<StoredTitle> =
         requests(profileId).flatMap { it.titles }.distinct().mapNotNull { state.titles[it] }
 
     /** The profile's copy of the title, when it is on the device. */
-    fun onDevice(profileId: Long, itemId: Long): StoredTitle? =
+    fun onDevice(profileId: String, itemId: String): StoredTitle? =
         state.titles[itemId]?.takeIf {
             it.state == TitleState.OnDevice && requests(profileId).any { r -> itemId in r.titles }
         }
@@ -231,27 +231,30 @@ class DownloadStore(
      * For the artwork badge: a title the profile has on the device, or the profile's request for
      * exactly [target] with every one of its titles on the device.
      */
-    fun badged(profileId: Long, target: DownloadTarget): Boolean {
+    fun badged(profileId: String, target: DownloadTarget): Boolean {
         if (target.itemId?.let { onDevice(profileId, it) } != null) return true
         val titles = request(profileId, target)?.titles.orEmpty()
         return titles.isNotEmpty() && titles.all { state.titles[it]?.state == TitleState.OnDevice }
     }
 
     /** Whether a library's watched titles stay; music always does. */
-    fun keeps(profileId: Long, libraryId: Long, kind: DownloadTitle.Kind): Boolean =
+    fun keeps(profileId: String, libraryId: String, kind: DownloadTitle.Kind): Boolean =
         kind == DownloadTitle.Kind.song ||
             settings(profileId).keep[libraryId] ?: (kind == DownloadTitle.Kind.movie)
 
     /** Whether a request of [count] titles taking [bytes] more is asked about first. */
-    fun isBig(profileId: Long, count: Int, bytes: Long): Boolean =
+    fun isBig(profileId: String, count: Int, bytes: Long): Boolean =
         !settings(profileId).dontAskBig &&
             (count > BIG_COUNT || bytes * BIG_SHARE_DIVISOR > device.allowanceBytes)
 
     /** What of [resolved] a request keeps: a container leaves out what its policy removes. */
-    fun kept(profileId: Long, container: Boolean, resolved: List<DownloadTitle>) = resolved.filter {
-        it.available &&
-            !(container && watchedNow(profileId, it) && !keeps(profileId, it.libraryId, it.kind))
-    }
+    fun kept(profileId: String, container: Boolean, resolved: List<DownloadTitle>) =
+        resolved.filter {
+            it.available &&
+                !(container &&
+                    watchedNow(profileId, it) &&
+                    !keeps(profileId, it.libraryId, it.kind))
+        }
 
     fun newBytes(titles: List<DownloadTitle>) =
         titles.filter { it.itemId !in state.titles }.sumOf { it.sizeBytes ?: 0 }
@@ -261,7 +264,7 @@ class DownloadStore(
      * what [resolved] holds now. Titles not yet stored wait as pending.
      */
     fun put(
-        profileId: Long,
+        profileId: String,
         target: DownloadTarget,
         name: String,
         quality: DownloadQuality,
@@ -307,7 +310,7 @@ class DownloadStore(
     }
 
     /** Takes titles the profile may no longer see out of every request of its. */
-    fun drop(profileId: Long, itemIds: Collection<Long>) = update { s ->
+    fun drop(profileId: String, itemIds: Collection<String>) = update { s ->
         val gone = itemIds.toSet()
         s.copy(
             requests =
@@ -329,7 +332,7 @@ class DownloadStore(
     }
 
     /** Deletes what one profile keeps, as when the server no longer knows it. */
-    fun wipe(profileId: Long) = update { s ->
+    fun wipe(profileId: String) = update { s ->
         s.copy(
             requests = s.requests.filter { it.profileId != profileId },
             watch = s.watch - profileId,
@@ -337,7 +340,7 @@ class DownloadStore(
         )
     }
 
-    fun setTitle(itemId: Long, change: (StoredTitle) -> StoredTitle) = update { s ->
+    fun setTitle(itemId: String, change: (StoredTitle) -> StoredTitle) = update { s ->
         val title = s.titles[itemId] ?: return@update s
         s.copy(titles = s.titles + (itemId to change(title)))
     }
@@ -346,7 +349,7 @@ class DownloadStore(
      * Keeps the title's claim. One the title held before, or one for a title gone meanwhile, is
      * kept to be let go of.
      */
-    fun claimed(itemId: Long, claim: Claim) = update { s ->
+    fun claimed(itemId: String, claim: Claim) = update { s ->
         val title = s.titles[itemId] ?: return@update s.copy(releases = s.releases + claim)
         s.copy(
             titles = s.titles + (itemId to title.copy(claim = claim)),
@@ -369,7 +372,7 @@ class DownloadStore(
      * it to know the partial file is still the one asked for.
      */
     @Synchronized
-    fun progress(itemId: Long, receivedBytes: Long, etag: String?) {
+    fun progress(itemId: String, receivedBytes: Long, etag: String?) {
         val title = state.titles[itemId] ?: return
         if (title.etag != etag)
             return setTitle(itemId) { it.copy(receivedBytes = receivedBytes, etag = etag) }
@@ -411,7 +414,7 @@ class DownloadStore(
      * disk, wait for space and are passed over for one that fits; a failed one waits to be retried,
      * and [skip] names titles to pass over.
      */
-    fun next(skip: Set<Long> = emptySet()): StoredTitle? {
+    fun next(skip: Set<String> = emptySet()): StoredTitle? {
         var room = device.allowanceBytes - usedBytes
         var disk = freeBytes
         var found: StoredTitle? = null
@@ -469,11 +472,12 @@ class DownloadStore(
     }
 
     /** Back to pending after a failure, or after the allowance grew. */
-    fun retry(itemId: Long) = setTitle(itemId) { it.copy(state = TitleState.Pending, error = null) }
+    fun retry(itemId: String) =
+        setTitle(itemId) { it.copy(state = TitleState.Pending, error = null) }
 
-    fun watch(profileId: Long, itemId: Long) = state.watch[profileId]?.get(itemId)
+    fun watch(profileId: String, itemId: String) = state.watch[profileId]?.get(itemId)
 
-    fun watches(profileId: Long) = state.watch[profileId].orEmpty().values
+    fun watches(profileId: String) = state.watch[profileId].orEmpty().values
 
     /**
      * Once watched and [ended], a title a container covers in a library that does not keep watched
@@ -481,12 +485,12 @@ class DownloadStore(
      * next sync applies it should playback never get to end.
      */
     fun record(
-        profileId: Long,
-        itemId: Long,
+        profileId: String,
+        itemId: String,
         positionMs: Long,
         watched: Boolean,
         atMs: Long,
-        editionId: Long? = null,
+        editionId: String? = null,
         ended: Boolean = true,
     ) = update { s ->
         val mark = LocalWatch(itemId, positionMs, watched, atMs, synced = false, editionId)
@@ -498,13 +502,13 @@ class DownloadStore(
     }
 
     /** The changes still to send, oldest first, as the server must apply them. */
-    fun unsynced(profileId: Long) = watches(profileId).filter { !it.synced }.sortedBy { it.atMs }
+    fun unsynced(profileId: String) = watches(profileId).filter { !it.synced }.sortedBy { it.atMs }
 
     /**
      * Takes the server's state for a title, unless this device changed it since [sentAtMs]: what
      * was sent then is synced, a later local change still waits.
      */
-    fun synced(profileId: Long, mark: LocalWatch, sentAtMs: Long? = null) = update { s ->
+    fun synced(profileId: String, mark: LocalWatch, sentAtMs: Long? = null) = update { s ->
         val local = s.watch[profileId]?.get(mark.itemId)
         if (local != null && !local.synced && sentAtMs != null && local.atMs > sentAtMs)
             return@update s
@@ -512,7 +516,7 @@ class DownloadStore(
         s.copy(watch = watch, requests = policed(s, profileId, mark.itemId, mark.watched))
     }
 
-    private fun policed(s: DownloadState, profileId: Long, itemId: Long, watched: Boolean) =
+    private fun policed(s: DownloadState, profileId: String, itemId: String, watched: Boolean) =
         if (!watched) s.requests
         else {
             val title = s.titles[itemId]
@@ -525,17 +529,17 @@ class DownloadStore(
                 }
         }
 
-    private fun watchedNow(profileId: Long, title: DownloadTitle): Boolean {
+    private fun watchedNow(profileId: String, title: DownloadTitle): Boolean {
         val local = watch(profileId, title.itemId)
         return if (local != null && !local.synced) local.watched else title.watched
     }
 
     /** The server's watch state for a title, unless this device has a change yet to send. */
     private fun seed(
-        watch: Map<Long, Map<Long, LocalWatch>>,
-        profileId: Long,
+        watch: Map<String, Map<String, LocalWatch>>,
+        profileId: String,
         title: DownloadTitle,
-    ): Map<Long, Map<Long, LocalWatch>> {
+    ): Map<String, Map<String, LocalWatch>> {
         val mine = watch[profileId].orEmpty()
         if (mine[title.itemId]?.synced == false) return watch
         val mark =

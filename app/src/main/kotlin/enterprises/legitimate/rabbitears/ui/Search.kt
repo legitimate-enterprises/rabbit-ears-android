@@ -164,7 +164,7 @@ fun Search() {
 }
 
 @Composable
-private fun Round(art: String, id: Long, name: String, downloaded: Boolean, onClick: () -> Unit) {
+private fun Round(art: String, id: String, name: String, downloaded: Boolean, onClick: () -> Unit) {
     Column(
         Modifier.width(96.dp).clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,

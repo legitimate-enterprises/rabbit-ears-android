@@ -27,7 +27,7 @@ interface DownloadScheduler {
 
 /** What a Download would hold, for the confirmation a big one asks first. */
 data class DownloadPlan(
-    val profileId: Long,
+    val profileId: String,
     val target: DownloadTarget,
     val name: String,
     val quality: DownloadQuality,
@@ -52,11 +52,11 @@ class Downloads(
 ) {
     private val meta = DownloadMeta(store)
 
-    fun request(profileId: Long, target: DownloadTarget) = store.request(profileId, target)
+    fun request(profileId: String, target: DownloadTarget) = store.request(profileId, target)
 
     suspend fun plan(
         api: Api,
-        profileId: Long,
+        profileId: String,
         target: DownloadTarget,
         name: String,
         quality: DownloadQuality,
@@ -92,13 +92,13 @@ class Downloads(
         meta.save(api, plan.profileId, request, plan.resolved)
     }
 
-    fun remove(profileId: Long, target: DownloadTarget) {
+    fun remove(profileId: String, target: DownloadTarget) {
         store.request(profileId, target)?.let { store.remove(it.id) }
         // The server converts for a claim until a run lets go of it.
         if (store.state.releases.isNotEmpty()) schedule()
     }
 
-    fun retry(itemId: Long) {
+    fun retry(itemId: String) {
         store.retry(itemId)
         schedule()
     }
@@ -115,15 +115,15 @@ class Downloads(
      */
     suspend fun run(
         api: Api,
-        active: () -> Long?,
-        kids: Set<Long>,
+        active: () -> String?,
+        kids: Set<String>,
         unmetered: Boolean,
         dataSaver: Boolean = false,
     ): Boolean {
         val waiting = waitingFor(store.device.wifiOnly, !unmetered, dataSaver)
         store.awaitNetwork(waiting ?: TitleState.Pending)
-        val passed = mutableSetOf<Long>()
-        val asked = mutableSetOf<Long>()
+        val passed = mutableSetOf<String>()
+        val asked = mutableSetOf<String>()
         while (true) {
             // Titles added during the run are claimed before the next transfer starts.
             claimAhead(api, active(), kids, asked)
@@ -145,14 +145,14 @@ class Downloads(
     }
 
     /** [kids] are the household's kids, whom the server lets an active adult act for. */
-    private fun claimant(itemId: Long, active: Long?, kids: Set<Long>): Long? {
+    private fun claimant(itemId: String, active: String?, kids: Set<String>): String? {
         val asking = store.state.requests.filter { itemId in it.titles }.map { it.profileId }
         if (active != null && active in asking) return active
         return if (active in kids) null else asking.firstOrNull { it in kids }
     }
 
     /** [run]'s claims alone, for a network that holds transfers back. */
-    suspend fun claim(api: Api, active: Long?, kids: Set<Long>) =
+    suspend fun claim(api: Api, active: String?, kids: Set<String>) =
         claimAhead(api, active, kids, mutableSetOf())
 
     /**
@@ -164,9 +164,9 @@ class Downloads(
      */
     private suspend fun claimAhead(
         api: Api,
-        active: Long?,
-        kids: Set<Long>,
-        asked: MutableSet<Long>,
+        active: String?,
+        kids: Set<String>,
+        asked: MutableSet<String>,
     ) {
         for (claim in store.state.releases) {
             try {
@@ -234,7 +234,7 @@ class Downloads(
     /** [still] says whether [profileId] may still claim the title, which a profile switch ends. */
     private suspend fun fetch(
         api: Api,
-        profileId: Long,
+        profileId: String,
         title: StoredTitle,
         still: () -> Boolean,
     ): Outcome {
@@ -393,14 +393,14 @@ class Downloads(
             else -> message
         }
 
-    private suspend fun claim(api: Api, profileId: Long, title: StoredTitle): Download {
+    private suspend fun claim(api: Api, profileId: String, title: StoredTitle): Download {
         val input = DownloadInput(title.itemId, title.quality, snapshot(api), title.editionId)
         return api.call { downloads.createDownload(profileId, input) }
     }
 
     private suspend fun resolve(
         api: Api,
-        profileId: Long,
+        profileId: String,
         target: DownloadTarget,
         quality: DownloadQuality,
     ): List<DownloadTitle> {
@@ -414,7 +414,7 @@ class Downloads(
      * not_found for the profile deletes what it keeps, its unauthorized everything; a proxy's 401
      * or 404 deletes nothing. What already waits is fetched whether or not the rest went through.
      */
-    suspend fun sync(api: Api, profileId: Long) {
+    suspend fun sync(api: Api, profileId: String) {
         try {
             try {
                 pushWatch(api, profileId)
@@ -444,7 +444,7 @@ class Downloads(
     }
 
     /** Each change carries when it was made, so the server keeps whichever is later. */
-    suspend fun pushWatch(api: Api, profileId: Long) {
+    suspend fun pushWatch(api: Api, profileId: String) {
         for (mark in store.unsynced(profileId)) {
             val at = OffsetDateTime.ofInstant(Instant.ofEpochMilli(mark.atMs), ZoneOffset.UTC)
             val input = WatchStateInput(mark.watched, mark.positionMs, mark.editionId, at)
@@ -462,7 +462,7 @@ class Downloads(
                     state.itemId,
                     state.positionMs,
                     state.watched,
-                    state.updatedAt.toInstant().toEpochMilli(),
+                    state.changedAt.toInstant().toEpochMilli(),
                     synced = true,
                     mark.editionId,
                 )
@@ -474,7 +474,7 @@ class Downloads(
      * Re-resolves each of the profile's requests; one whose target is gone goes. A title the
      * request covers is kept again when its metadata never arrived.
      */
-    private suspend fun refresh(api: Api, profileId: Long) {
+    private suspend fun refresh(api: Api, profileId: String) {
         for (request in store.requests(profileId)) {
             val resolved =
                 try {

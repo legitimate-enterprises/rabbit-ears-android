@@ -79,7 +79,7 @@ fun MusicTab() {
     var view by rememberSaveable { mutableStateOf(MusicView.Albums) }
     var sort by rememberStored("music.albumSort", AlbumSort.Title)
     var songSort by rememberStored("music.songSort", SongSort.Title)
-    var genre by rememberSaveable { mutableStateOf<Long?>(null) }
+    var genre by rememberSaveable { mutableStateOf<String?>(null) }
     val genres by produceState(emptyList<Genre>(), library) { value = library.genres() }
     val selection = remember { Selection() }
     val selectKind =
@@ -276,8 +276,8 @@ private fun <S> SortMenu(
     label: (S) -> String,
     onSort: (S) -> Unit,
     genres: List<Genre>,
-    genre: Long?,
-    onGenre: (Long?) -> Unit,
+    genre: String?,
+    onGenre: (String?) -> Unit,
 ) {
     if (sorts.isEmpty() && genres.isEmpty()) return
     var open by remember { mutableStateOf(false) }
@@ -416,7 +416,7 @@ private fun DetailPage(
 }
 
 @Composable
-fun ArtistScreen(id: Long) {
+fun ArtistScreen(id: String) {
     val nav = LocalNav.current
     val scope = nav.music?.scope
     val detail = rememberLoaded(id, nav.app.live.watched) { nav.musicLibrary.artist(id) }
@@ -475,7 +475,7 @@ fun ArtistScreen(id: Long) {
 }
 
 @Composable
-fun AlbumScreen(id: Long) {
+fun AlbumScreen(id: String) {
     val nav = LocalNav.current
     val scope = nav.music?.scope
     val detail = rememberLoaded(id, nav.app.live.watched) { nav.musicLibrary.album(id) }

@@ -48,10 +48,10 @@ import kotlinx.serialization.encoding.Encoder
 data class TaskRun (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "taskId")
-    val taskId: kotlin.Long,
+    val taskId: kotlin.String,
 
     @Contextual @SerialName(value = "status")
     val status: TaskRunStatus,

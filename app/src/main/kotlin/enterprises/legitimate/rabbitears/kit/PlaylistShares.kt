@@ -22,7 +22,7 @@ val PlaylistShareAccess.label: String
  * [color], from a server before it, draws the initial on a neutral circle.
  */
 class ShareProfile(
-    val profileId: Long,
+    val profileId: String,
     val name: String,
     val kind: AccountKind,
     val subtitle: String,
@@ -40,7 +40,7 @@ class ShareProfile(
  * The owner's view of who has one playlist: the [households] they are in and the [profiles] they
  * can share with, each with its access. Each write reads the shares again.
  */
-class PlaylistSharesModel(val api: Api, val profileId: Long, val playlistId: Long) {
+class PlaylistSharesModel(val api: Api, val profileId: String, val playlistId: String) {
     var households by mutableStateOf<List<ShareHousehold>>(emptyList())
         private set
 
@@ -61,7 +61,7 @@ class PlaylistSharesModel(val api: Api, val profileId: Long, val playlistId: Lon
         get() {
             val access = shares.associate { it.profileId to it.access }
             val named = households.size > 1
-            fun subtitle(householdId: Long?, kind: AccountKind) =
+            fun subtitle(householdId: String?, kind: AccountKind) =
                 listOfNotNull(
                         households.firstOrNull { it.id == householdId }?.name?.takeIf { named },
                         "Kid".takeIf { kind == AccountKind.kid },

@@ -46,10 +46,10 @@ import kotlinx.serialization.Contextual
 data class MusicArtist (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long,
+    val libraryId: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,

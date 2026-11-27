@@ -32,8 +32,8 @@ fun placeholderKind(itemKind: String): PlaceholderKind =
 /** The placeholder an address alone names: a collection's or a person's. Items need their kind. */
 fun placeholderOfPath(path: String): PlaceholderKind? =
     when {
-        path.startsWith("/api/v1/collections/") -> PlaceholderKind.Collection
-        path.startsWith("/api/v1/people/") -> PlaceholderKind.Person
+        path.startsWith("/api/v2/collections/") -> PlaceholderKind.Collection
+        path.startsWith("/api/v2/people/") -> PlaceholderKind.Person
         else -> null
     }
 

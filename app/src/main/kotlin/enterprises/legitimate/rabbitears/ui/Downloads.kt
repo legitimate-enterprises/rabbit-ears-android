@@ -248,7 +248,7 @@ fun isDownloaded(target: DownloadTarget): Boolean {
     return store.badged(nav.catalog.profileId, target)
 }
 
-@Composable fun isDownloaded(id: Long) = isDownloaded(DownloadTarget(itemId = id))
+@Composable fun isDownloaded(id: String) = isDownloaded(DownloadTarget(itemId = id))
 
 /**
  * The marks in the artwork's bottom end corner, laid right to left with Downloaded rightmost,
@@ -346,7 +346,7 @@ fun DownloadsPreferences() {
 
 /** One switch per movies, TV and YouTube library; music always keeps. */
 @Composable
-private fun KeepAfterWatched(profileId: Long) {
+private fun KeepAfterWatched(profileId: String) {
     val nav = LocalNav.current
     val store = nav.downloads?.store ?: return
     var libraries by remember { mutableStateOf<List<Library>>(emptyList()) }

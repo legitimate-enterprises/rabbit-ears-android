@@ -38,7 +38,7 @@ import kotlinx.serialization.Contextual
 data class WatchStateBatchInput (
 
     @SerialName(value = "itemIds")
-    val itemIds: kotlin.collections.List<kotlin.Long>,
+    val itemIds: kotlin.collections.List<kotlin.String>,
 
     @SerialName(value = "watched")
     val watched: kotlin.Boolean,

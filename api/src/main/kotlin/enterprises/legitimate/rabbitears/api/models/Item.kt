@@ -43,7 +43,8 @@ import kotlinx.serialization.encoding.Encoder
  * @param kind
  * @param parsedTitle Title parsed from the file or folder name.
  * @param addedAt
- * @param updatedAt
+ * @param createdAt
+ * @param modifiedAt
  * @param parentId
  * @param path The base name unless the caller is an admin.
  * @param parsedYear
@@ -62,10 +63,10 @@ import kotlinx.serialization.encoding.Encoder
 data class Item (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long,
+    val libraryId: kotlin.String,
 
     @Contextual @SerialName(value = "kind")
     val kind: ItemKind,
@@ -77,11 +78,14 @@ data class Item (
     @Contextual @SerialName(value = "addedAt")
     val addedAt: java.time.OffsetDateTime,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "createdAt")
+    val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     @SerialName(value = "parentId")
-    val parentId: kotlin.Long? = null,
+    val parentId: kotlin.String? = null,
 
     /* The base name unless the caller is an admin. */
     @SerialName(value = "path")

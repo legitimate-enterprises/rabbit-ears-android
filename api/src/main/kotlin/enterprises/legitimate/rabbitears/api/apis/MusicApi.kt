@@ -64,7 +64,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -82,7 +82,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getMusicAlbum(albumId: kotlin.Long) : MusicAlbum {
+    fun getMusicAlbum(albumId: kotlin.String) : MusicAlbum {
         val localVarResponse = getMusicAlbumWithHttpInfo(albumId = albumId)
 
         return when (localVarResponse.responseType) {
@@ -111,7 +111,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getMusicAlbumWithHttpInfo(albumId: kotlin.Long) : ApiResponse<MusicAlbum?> {
+    fun getMusicAlbumWithHttpInfo(albumId: kotlin.String) : ApiResponse<MusicAlbum?> {
         val localVariableConfig = getMusicAlbumRequestConfig(albumId = albumId)
 
         return request<Unit, MusicAlbum>(
@@ -125,7 +125,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param albumId 
      * @return RequestConfig
      */
-    fun getMusicAlbumRequestConfig(albumId: kotlin.Long) : RequestConfig<Unit> {
+    fun getMusicAlbumRequestConfig(albumId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -155,7 +155,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getMusicArtist(artistId: kotlin.Long) : MusicArtist {
+    fun getMusicArtist(artistId: kotlin.String) : MusicArtist {
         val localVarResponse = getMusicArtistWithHttpInfo(artistId = artistId)
 
         return when (localVarResponse.responseType) {
@@ -184,7 +184,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getMusicArtistWithHttpInfo(artistId: kotlin.Long) : ApiResponse<MusicArtist?> {
+    fun getMusicArtistWithHttpInfo(artistId: kotlin.String) : ApiResponse<MusicArtist?> {
         val localVariableConfig = getMusicArtistRequestConfig(artistId = artistId)
 
         return request<Unit, MusicArtist>(
@@ -198,7 +198,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param artistId 
      * @return RequestConfig
      */
-    fun getMusicArtistRequestConfig(artistId: kotlin.Long) : RequestConfig<Unit> {
+    fun getMusicArtistRequestConfig(artistId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -228,7 +228,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getMusicSong(songId: kotlin.Long) : MusicSong {
+    fun getMusicSong(songId: kotlin.String) : MusicSong {
         val localVarResponse = getMusicSongWithHttpInfo(songId = songId)
 
         return when (localVarResponse.responseType) {
@@ -257,7 +257,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getMusicSongWithHttpInfo(songId: kotlin.Long) : ApiResponse<MusicSong?> {
+    fun getMusicSongWithHttpInfo(songId: kotlin.String) : ApiResponse<MusicSong?> {
         val localVariableConfig = getMusicSongRequestConfig(songId = songId)
 
         return request<Unit, MusicSong>(
@@ -271,7 +271,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param songId 
      * @return RequestConfig
      */
-    fun getMusicSongRequestConfig(songId: kotlin.Long) : RequestConfig<Unit> {
+    fun getMusicSongRequestConfig(songId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -308,7 +308,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listMusicAlbums(libraryId: kotlin.Long? = null, artistId: kotlin.Long? = null, genreId: kotlin.Long? = null, letter: kotlin.String? = null, q: kotlin.String? = null, sort: MusicAlbumSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicAlbumPage {
+    fun listMusicAlbums(libraryId: kotlin.String? = null, artistId: kotlin.String? = null, genreId: kotlin.String? = null, letter: kotlin.String? = null, q: kotlin.String? = null, sort: MusicAlbumSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicAlbumPage {
         val localVarResponse = listMusicAlbumsWithHttpInfo(libraryId = libraryId, artistId = artistId, genreId = genreId, letter = letter, q = q, sort = sort, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -344,7 +344,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listMusicAlbumsWithHttpInfo(libraryId: kotlin.Long?, artistId: kotlin.Long?, genreId: kotlin.Long?, letter: kotlin.String?, q: kotlin.String?, sort: MusicAlbumSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicAlbumPage?> {
+    fun listMusicAlbumsWithHttpInfo(libraryId: kotlin.String?, artistId: kotlin.String?, genreId: kotlin.String?, letter: kotlin.String?, q: kotlin.String?, sort: MusicAlbumSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicAlbumPage?> {
         val localVariableConfig = listMusicAlbumsRequestConfig(libraryId = libraryId, artistId = artistId, genreId = genreId, letter = letter, q = q, sort = sort, limit = limit, offset = offset)
 
         return request<Unit, MusicAlbumPage>(
@@ -365,7 +365,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listMusicAlbumsRequestConfig(libraryId: kotlin.Long?, artistId: kotlin.Long?, genreId: kotlin.Long?, letter: kotlin.String?, q: kotlin.String?, sort: MusicAlbumSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listMusicAlbumsRequestConfig(libraryId: kotlin.String?, artistId: kotlin.String?, genreId: kotlin.String?, letter: kotlin.String?, q: kotlin.String?, sort: MusicAlbumSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -426,7 +426,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listMusicArtists(libraryId: kotlin.Long? = null, genreId: kotlin.Long? = null, letter: kotlin.String? = null, q: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicArtistPage {
+    fun listMusicArtists(libraryId: kotlin.String? = null, genreId: kotlin.String? = null, letter: kotlin.String? = null, q: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicArtistPage {
         val localVarResponse = listMusicArtistsWithHttpInfo(libraryId = libraryId, genreId = genreId, letter = letter, q = q, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -460,7 +460,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listMusicArtistsWithHttpInfo(libraryId: kotlin.Long?, genreId: kotlin.Long?, letter: kotlin.String?, q: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicArtistPage?> {
+    fun listMusicArtistsWithHttpInfo(libraryId: kotlin.String?, genreId: kotlin.String?, letter: kotlin.String?, q: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicArtistPage?> {
         val localVariableConfig = listMusicArtistsRequestConfig(libraryId = libraryId, genreId = genreId, letter = letter, q = q, limit = limit, offset = offset)
 
         return request<Unit, MusicArtistPage>(
@@ -479,7 +479,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listMusicArtistsRequestConfig(libraryId: kotlin.Long?, genreId: kotlin.Long?, letter: kotlin.String?, q: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listMusicArtistsRequestConfig(libraryId: kotlin.String?, genreId: kotlin.String?, letter: kotlin.String?, q: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -530,7 +530,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listMusicLetters(of: MusicLetterGroup, libraryId: kotlin.Long? = null) : MusicLetterCountList {
+    fun listMusicLetters(of: MusicLetterGroup, libraryId: kotlin.String? = null) : MusicLetterCountList {
         val localVarResponse = listMusicLettersWithHttpInfo(of = of, libraryId = libraryId)
 
         return when (localVarResponse.responseType) {
@@ -560,7 +560,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listMusicLettersWithHttpInfo(of: MusicLetterGroup, libraryId: kotlin.Long?) : ApiResponse<MusicLetterCountList?> {
+    fun listMusicLettersWithHttpInfo(of: MusicLetterGroup, libraryId: kotlin.String?) : ApiResponse<MusicLetterCountList?> {
         val localVariableConfig = listMusicLettersRequestConfig(of = of, libraryId = libraryId)
 
         return request<Unit, MusicLetterCountList>(
@@ -575,7 +575,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param libraryId One Music library; absent spans every Music library. (optional)
      * @return RequestConfig
      */
-    fun listMusicLettersRequestConfig(of: MusicLetterGroup, libraryId: kotlin.Long?) : RequestConfig<Unit> {
+    fun listMusicLettersRequestConfig(of: MusicLetterGroup, libraryId: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -618,7 +618,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listMusicSongs(libraryId: kotlin.Long? = null, albumId: kotlin.Long? = null, artistId: kotlin.Long? = null, genreId: kotlin.Long? = null, q: kotlin.String? = null, sort: MusicSongSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicSongPage {
+    fun listMusicSongs(libraryId: kotlin.String? = null, albumId: kotlin.String? = null, artistId: kotlin.String? = null, genreId: kotlin.String? = null, q: kotlin.String? = null, sort: MusicSongSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicSongPage {
         val localVarResponse = listMusicSongsWithHttpInfo(libraryId = libraryId, albumId = albumId, artistId = artistId, genreId = genreId, q = q, sort = sort, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -654,7 +654,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listMusicSongsWithHttpInfo(libraryId: kotlin.Long?, albumId: kotlin.Long?, artistId: kotlin.Long?, genreId: kotlin.Long?, q: kotlin.String?, sort: MusicSongSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicSongPage?> {
+    fun listMusicSongsWithHttpInfo(libraryId: kotlin.String?, albumId: kotlin.String?, artistId: kotlin.String?, genreId: kotlin.String?, q: kotlin.String?, sort: MusicSongSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicSongPage?> {
         val localVariableConfig = listMusicSongsRequestConfig(libraryId = libraryId, albumId = albumId, artistId = artistId, genreId = genreId, q = q, sort = sort, limit = limit, offset = offset)
 
         return request<Unit, MusicSongPage>(
@@ -675,7 +675,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listMusicSongsRequestConfig(libraryId: kotlin.Long?, albumId: kotlin.Long?, artistId: kotlin.Long?, genreId: kotlin.Long?, q: kotlin.String?, sort: MusicSongSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listMusicSongsRequestConfig(libraryId: kotlin.String?, albumId: kotlin.String?, artistId: kotlin.String?, genreId: kotlin.String?, q: kotlin.String?, sort: MusicSongSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -734,7 +734,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listRecentlyPlayedMusic(profileId: kotlin.Long, kind: MusicRecentKind? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicRecentPage {
+    fun listRecentlyPlayedMusic(profileId: kotlin.String, kind: MusicRecentKind? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicRecentPage {
         val localVarResponse = listRecentlyPlayedMusicWithHttpInfo(profileId = profileId, kind = kind, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -766,7 +766,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listRecentlyPlayedMusicWithHttpInfo(profileId: kotlin.Long, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicRecentPage?> {
+    fun listRecentlyPlayedMusicWithHttpInfo(profileId: kotlin.String, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicRecentPage?> {
         val localVariableConfig = listRecentlyPlayedMusicRequestConfig(profileId = profileId, kind = kind, limit = limit, offset = offset)
 
         return request<Unit, MusicRecentPage>(
@@ -783,7 +783,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listRecentlyPlayedMusicRequestConfig(profileId: kotlin.Long, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listRecentlyPlayedMusicRequestConfig(profileId: kotlin.String, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -826,7 +826,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun searchMusic(q: kotlin.String, libraryId: kotlin.Long? = null, limit: kotlin.Int? = 20) : MusicSearchResult {
+    fun searchMusic(q: kotlin.String, libraryId: kotlin.String? = null, limit: kotlin.Int? = 20) : MusicSearchResult {
         val localVarResponse = searchMusicWithHttpInfo(q = q, libraryId = libraryId, limit = limit)
 
         return when (localVarResponse.responseType) {
@@ -857,7 +857,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun searchMusicWithHttpInfo(q: kotlin.String, libraryId: kotlin.Long?, limit: kotlin.Int?) : ApiResponse<MusicSearchResult?> {
+    fun searchMusicWithHttpInfo(q: kotlin.String, libraryId: kotlin.String?, limit: kotlin.Int?) : ApiResponse<MusicSearchResult?> {
         val localVariableConfig = searchMusicRequestConfig(q = q, libraryId = libraryId, limit = limit)
 
         return request<Unit, MusicSearchResult>(
@@ -873,7 +873,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param limit  (optional, default to 20)
      * @return RequestConfig
      */
-    fun searchMusicRequestConfig(q: kotlin.String, libraryId: kotlin.Long?, limit: kotlin.Int?) : RequestConfig<Unit> {
+    fun searchMusicRequestConfig(q: kotlin.String, libraryId: kotlin.String?, limit: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {

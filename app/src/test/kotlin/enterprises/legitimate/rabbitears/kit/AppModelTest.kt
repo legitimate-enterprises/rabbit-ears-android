@@ -127,22 +127,22 @@ class AppModelTest {
             val downloads = DownloadStore(Files.createTempDirectory("app").toFile())
             val dune =
                 DownloadTitle(
-                    1,
+                    "1",
                     DownloadTitle.Kind.movie,
-                    1,
+                    "1",
                     available = true,
                     watched = false,
                     positionMs = 0,
                     runtimeMs = 1,
                 )
             downloads.put(
-                1,
-                DownloadTarget(itemId = 1),
+                "1",
+                DownloadTarget(itemId = "1"),
                 "Dune",
                 DownloadQuality.original,
                 listOf(dune),
             )
-            downloads.setTitle(1) { it.copy(state = TitleState.OnDevice, file = "1.mp4") }
+            downloads.setTitle("1") { it.copy(state = TitleState.OnDevice, file = "1.mp4") }
             downloads.setMe(Json.me())
             val app = AppModel(store, "Pixel 9", server.http, downloads)
             store.server = "http://192.168.1.20:8477"
@@ -151,13 +151,13 @@ class AppModelTest {
             app.restore()
             assertTrue(app.offline)
             assertEquals("t1", store.token)
-            assertEquals(TitleState.OnDevice, downloads.title(1)?.state)
+            assertEquals(TitleState.OnDevice, downloads.title("1")?.state)
 
             server.before = {}
             server.error("GET /me", 401, "unauthorized")
             app.restore()
             assertEquals(Phase.SignedOut, app.phase)
-            assertNull(downloads.title(1))
+            assertNull(downloads.title("1"))
         }
 
     @Test
@@ -182,12 +182,12 @@ class AppModelTest {
             app.restore()
             assertTrue(app.offline)
             assertEquals("t1", store.token)
-            assertEquals(TitleState.OnDevice, downloads.title(1)?.state)
+            assertEquals(TitleState.OnDevice, downloads.title("1")?.state)
 
             app.reconnect()
             assertTrue(app.offline)
             assertEquals("t1", store.token)
-            assertEquals(TitleState.OnDevice, downloads.title(1)?.state)
+            assertEquals(TitleState.OnDevice, downloads.title("1")?.state)
 
             val bare = AppModel(store, "Pixel 9", server.http)
             bare.restore()
@@ -197,12 +197,12 @@ class AppModelTest {
 
     @Test
     fun whoIsWatchingListsJoinedMembersAndKnowsWhoMayAddKids() = runBlocking {
-        val kid = Json.account(3, "Joan", kind = "kid")
-        val pending = Json.account(4, "Gary", pending = true)
+        val kid = Json.account("3", "Joan", kind = "kid")
+        val pending = Json.account("4", "Gary", pending = true)
         server.on(
             "POST /auth/sign-in",
             201,
-            """{"token":"t1","me":${Json.me(1, Json.account(1, "Helga"), kid, pending)}}""",
+            """{"token":"t1","me":${Json.me(1, Json.account("1", "Helga"), kid, pending)}}""",
         )
         app.signIn("192.168.1.20", "a@example.com", "pw")
         assertEquals(listOf("Helga", "Joan"), app.profiles.map { it.name })
@@ -212,12 +212,12 @@ class AppModelTest {
 
     @Test
     fun onlyKidsOnAManualAllowListAreListManaged() = runBlocking {
-        val ratings = Json.account(3, "Joan", kind = "kid")
-        val listed = Json.account(4, "Eli", kind = "kid", filterMode = "allow_list")
+        val ratings = Json.account("3", "Joan", kind = "kid")
+        val listed = Json.account("4", "Eli", kind = "kid", filterMode = "allow_list")
         server.on(
             "POST /auth/sign-in",
             201,
-            """{"token":"t1","me":${Json.me(1, Json.account(1, "Helga"), ratings, listed)}}""",
+            """{"token":"t1","me":${Json.me(1, Json.account("1", "Helga"), ratings, listed)}}""",
         )
         app.signIn("192.168.1.20", "a@example.com", "pw")
         assertEquals(listOf("Eli"), app.listKids.map { it.name })
@@ -228,22 +228,26 @@ class AppModelTest {
         server.on("POST /auth/sign-in", 201, """{"token":"t1","me":${Json.me()}}""")
         server.on("POST /me/lock", 204)
         server.on("POST /profiles/1/unlock", 204)
-        server.on("GET /items", body = Json.page(Json.item(1, "movie", "Dune")))
+        server.on("GET /items", body = Json.page(Json.item("1", "movie", "Dune")))
         server.on("GET /profiles/1/watch-state", body = Json.page())
         app.signIn("192.168.1.20", "a@example.com", "pw")
         app.choose(app.profiles.single())
         val catalog =
-            CatalogModel(app.api!!, 1, hideKidsContent = app.activeProfile?.hideKidsContent == true)
+            CatalogModel(
+                app.api!!,
+                "1",
+                hideKidsContent = app.activeProfile?.hideKidsContent == true,
+            )
         catalog.load()
         assertFalse(catalog.hideKidsContent)
 
-        server.on("GET /me", body = Json.me(1, Json.account(1, "Helga", hide = true)))
+        server.on("GET /me", body = Json.me(1, Json.account("1", "Helga", hide = true)))
         app.reload()
         catalog.hideKids(app.activeProfile?.hideKidsContent == true)
         assertTrue(catalog.hideKidsContent)
         assertEquals(8, server.called("GET /items").size)
 
-        server.on("GET /me", body = Json.me(1, Json.account(1, "Helga", hide = false)))
+        server.on("GET /me", body = Json.me(1, Json.account("1", "Helga", hide = false)))
         app.reload()
         catalog.hideKids(app.activeProfile?.hideKidsContent == true)
         assertFalse(catalog.hideKidsContent)
@@ -258,7 +262,7 @@ class AppModelTest {
         app.signIn("192.168.1.20", "a@example.com", "pw")
         app.choose(app.profiles.single())
 
-        val helga = Json.account(1, "Helga", color = "#2E6B5B")
+        val helga = Json.account("1", "Helga", color = "#2E6B5B")
         server.on("PUT /profiles/1/preferences", body = helga)
         server.on("GET /me", body = Json.me(1, helga))
         app.setPreferences(app.activeProfile!!, color = "#2E6B5B", hideKidsContent = true)
@@ -350,19 +354,19 @@ class AppModelTest {
 
     @Test
     fun addKidWhileLockedUnlocksTheActiveAdultWithoutLeavingWhoIsWatching() = runBlocking {
-        val gary = Json.account(2, "Gary", hasPin = true)
+        val gary = Json.account("2", "Gary", hasPin = true)
         store.server = "http://192.168.1.20:8477"
         store.token = "t1"
         server.on(
             "GET /me",
-            body = Json.me(2, Json.account(1, "Helga"), gary).dropLast(1) + ""","locked":true}""",
+            body = Json.me(2, Json.account("1", "Helga"), gary).dropLast(1) + ""","locked":true}""",
         )
         app.restore()
         assertTrue(app.canAddKid)
         assertTrue(app.locked)
 
         server.on("POST /profiles/2/unlock", 204)
-        app.unlock(app.profiles.first { it.id == 2L }, "1234")
+        app.unlock(app.profiles.first { it.id == "2" }, "1234")
         assertFalse(app.locked)
         assertEquals(Phase.ChoosingProfile, app.phase)
         assertTrue(server.calls.last().body.contains(""""pin":"1234""""))
@@ -415,7 +419,7 @@ class AppModelTest {
 
     private fun locked(me: String) = me.dropLast(1) + ""","locked":true}"""
 
-    private val gary = Json.account(2, "Gary", hasPin = true)
+    private val gary = Json.account("2", "Gary", hasPin = true)
 
     @Test
     fun aRememberedProfileContinuesAtLaunchWithoutLocking() = runBlocking {
@@ -438,7 +442,7 @@ class AppModelTest {
 
     @Test
     fun skipPinContinuesAsAPinProfileTheDeviceStillHas() = runBlocking {
-        stored(Json.me(2, Json.account(1, "Helga"), gary))
+        stored(Json.me(2, Json.account("1", "Helga"), gary))
         app.restore()
         assertEquals(Phase.Browsing, app.phase)
         assertEquals("Gary", app.activeProfile?.name)
@@ -447,7 +451,7 @@ class AppModelTest {
 
     @Test
     fun withoutSkipPinLaunchLocksAndAsksTheRememberedProfilesPin() = runBlocking {
-        stored(Json.me(2, Json.account(1, "Helga"), gary), ProfileMemory(skipPin = false))
+        stored(Json.me(2, Json.account("1", "Helga"), gary), ProfileMemory(skipPin = false))
         app.restore()
         assertEquals(Phase.ChoosingProfile, app.phase)
         assertTrue(app.locked)
@@ -457,7 +461,7 @@ class AppModelTest {
 
     @Test
     fun aPinProfileOnALockedDeviceAsksItsPinEvenWithSkipPin() = runBlocking {
-        stored(locked(Json.me(2, Json.account(1, "Helga"), gary)))
+        stored(locked(Json.me(2, Json.account("1", "Helga"), gary)))
         app.restore()
         assertEquals(Phase.ChoosingProfile, app.phase)
         assertEquals("Gary", app.pinFor?.name)
@@ -570,24 +574,30 @@ class AppModelTest {
         assertEquals("Rabbit Ears", app.placeName(app.lastServer))
     }
 
-    private val mom = Json.account(1, "Helga", hasPin = true)
-    private val joan = Json.account(3, "Joan", kind = "kid")
+    private val mom = Json.account("1", "Helga", hasPin = true)
+    private val joan = Json.account("3", "Joan", kind = "kid")
 
     /** A device with Dune downloaded, so a server out of reach browses offline. */
     private fun downloaded(): DownloadStore {
         val downloads = DownloadStore(Files.createTempDirectory("app").toFile())
         val dune =
             DownloadTitle(
-                1,
+                "1",
                 DownloadTitle.Kind.movie,
-                1,
+                "1",
                 available = true,
                 watched = false,
                 positionMs = 0,
                 runtimeMs = 1,
             )
-        downloads.put(1, DownloadTarget(itemId = 1), "Dune", DownloadQuality.original, listOf(dune))
-        downloads.setTitle(1) { it.copy(state = TitleState.OnDevice, file = "1.mp4") }
+        downloads.put(
+            "1",
+            DownloadTarget(itemId = "1"),
+            "Dune",
+            DownloadQuality.original,
+            listOf(dune),
+        )
+        downloads.setTitle("1") { it.copy(state = TitleState.OnDevice, file = "1.mp4") }
         return downloads
     }
 
@@ -604,57 +614,61 @@ class AppModelTest {
     fun aProfileTheHouseholdNoLongerListsLosesItsDownloadsWhenTheOwnersAnswerSaysSo() =
         runBlocking {
             val downloads = downloaded()
-            fun title(id: Long) =
+            fun title(id: String) =
                 DownloadTitle(
                     id,
                     DownloadTitle.Kind.movie,
-                    1,
+                    "1",
                     available = true,
                     watched = false,
                     positionMs = 0,
                     runtimeMs = 1,
                 )
             downloads.put(
-                2,
-                DownloadTarget(itemId = 22),
+                "2",
+                DownloadTarget(itemId = "22"),
                 "B",
                 DownloadQuality.original,
-                listOf(title(22)),
+                listOf(title("22")),
             )
             downloads.put(
-                3,
-                DownloadTarget(itemId = 1),
+                "3",
+                DownloadTarget(itemId = "1"),
                 "Dune",
                 DownloadQuality.original,
-                listOf(title(1)),
+                listOf(title("1")),
             )
             downloads.put(
-                3,
-                DownloadTarget(itemId = 21),
+                "3",
+                DownloadTarget(itemId = "21"),
                 "A",
                 DownloadQuality.original,
-                listOf(title(21)),
+                listOf(title("21")),
             )
-            downloads.setTitle(21) { it.copy(state = TitleState.OnDevice, file = "21.mp4") }
+            downloads.setTitle("21") { it.copy(state = TitleState.OnDevice, file = "21.mp4") }
             val file =
                 downloads.media("21.mp4").apply { parentFile!!.mkdirs() }.apply { writeText("x") }
-            val gary = Json.account(2, "Gary")
+            val gary = Json.account("2", "Gary")
             val app = AppModel(store, "Pixel 9", server.http, downloads)
 
             // Pending adults are listed to the owner alone, so another profile's answer leaves 3
             // be.
-            stored(Json.me(2, Json.account(1, "Helga"), gary))
+            stored(Json.me(2, Json.account("1", "Helga"), gary))
             app.restore()
-            assertEquals(2, downloads.requests(3).size)
+            assertEquals(2, downloads.requests("3").size)
 
-            stored(Json.me(1, Json.account(1, "Helga"), gary))
+            stored(Json.me(1, Json.account("1", "Helga"), gary))
             app.restore()
-            assertTrue(downloads.requests(3).isEmpty())
-            assertNull(downloads.title(21))
+            assertTrue(downloads.requests("3").isEmpty())
+            assertNull(downloads.title("21"))
             eventually { !file.exists() }
-            assertEquals("profile 1 still holds it", TitleState.OnDevice, downloads.title(1)?.state)
-            assertEquals(1, downloads.requests(1).size)
-            assertEquals(1, downloads.requests(2).size)
+            assertEquals(
+                "profile 1 still holds it",
+                TitleState.OnDevice,
+                downloads.title("1")?.state,
+            )
+            assertEquals(1, downloads.requests("1").size)
+            assertEquals(1, downloads.requests("2").size)
         }
 
     @Test
@@ -666,7 +680,7 @@ class AppModelTest {
         app.restore()
         assertEquals("Helga", app.activeProfile?.name)
         app.switchProfile()
-        app.choose(app.profiles.first { it.id == 3L })
+        app.choose(app.profiles.first { it.id == "3" })
 
         val after = relaunchOffline(downloads)
         assertTrue(after.offline)
@@ -723,7 +737,7 @@ class AppModelTest {
         val app = relaunchOffline(downloads)
         assertEquals("Helga", app.activeProfile?.name)
         app.switchProfile()
-        app.choose(app.profiles.first { it.id == 3L })
+        app.choose(app.profiles.first { it.id == "3" })
 
         assertEquals(Phase.ChoosingProfile, relaunchOffline(downloads).phase)
     }
@@ -739,8 +753,8 @@ class AppModelTest {
         assertEquals(true, snapshot(downloads).locked)
 
         server.on("POST /profiles/3/unlock", 204)
-        app.unlock(app.profiles.first { it.id == 3L })
-        assertEquals(3L, snapshot(downloads).activeProfileId)
+        app.unlock(app.profiles.first { it.id == "3" })
+        assertEquals("3", snapshot(downloads).activeProfileId)
         assertEquals(false, snapshot(downloads).locked)
 
         server.on("POST /me/lock", 503)
@@ -748,7 +762,7 @@ class AppModelTest {
         assertFalse(app.locked)
         assertEquals(true, snapshot(downloads).locked)
 
-        app.unlock(app.profiles.first { it.id == 3L })
+        app.unlock(app.profiles.first { it.id == "3" })
         server.error("GET /libraries", 403, "device_locked")
         runCatching { app.signedIn().call { libraries.listLibraries() } }
         assertEquals(true, snapshot(downloads).locked)
@@ -756,7 +770,7 @@ class AppModelTest {
 
     @Test
     fun switchingProfileForgetsThePinPrompt() = runBlocking {
-        stored(Json.me(2, Json.account(1, "Helga"), gary), ProfileMemory(skipPin = false))
+        stored(Json.me(2, Json.account("1", "Helga"), gary), ProfileMemory(skipPin = false))
         app.restore()
         server.on("POST /profiles/2/unlock", 204)
         app.choose(app.pinFor!!, "1234")

@@ -44,23 +44,23 @@ import kotlinx.serialization.Contextual
 data class PlaybackRequest (
 
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "snapshot")
     val snapshot: CapabilitySnapshot,
 
     /* An edition of the item; absent plays the default. The server picks the file. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     @SerialName(value = "audioTrackId")
-    val audioTrackId: kotlin.Long? = null,
+    val audioTrackId: kotlin.String? = null,
 
     @SerialName(value = "subtitleTrackId")
-    val subtitleTrackId: kotlin.Long? = null,
+    val subtitleTrackId: kotlin.String? = null,
 
     /* Absent resumes from watch state. */
     @SerialName(value = "positionMs")
@@ -68,7 +68,7 @@ data class PlaybackRequest (
 
     /* The playlist, the profile's own or shared with it, this item plays from, as a row of its play order; it stamps the playlist's lastPlayedAt for Recently played. */
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long? = null
+    val playlistId: kotlin.String? = null
 
 ) {
 

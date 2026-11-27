@@ -33,7 +33,7 @@ enum class VideoSort(val label: String, val api: YouTubeVideoSort) {
  */
 class YouTubeModel(
     val api: Api,
-    val profileId: Long,
+    val profileId: String,
     private val offline: OfflineLibrary? = null,
 ) {
     var channels by mutableStateOf<List<YouTubeChannel>?>(null)
@@ -94,7 +94,7 @@ class YouTubeModel(
             } ?: channels
     }
 
-    suspend fun channel(id: Long): ChannelDetail? =
+    suspend fun channel(id: String): ChannelDetail? =
         read({ channel(id) }) {
             ChannelDetail(
                 api.call { youtube.getYouTubeChannel(id) },
@@ -112,11 +112,11 @@ class YouTubeModel(
             )
         }
 
-    suspend fun video(id: Long): YouTubeVideo? =
+    suspend fun video(id: String): YouTubeVideo? =
         read({ video(id) }) { api.call { youtube.getYouTubeVideo(id) } }
 
     /** Whether the channel is for kids, any adult's to set; false when it was refused. */
-    suspend fun setForKids(channelId: Long, forKids: Boolean): Boolean =
+    suspend fun setForKids(channelId: String, forKids: Boolean): Boolean =
         read {
             api.call {
                 youtube.setYouTubeChannelForKids(channelId, YouTubeChannelForKidsInput(forKids))
@@ -124,17 +124,17 @@ class YouTubeModel(
         } != null
 
     /** Marks a selection of channels and videos in one request; a channel marks each video. */
-    suspend fun setWatched(ids: List<Long>, watched: Boolean): Boolean =
+    suspend fun setWatched(ids: List<String>, watched: Boolean): Boolean =
         read {
             api.call { profiles.putWatchStates(profileId, WatchStateBatchInput(ids, watched)) }
         } != null
 
     /** Marks a selection of channels for kids, or not, in one request. */
-    suspend fun setForKids(ids: List<Long>, forKids: Boolean): Boolean =
+    suspend fun setForKids(ids: List<String>, forKids: Boolean): Boolean =
         read { api.call { items.setKidsContents(KidsContentBatchInput(ids, forKids)) } } != null
 
     /** Mark all watched, or unwatched, on Channel. */
-    suspend fun setWatched(channelId: Long, watched: Boolean): Boolean =
+    suspend fun setWatched(channelId: String, watched: Boolean): Boolean =
         read {
             api.call {
                 youtube.putYouTubeChannelWatchState(

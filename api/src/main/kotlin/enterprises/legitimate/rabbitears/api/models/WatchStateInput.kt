@@ -46,7 +46,7 @@ data class WatchStateInput (
 
     /* The edition, of this item, positionMs was reached in; absent is the default edition. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     /* When the change happened, as a device that played offline knows it; absent is now, and a time ahead of the server's is taken as now. The change applies only over a state that changed no later, and is lastPlayedAt; otherwise the stored state stays and is the answer. */
     @Contextual @SerialName(value = "at")

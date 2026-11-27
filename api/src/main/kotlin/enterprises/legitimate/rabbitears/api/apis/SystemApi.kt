@@ -52,7 +52,7 @@ open class SystemApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 

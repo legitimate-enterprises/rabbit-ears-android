@@ -56,7 +56,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -147,7 +147,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deletePerson(personId: kotlin.Long) : Unit {
+    fun deletePerson(personId: kotlin.String) : Unit {
         val localVarResponse = deletePersonWithHttpInfo(personId = personId)
 
         return when (localVarResponse.responseType) {
@@ -175,7 +175,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deletePersonWithHttpInfo(personId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deletePersonWithHttpInfo(personId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deletePersonRequestConfig(personId = personId)
 
         return request<Unit, Unit>(
@@ -189,7 +189,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @param personId 
      * @return RequestConfig
      */
-    fun deletePersonRequestConfig(personId: kotlin.Long) : RequestConfig<Unit> {
+    fun deletePersonRequestConfig(personId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -219,7 +219,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getItemCredits(itemId: kotlin.Long) : ItemCredits {
+    fun getItemCredits(itemId: kotlin.String) : ItemCredits {
         val localVarResponse = getItemCreditsWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -248,7 +248,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getItemCreditsWithHttpInfo(itemId: kotlin.Long) : ApiResponse<ItemCredits?> {
+    fun getItemCreditsWithHttpInfo(itemId: kotlin.String) : ApiResponse<ItemCredits?> {
         val localVariableConfig = getItemCreditsRequestConfig(itemId = itemId)
 
         return request<Unit, ItemCredits>(
@@ -262,7 +262,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @param itemId 
      * @return RequestConfig
      */
-    fun getItemCreditsRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun getItemCreditsRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -292,7 +292,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPerson(personId: kotlin.Long) : Person {
+    fun getPerson(personId: kotlin.String) : Person {
         val localVarResponse = getPersonWithHttpInfo(personId = personId)
 
         return when (localVarResponse.responseType) {
@@ -321,7 +321,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPersonWithHttpInfo(personId: kotlin.Long) : ApiResponse<Person?> {
+    fun getPersonWithHttpInfo(personId: kotlin.String) : ApiResponse<Person?> {
         val localVariableConfig = getPersonRequestConfig(personId = personId)
 
         return request<Unit, Person>(
@@ -335,7 +335,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @param personId 
      * @return RequestConfig
      */
-    fun getPersonRequestConfig(personId: kotlin.Long) : RequestConfig<Unit> {
+    fun getPersonRequestConfig(personId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -367,7 +367,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPersonArtwork(personId: kotlin.Long, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
+    fun getPersonArtwork(personId: kotlin.String, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
         val localVarResponse = getPersonArtworkWithHttpInfo(personId = personId, v = v, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
@@ -398,7 +398,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPersonArtworkWithHttpInfo(personId: kotlin.Long, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+    fun getPersonArtworkWithHttpInfo(personId: kotlin.String, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
         val localVariableConfig = getPersonArtworkRequestConfig(personId = personId, v = v, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
@@ -414,7 +414,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getPersonArtworkRequestConfig(personId: kotlin.Long, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    fun getPersonArtworkRequestConfig(personId: kotlin.String, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -541,7 +541,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceItemCredits(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : ItemCredits {
+    fun replaceItemCredits(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : ItemCredits {
         val localVarResponse = replaceItemCreditsWithHttpInfo(itemId = itemId, itemCreditsInput = itemCreditsInput)
 
         return when (localVarResponse.responseType) {
@@ -571,7 +571,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceItemCreditsWithHttpInfo(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : ApiResponse<ItemCredits?> {
+    fun replaceItemCreditsWithHttpInfo(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : ApiResponse<ItemCredits?> {
         val localVariableConfig = replaceItemCreditsRequestConfig(itemId = itemId, itemCreditsInput = itemCreditsInput)
 
         return request<ItemCreditsInput, ItemCredits>(
@@ -586,7 +586,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @param itemCreditsInput 
      * @return RequestConfig
      */
-    fun replaceItemCreditsRequestConfig(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : RequestConfig<ItemCreditsInput> {
+    fun replaceItemCreditsRequestConfig(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : RequestConfig<ItemCreditsInput> {
         val localVariableBody = itemCreditsInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -618,7 +618,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replacePerson(personId: kotlin.Long, personInput: PersonInput) : Person {
+    fun replacePerson(personId: kotlin.String, personInput: PersonInput) : Person {
         val localVarResponse = replacePersonWithHttpInfo(personId = personId, personInput = personInput)
 
         return when (localVarResponse.responseType) {
@@ -648,7 +648,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replacePersonWithHttpInfo(personId: kotlin.Long, personInput: PersonInput) : ApiResponse<Person?> {
+    fun replacePersonWithHttpInfo(personId: kotlin.String, personInput: PersonInput) : ApiResponse<Person?> {
         val localVariableConfig = replacePersonRequestConfig(personId = personId, personInput = personInput)
 
         return request<PersonInput, Person>(
@@ -663,7 +663,7 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * @param personInput 
      * @return RequestConfig
      */
-    fun replacePersonRequestConfig(personId: kotlin.Long, personInput: PersonInput) : RequestConfig<PersonInput> {
+    fun replacePersonRequestConfig(personId: kotlin.String, personInput: PersonInput) : RequestConfig<PersonInput> {
         val localVariableBody = personInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

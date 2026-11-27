@@ -70,14 +70,14 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
     /**
      * POST /profiles/{profileId}/playlists/{playlistId}/entries/batch
      * Add many to a playlist, appended in order.
-     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position is ignored; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be.
+     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position and rank are ignored: the entries take the ranks of generateNKeysBetween after the last entry&#39;s; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be.
      * @param profileId 
      * @param playlistId 
      * @param playlistEntriesInput 
@@ -89,7 +89,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addPlaylistEntries(profileId: kotlin.Long, playlistId: kotlin.Long, playlistEntriesInput: PlaylistEntriesInput) : Unit {
+    fun addPlaylistEntries(profileId: kotlin.String, playlistId: kotlin.String, playlistEntriesInput: PlaylistEntriesInput) : Unit {
         val localVarResponse = addPlaylistEntriesWithHttpInfo(profileId = profileId, playlistId = playlistId, playlistEntriesInput = playlistEntriesInput)
 
         return when (localVarResponse.responseType) {
@@ -110,7 +110,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     /**
      * POST /profiles/{profileId}/playlists/{playlistId}/entries/batch
      * Add many to a playlist, appended in order.
-     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position is ignored; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be.
+     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position and rank are ignored: the entries take the ranks of generateNKeysBetween after the last entry&#39;s; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be.
      * @param profileId 
      * @param playlistId 
      * @param playlistEntriesInput 
@@ -119,7 +119,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun addPlaylistEntriesWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, playlistEntriesInput: PlaylistEntriesInput) : ApiResponse<Unit?> {
+    fun addPlaylistEntriesWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, playlistEntriesInput: PlaylistEntriesInput) : ApiResponse<Unit?> {
         val localVariableConfig = addPlaylistEntriesRequestConfig(profileId = profileId, playlistId = playlistId, playlistEntriesInput = playlistEntriesInput)
 
         return request<PlaylistEntriesInput, Unit>(
@@ -135,7 +135,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistEntriesInput 
      * @return RequestConfig
      */
-    fun addPlaylistEntriesRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, playlistEntriesInput: PlaylistEntriesInput) : RequestConfig<PlaylistEntriesInput> {
+    fun addPlaylistEntriesRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, playlistEntriesInput: PlaylistEntriesInput) : RequestConfig<PlaylistEntriesInput> {
         val localVariableBody = playlistEntriesInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -168,7 +168,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addPlaylistEntry(profileId: kotlin.Long, playlistId: kotlin.Long, playlistEntryInput: PlaylistEntryInput) : PlaylistEntry {
+    fun addPlaylistEntry(profileId: kotlin.String, playlistId: kotlin.String, playlistEntryInput: PlaylistEntryInput) : PlaylistEntry {
         val localVarResponse = addPlaylistEntryWithHttpInfo(profileId = profileId, playlistId = playlistId, playlistEntryInput = playlistEntryInput)
 
         return when (localVarResponse.responseType) {
@@ -199,7 +199,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun addPlaylistEntryWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, playlistEntryInput: PlaylistEntryInput) : ApiResponse<PlaylistEntry?> {
+    fun addPlaylistEntryWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, playlistEntryInput: PlaylistEntryInput) : ApiResponse<PlaylistEntry?> {
         val localVariableConfig = addPlaylistEntryRequestConfig(profileId = profileId, playlistId = playlistId, playlistEntryInput = playlistEntryInput)
 
         return request<PlaylistEntryInput, PlaylistEntry>(
@@ -215,7 +215,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistEntryInput 
      * @return RequestConfig
      */
-    fun addPlaylistEntryRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, playlistEntryInput: PlaylistEntryInput) : RequestConfig<PlaylistEntryInput> {
+    fun addPlaylistEntryRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, playlistEntryInput: PlaylistEntryInput) : RequestConfig<PlaylistEntryInput> {
         val localVariableBody = playlistEntryInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -247,7 +247,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun createPlaylist(profileId: kotlin.Long, playlistInput: PlaylistInput) : Playlist {
+    fun createPlaylist(profileId: kotlin.String, playlistInput: PlaylistInput) : Playlist {
         val localVarResponse = createPlaylistWithHttpInfo(profileId = profileId, playlistInput = playlistInput)
 
         return when (localVarResponse.responseType) {
@@ -277,7 +277,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun createPlaylistWithHttpInfo(profileId: kotlin.Long, playlistInput: PlaylistInput) : ApiResponse<Playlist?> {
+    fun createPlaylistWithHttpInfo(profileId: kotlin.String, playlistInput: PlaylistInput) : ApiResponse<Playlist?> {
         val localVariableConfig = createPlaylistRequestConfig(profileId = profileId, playlistInput = playlistInput)
 
         return request<PlaylistInput, Playlist>(
@@ -292,7 +292,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistInput 
      * @return RequestConfig
      */
-    fun createPlaylistRequestConfig(profileId: kotlin.Long, playlistInput: PlaylistInput) : RequestConfig<PlaylistInput> {
+    fun createPlaylistRequestConfig(profileId: kotlin.String, playlistInput: PlaylistInput) : RequestConfig<PlaylistInput> {
         val localVariableBody = playlistInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -325,7 +325,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun createPlaylistHouseholdShare(profileId: kotlin.Long, playlistId: kotlin.Long, playlistHouseholdShareInput: PlaylistHouseholdShareInput) : PlaylistHouseholdShare {
+    fun createPlaylistHouseholdShare(profileId: kotlin.String, playlistId: kotlin.String, playlistHouseholdShareInput: PlaylistHouseholdShareInput) : PlaylistHouseholdShare {
         val localVarResponse = createPlaylistHouseholdShareWithHttpInfo(profileId = profileId, playlistId = playlistId, playlistHouseholdShareInput = playlistHouseholdShareInput)
 
         return when (localVarResponse.responseType) {
@@ -356,7 +356,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun createPlaylistHouseholdShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, playlistHouseholdShareInput: PlaylistHouseholdShareInput) : ApiResponse<PlaylistHouseholdShare?> {
+    fun createPlaylistHouseholdShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, playlistHouseholdShareInput: PlaylistHouseholdShareInput) : ApiResponse<PlaylistHouseholdShare?> {
         val localVariableConfig = createPlaylistHouseholdShareRequestConfig(profileId = profileId, playlistId = playlistId, playlistHouseholdShareInput = playlistHouseholdShareInput)
 
         return request<PlaylistHouseholdShareInput, PlaylistHouseholdShare>(
@@ -372,7 +372,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistHouseholdShareInput 
      * @return RequestConfig
      */
-    fun createPlaylistHouseholdShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, playlistHouseholdShareInput: PlaylistHouseholdShareInput) : RequestConfig<PlaylistHouseholdShareInput> {
+    fun createPlaylistHouseholdShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, playlistHouseholdShareInput: PlaylistHouseholdShareInput) : RequestConfig<PlaylistHouseholdShareInput> {
         val localVariableBody = playlistHouseholdShareInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -405,7 +405,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun createPlaylistShare(profileId: kotlin.Long, playlistId: kotlin.Long, playlistShareInput: PlaylistShareInput) : PlaylistShare {
+    fun createPlaylistShare(profileId: kotlin.String, playlistId: kotlin.String, playlistShareInput: PlaylistShareInput) : PlaylistShare {
         val localVarResponse = createPlaylistShareWithHttpInfo(profileId = profileId, playlistId = playlistId, playlistShareInput = playlistShareInput)
 
         return when (localVarResponse.responseType) {
@@ -436,7 +436,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun createPlaylistShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, playlistShareInput: PlaylistShareInput) : ApiResponse<PlaylistShare?> {
+    fun createPlaylistShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, playlistShareInput: PlaylistShareInput) : ApiResponse<PlaylistShare?> {
         val localVariableConfig = createPlaylistShareRequestConfig(profileId = profileId, playlistId = playlistId, playlistShareInput = playlistShareInput)
 
         return request<PlaylistShareInput, PlaylistShare>(
@@ -452,7 +452,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistShareInput 
      * @return RequestConfig
      */
-    fun createPlaylistShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, playlistShareInput: PlaylistShareInput) : RequestConfig<PlaylistShareInput> {
+    fun createPlaylistShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, playlistShareInput: PlaylistShareInput) : RequestConfig<PlaylistShareInput> {
         val localVariableBody = playlistShareInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -483,7 +483,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deletePlaylist(profileId: kotlin.Long, playlistId: kotlin.Long) : Unit {
+    fun deletePlaylist(profileId: kotlin.String, playlistId: kotlin.String) : Unit {
         val localVarResponse = deletePlaylistWithHttpInfo(profileId = profileId, playlistId = playlistId)
 
         return when (localVarResponse.responseType) {
@@ -512,7 +512,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deletePlaylistWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deletePlaylistWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deletePlaylistRequestConfig(profileId = profileId, playlistId = playlistId)
 
         return request<Unit, Unit>(
@@ -527,7 +527,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistId 
      * @return RequestConfig
      */
-    fun deletePlaylistRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long) : RequestConfig<Unit> {
+    fun deletePlaylistRequestConfig(profileId: kotlin.String, playlistId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -558,7 +558,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deletePlaylistHouseholdShare(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long) : Unit {
+    fun deletePlaylistHouseholdShare(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String) : Unit {
         val localVarResponse = deletePlaylistHouseholdShareWithHttpInfo(profileId = profileId, playlistId = playlistId, householdId = householdId)
 
         return when (localVarResponse.responseType) {
@@ -588,7 +588,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deletePlaylistHouseholdShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deletePlaylistHouseholdShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deletePlaylistHouseholdShareRequestConfig(profileId = profileId, playlistId = playlistId, householdId = householdId)
 
         return request<Unit, Unit>(
@@ -604,7 +604,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param householdId The household the playlist is shared with.
      * @return RequestConfig
      */
-    fun deletePlaylistHouseholdShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long) : RequestConfig<Unit> {
+    fun deletePlaylistHouseholdShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -634,7 +634,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deletePlaylistImage(profileId: kotlin.Long, playlistId: kotlin.Long) : Unit {
+    fun deletePlaylistImage(profileId: kotlin.String, playlistId: kotlin.String) : Unit {
         val localVarResponse = deletePlaylistImageWithHttpInfo(profileId = profileId, playlistId = playlistId)
 
         return when (localVarResponse.responseType) {
@@ -663,7 +663,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deletePlaylistImageWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deletePlaylistImageWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deletePlaylistImageRequestConfig(profileId = profileId, playlistId = playlistId)
 
         return request<Unit, Unit>(
@@ -678,7 +678,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistId 
      * @return RequestConfig
      */
-    fun deletePlaylistImageRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long) : RequestConfig<Unit> {
+    fun deletePlaylistImageRequestConfig(profileId: kotlin.String, playlistId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -709,7 +709,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deletePlaylistShare(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long) : Unit {
+    fun deletePlaylistShare(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String) : Unit {
         val localVarResponse = deletePlaylistShareWithHttpInfo(profileId = profileId, playlistId = playlistId, shareProfileId = shareProfileId)
 
         return when (localVarResponse.responseType) {
@@ -739,7 +739,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deletePlaylistShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deletePlaylistShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deletePlaylistShareRequestConfig(profileId = profileId, playlistId = playlistId, shareProfileId = shareProfileId)
 
         return request<Unit, Unit>(
@@ -755,7 +755,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param shareProfileId The profile the playlist is shared with.
      * @return RequestConfig
      */
-    fun deletePlaylistShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long) : RequestConfig<Unit> {
+    fun deletePlaylistShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -786,7 +786,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPlaylist(profileId: kotlin.Long, playlistId: kotlin.Long) : Playlist {
+    fun getPlaylist(profileId: kotlin.String, playlistId: kotlin.String) : Playlist {
         val localVarResponse = getPlaylistWithHttpInfo(profileId = profileId, playlistId = playlistId)
 
         return when (localVarResponse.responseType) {
@@ -816,7 +816,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPlaylistWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long) : ApiResponse<Playlist?> {
+    fun getPlaylistWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String) : ApiResponse<Playlist?> {
         val localVariableConfig = getPlaylistRequestConfig(profileId = profileId, playlistId = playlistId)
 
         return request<Unit, Playlist>(
@@ -831,7 +831,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistId 
      * @return RequestConfig
      */
-    fun getPlaylistRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long) : RequestConfig<Unit> {
+    fun getPlaylistRequestConfig(profileId: kotlin.String, playlistId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -863,7 +863,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPlaylistEntry(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long) : PlaylistEntry {
+    fun getPlaylistEntry(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String) : PlaylistEntry {
         val localVarResponse = getPlaylistEntryWithHttpInfo(profileId = profileId, playlistId = playlistId, entryId = entryId)
 
         return when (localVarResponse.responseType) {
@@ -894,7 +894,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPlaylistEntryWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long) : ApiResponse<PlaylistEntry?> {
+    fun getPlaylistEntryWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String) : ApiResponse<PlaylistEntry?> {
         val localVariableConfig = getPlaylistEntryRequestConfig(profileId = profileId, playlistId = playlistId, entryId = entryId)
 
         return request<Unit, PlaylistEntry>(
@@ -910,7 +910,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param entryId 
      * @return RequestConfig
      */
-    fun getPlaylistEntryRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long) : RequestConfig<Unit> {
+    fun getPlaylistEntryRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -942,7 +942,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPlaylistHouseholdShare(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long) : PlaylistHouseholdShare {
+    fun getPlaylistHouseholdShare(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String) : PlaylistHouseholdShare {
         val localVarResponse = getPlaylistHouseholdShareWithHttpInfo(profileId = profileId, playlistId = playlistId, householdId = householdId)
 
         return when (localVarResponse.responseType) {
@@ -973,7 +973,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPlaylistHouseholdShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long) : ApiResponse<PlaylistHouseholdShare?> {
+    fun getPlaylistHouseholdShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String) : ApiResponse<PlaylistHouseholdShare?> {
         val localVariableConfig = getPlaylistHouseholdShareRequestConfig(profileId = profileId, playlistId = playlistId, householdId = householdId)
 
         return request<Unit, PlaylistHouseholdShare>(
@@ -989,7 +989,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param householdId The household the playlist is shared with.
      * @return RequestConfig
      */
-    fun getPlaylistHouseholdShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long) : RequestConfig<Unit> {
+    fun getPlaylistHouseholdShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1011,7 +1011,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * Anyone the playlist is shown to. Not found while it has none, and, for a title&#39;s artwork, while that title is not one of the playlist&#39;s entries or the active profile may not see it.
      * @param profileId 
      * @param playlistId 
-     * @param v Read by nothing; imageUrl carries it so that a new image has a new address. (optional)
+     * @param v Read by nothing; imageUrl carries it, the image&#39;s id, so that a new image has a new address. (optional)
      * @param ifNoneMatch  (optional)
      * @return java.io.File
      * @throws IllegalStateException If the request is not correctly configured
@@ -1022,7 +1022,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPlaylistImage(profileId: kotlin.Long, playlistId: kotlin.Long, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
+    fun getPlaylistImage(profileId: kotlin.String, playlistId: kotlin.String, v: kotlin.String? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
         val localVarResponse = getPlaylistImageWithHttpInfo(profileId = profileId, playlistId = playlistId, v = v, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
@@ -1046,7 +1046,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * Anyone the playlist is shown to. Not found while it has none, and, for a title&#39;s artwork, while that title is not one of the playlist&#39;s entries or the active profile may not see it.
      * @param profileId 
      * @param playlistId 
-     * @param v Read by nothing; imageUrl carries it so that a new image has a new address. (optional)
+     * @param v Read by nothing; imageUrl carries it, the image&#39;s id, so that a new image has a new address. (optional)
      * @param ifNoneMatch  (optional)
      * @return ApiResponse<java.io.File?>
      * @throws IllegalStateException If the request is not correctly configured
@@ -1054,7 +1054,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPlaylistImageWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+    fun getPlaylistImageWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, v: kotlin.String?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
         val localVariableConfig = getPlaylistImageRequestConfig(profileId = profileId, playlistId = playlistId, v = v, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
@@ -1067,11 +1067,11 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      *
      * @param profileId 
      * @param playlistId 
-     * @param v Read by nothing; imageUrl carries it so that a new image has a new address. (optional)
+     * @param v Read by nothing; imageUrl carries it, the image&#39;s id, so that a new image has a new address. (optional)
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getPlaylistImageRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    fun getPlaylistImageRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, v: kotlin.String?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1109,7 +1109,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPlaylistShare(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long) : PlaylistShare {
+    fun getPlaylistShare(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String) : PlaylistShare {
         val localVarResponse = getPlaylistShareWithHttpInfo(profileId = profileId, playlistId = playlistId, shareProfileId = shareProfileId)
 
         return when (localVarResponse.responseType) {
@@ -1140,7 +1140,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPlaylistShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long) : ApiResponse<PlaylistShare?> {
+    fun getPlaylistShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String) : ApiResponse<PlaylistShare?> {
         val localVariableConfig = getPlaylistShareRequestConfig(profileId = profileId, playlistId = playlistId, shareProfileId = shareProfileId)
 
         return request<Unit, PlaylistShare>(
@@ -1156,7 +1156,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param shareProfileId The profile the playlist is shared with.
      * @return RequestConfig
      */
-    fun getPlaylistShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long) : RequestConfig<Unit> {
+    fun getPlaylistShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1189,7 +1189,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listPlaylistEntries(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistEntryPage {
+    fun listPlaylistEntries(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistEntryPage {
         val localVarResponse = listPlaylistEntriesWithHttpInfo(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1221,7 +1221,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listPlaylistEntriesWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistEntryPage?> {
+    fun listPlaylistEntriesWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistEntryPage?> {
         val localVariableConfig = listPlaylistEntriesRequestConfig(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return request<Unit, PlaylistEntryPage>(
@@ -1238,7 +1238,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listPlaylistEntriesRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listPlaylistEntriesRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1279,7 +1279,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listPlaylistHouseholdShares(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistHouseholdSharePage {
+    fun listPlaylistHouseholdShares(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistHouseholdSharePage {
         val localVarResponse = listPlaylistHouseholdSharesWithHttpInfo(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1311,7 +1311,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listPlaylistHouseholdSharesWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistHouseholdSharePage?> {
+    fun listPlaylistHouseholdSharesWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistHouseholdSharePage?> {
         val localVariableConfig = listPlaylistHouseholdSharesRequestConfig(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return request<Unit, PlaylistHouseholdSharePage>(
@@ -1328,7 +1328,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listPlaylistHouseholdSharesRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listPlaylistHouseholdSharesRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1369,7 +1369,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listPlaylistPlayOrder(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistPlayOrderPage {
+    fun listPlaylistPlayOrder(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistPlayOrderPage {
         val localVarResponse = listPlaylistPlayOrderWithHttpInfo(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1401,7 +1401,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listPlaylistPlayOrderWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistPlayOrderPage?> {
+    fun listPlaylistPlayOrderWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistPlayOrderPage?> {
         val localVariableConfig = listPlaylistPlayOrderRequestConfig(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return request<Unit, PlaylistPlayOrderPage>(
@@ -1418,7 +1418,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listPlaylistPlayOrderRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listPlaylistPlayOrderRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1459,7 +1459,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listPlaylistShares(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistSharePage {
+    fun listPlaylistShares(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistSharePage {
         val localVarResponse = listPlaylistSharesWithHttpInfo(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1491,7 +1491,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listPlaylistSharesWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistSharePage?> {
+    fun listPlaylistSharesWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistSharePage?> {
         val localVariableConfig = listPlaylistSharesRequestConfig(profileId = profileId, playlistId = playlistId, limit = limit, offset = offset)
 
         return request<Unit, PlaylistSharePage>(
@@ -1508,7 +1508,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listPlaylistSharesRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listPlaylistSharesRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1549,7 +1549,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listPlaylists(profileId: kotlin.Long, kind: PlaylistKind? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistPage {
+    fun listPlaylists(profileId: kotlin.String, kind: PlaylistKind? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaylistPage {
         val localVarResponse = listPlaylistsWithHttpInfo(profileId = profileId, kind = kind, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1581,7 +1581,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listPlaylistsWithHttpInfo(profileId: kotlin.Long, kind: PlaylistKind?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistPage?> {
+    fun listPlaylistsWithHttpInfo(profileId: kotlin.String, kind: PlaylistKind?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaylistPage?> {
         val localVariableConfig = listPlaylistsRequestConfig(profileId = profileId, kind = kind, limit = limit, offset = offset)
 
         return request<Unit, PlaylistPage>(
@@ -1598,7 +1598,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listPlaylistsRequestConfig(profileId: kotlin.Long, kind: PlaylistKind?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listPlaylistsRequestConfig(profileId: kotlin.String, kind: PlaylistKind?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1641,7 +1641,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listShareCandidates(profileId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ShareCandidatePage {
+    fun listShareCandidates(profileId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ShareCandidatePage {
         val localVarResponse = listShareCandidatesWithHttpInfo(profileId = profileId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1672,7 +1672,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listShareCandidatesWithHttpInfo(profileId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ShareCandidatePage?> {
+    fun listShareCandidatesWithHttpInfo(profileId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ShareCandidatePage?> {
         val localVariableConfig = listShareCandidatesRequestConfig(profileId = profileId, limit = limit, offset = offset)
 
         return request<Unit, ShareCandidatePage>(
@@ -1688,7 +1688,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listShareCandidatesRequestConfig(profileId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listShareCandidatesRequestConfig(profileId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1726,7 +1726,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listShareHouseholds(profileId: kotlin.Long) : ShareHouseholdList {
+    fun listShareHouseholds(profileId: kotlin.String) : ShareHouseholdList {
         val localVarResponse = listShareHouseholdsWithHttpInfo(profileId = profileId)
 
         return when (localVarResponse.responseType) {
@@ -1755,7 +1755,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listShareHouseholdsWithHttpInfo(profileId: kotlin.Long) : ApiResponse<ShareHouseholdList?> {
+    fun listShareHouseholdsWithHttpInfo(profileId: kotlin.String) : ApiResponse<ShareHouseholdList?> {
         val localVariableConfig = listShareHouseholdsRequestConfig(profileId = profileId)
 
         return request<Unit, ShareHouseholdList>(
@@ -1769,7 +1769,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param profileId 
      * @return RequestConfig
      */
-    fun listShareHouseholdsRequestConfig(profileId: kotlin.Long) : RequestConfig<Unit> {
+    fun listShareHouseholdsRequestConfig(profileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1800,7 +1800,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun removePlaylistEntry(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long) : Unit {
+    fun removePlaylistEntry(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String) : Unit {
         val localVarResponse = removePlaylistEntryWithHttpInfo(profileId = profileId, playlistId = playlistId, entryId = entryId)
 
         return when (localVarResponse.responseType) {
@@ -1830,7 +1830,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun removePlaylistEntryWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long) : ApiResponse<Unit?> {
+    fun removePlaylistEntryWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = removePlaylistEntryRequestConfig(profileId = profileId, playlistId = playlistId, entryId = entryId)
 
         return request<Unit, Unit>(
@@ -1846,7 +1846,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param entryId 
      * @return RequestConfig
      */
-    fun removePlaylistEntryRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long) : RequestConfig<Unit> {
+    fun removePlaylistEntryRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1878,7 +1878,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replacePlaylist(profileId: kotlin.Long, playlistId: kotlin.Long, playlistInput: PlaylistInput) : Playlist {
+    fun replacePlaylist(profileId: kotlin.String, playlistId: kotlin.String, playlistInput: PlaylistInput) : Playlist {
         val localVarResponse = replacePlaylistWithHttpInfo(profileId = profileId, playlistId = playlistId, playlistInput = playlistInput)
 
         return when (localVarResponse.responseType) {
@@ -1909,7 +1909,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replacePlaylistWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, playlistInput: PlaylistInput) : ApiResponse<Playlist?> {
+    fun replacePlaylistWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, playlistInput: PlaylistInput) : ApiResponse<Playlist?> {
         val localVariableConfig = replacePlaylistRequestConfig(profileId = profileId, playlistId = playlistId, playlistInput = playlistInput)
 
         return request<PlaylistInput, Playlist>(
@@ -1925,7 +1925,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistInput 
      * @return RequestConfig
      */
-    fun replacePlaylistRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, playlistInput: PlaylistInput) : RequestConfig<PlaylistInput> {
+    fun replacePlaylistRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, playlistInput: PlaylistInput) : RequestConfig<PlaylistInput> {
         val localVariableBody = playlistInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1959,7 +1959,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replacePlaylistEntry(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long, playlistEntryInput: PlaylistEntryInput) : PlaylistEntry {
+    fun replacePlaylistEntry(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String, playlistEntryInput: PlaylistEntryInput) : PlaylistEntry {
         val localVarResponse = replacePlaylistEntryWithHttpInfo(profileId = profileId, playlistId = playlistId, entryId = entryId, playlistEntryInput = playlistEntryInput)
 
         return when (localVarResponse.responseType) {
@@ -1991,7 +1991,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replacePlaylistEntryWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long, playlistEntryInput: PlaylistEntryInput) : ApiResponse<PlaylistEntry?> {
+    fun replacePlaylistEntryWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String, playlistEntryInput: PlaylistEntryInput) : ApiResponse<PlaylistEntry?> {
         val localVariableConfig = replacePlaylistEntryRequestConfig(profileId = profileId, playlistId = playlistId, entryId = entryId, playlistEntryInput = playlistEntryInput)
 
         return request<PlaylistEntryInput, PlaylistEntry>(
@@ -2008,7 +2008,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistEntryInput 
      * @return RequestConfig
      */
-    fun replacePlaylistEntryRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, entryId: kotlin.Long, playlistEntryInput: PlaylistEntryInput) : RequestConfig<PlaylistEntryInput> {
+    fun replacePlaylistEntryRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, entryId: kotlin.String, playlistEntryInput: PlaylistEntryInput) : RequestConfig<PlaylistEntryInput> {
         val localVariableBody = playlistEntryInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2042,7 +2042,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replacePlaylistHouseholdShare(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long, playlistShareChange: PlaylistShareChange) : PlaylistHouseholdShare {
+    fun replacePlaylistHouseholdShare(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String, playlistShareChange: PlaylistShareChange) : PlaylistHouseholdShare {
         val localVarResponse = replacePlaylistHouseholdShareWithHttpInfo(profileId = profileId, playlistId = playlistId, householdId = householdId, playlistShareChange = playlistShareChange)
 
         return when (localVarResponse.responseType) {
@@ -2074,7 +2074,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replacePlaylistHouseholdShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long, playlistShareChange: PlaylistShareChange) : ApiResponse<PlaylistHouseholdShare?> {
+    fun replacePlaylistHouseholdShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String, playlistShareChange: PlaylistShareChange) : ApiResponse<PlaylistHouseholdShare?> {
         val localVariableConfig = replacePlaylistHouseholdShareRequestConfig(profileId = profileId, playlistId = playlistId, householdId = householdId, playlistShareChange = playlistShareChange)
 
         return request<PlaylistShareChange, PlaylistHouseholdShare>(
@@ -2091,7 +2091,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistShareChange 
      * @return RequestConfig
      */
-    fun replacePlaylistHouseholdShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, householdId: kotlin.Long, playlistShareChange: PlaylistShareChange) : RequestConfig<PlaylistShareChange> {
+    fun replacePlaylistHouseholdShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, householdId: kotlin.String, playlistShareChange: PlaylistShareChange) : RequestConfig<PlaylistShareChange> {
         val localVariableBody = playlistShareChange
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2124,7 +2124,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replacePlaylistImage(profileId: kotlin.Long, playlistId: kotlin.Long, body: java.io.File) : Playlist {
+    fun replacePlaylistImage(profileId: kotlin.String, playlistId: kotlin.String, body: java.io.File) : Playlist {
         val localVarResponse = replacePlaylistImageWithHttpInfo(profileId = profileId, playlistId = playlistId, body = body)
 
         return when (localVarResponse.responseType) {
@@ -2155,7 +2155,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replacePlaylistImageWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, body: java.io.File) : ApiResponse<Playlist?> {
+    fun replacePlaylistImageWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, body: java.io.File) : ApiResponse<Playlist?> {
         val localVariableConfig = replacePlaylistImageRequestConfig(profileId = profileId, playlistId = playlistId, body = body)
 
         return request<java.io.File, Playlist>(
@@ -2171,7 +2171,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param body 
      * @return RequestConfig
      */
-    fun replacePlaylistImageRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, body: java.io.File) : RequestConfig<java.io.File> {
+    fun replacePlaylistImageRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, body: java.io.File) : RequestConfig<java.io.File> {
         val localVariableBody = body
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2205,7 +2205,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replacePlaylistShare(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long, playlistShareChange: PlaylistShareChange) : PlaylistShare {
+    fun replacePlaylistShare(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String, playlistShareChange: PlaylistShareChange) : PlaylistShare {
         val localVarResponse = replacePlaylistShareWithHttpInfo(profileId = profileId, playlistId = playlistId, shareProfileId = shareProfileId, playlistShareChange = playlistShareChange)
 
         return when (localVarResponse.responseType) {
@@ -2237,7 +2237,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replacePlaylistShareWithHttpInfo(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long, playlistShareChange: PlaylistShareChange) : ApiResponse<PlaylistShare?> {
+    fun replacePlaylistShareWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String, playlistShareChange: PlaylistShareChange) : ApiResponse<PlaylistShare?> {
         val localVariableConfig = replacePlaylistShareRequestConfig(profileId = profileId, playlistId = playlistId, shareProfileId = shareProfileId, playlistShareChange = playlistShareChange)
 
         return request<PlaylistShareChange, PlaylistShare>(
@@ -2254,7 +2254,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param playlistShareChange 
      * @return RequestConfig
      */
-    fun replacePlaylistShareRequestConfig(profileId: kotlin.Long, playlistId: kotlin.Long, shareProfileId: kotlin.Long, playlistShareChange: PlaylistShareChange) : RequestConfig<PlaylistShareChange> {
+    fun replacePlaylistShareRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, shareProfileId: kotlin.String, playlistShareChange: PlaylistShareChange) : RequestConfig<PlaylistShareChange> {
         val localVariableBody = playlistShareChange
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

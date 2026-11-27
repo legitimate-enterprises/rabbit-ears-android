@@ -41,7 +41,7 @@ suspend fun <T> pages(fetch: suspend (offset: Int?) -> Pair<List<T>, Int?>): Lis
 /** Loads the active profile's movies and TV and writes its watch state. */
 class CatalogModel(
     val api: Api,
-    val profileId: Long,
+    val profileId: String,
     /** What is downloaded, shown in place of the server's catalog when it can't be reached. */
     val offline: OfflineLibrary? = null,
     hideKidsContent: Boolean = false,
@@ -227,7 +227,7 @@ class CatalogModel(
      * Takes the server's watch state after play, since the server decides when a position counts as
      * watched.
      */
-    suspend fun refreshWatchState(id: Long) {
+    suspend fun refreshWatchState(id: String) {
         val local = offline?.watchState(id)
         runCatching {
             offline?.or({ local ?: throw IOException() }) {
@@ -253,13 +253,13 @@ class CatalogModel(
             .forEach { refreshWatchState(it) }
     }
 
-    suspend fun credits(id: Long): ItemCredits? = runCatching {
+    suspend fun credits(id: String): ItemCredits? = runCatching {
         api.call { people.getItemCredits(id) }
     }
         .getOrNull()
 
     /** The person and every movie and show crediting them; null when either read fails. */
-    suspend fun person(id: Long): Pair<Person, List<Item>>? = runCatching {
+    suspend fun person(id: String): Pair<Person, List<Item>>? = runCatching {
         coroutineScope {
             val person = async { api.call { people.getPerson(id) } }
             val titles = pages { offset ->
@@ -272,7 +272,7 @@ class CatalogModel(
         .getOrNull()
 
     /** A title's related movies and its neighbors in play order; null when the read fails. */
-    suspend fun related(id: Long): ItemRelated? = runCatching {
+    suspend fun related(id: String): ItemRelated? = runCatching {
         api.call { items.getItemRelated(id) }
     }
         .getOrNull()
@@ -281,7 +281,7 @@ class CatalogModel(
      * The tracks of [fileId], else of the item's first media file, for the details lines; null when
      * there is none.
      */
-    suspend fun media(id: Long, fileId: Long? = null): MediaSummary? = runCatching {
+    suspend fun media(id: String, fileId: String? = null): MediaSummary? = runCatching {
         if (fileId != null) MediaSummary(api.call { media.getMediaFile(fileId) })
         else
             api.call { media.listMediaFiles(id, limit = 1) }
@@ -295,7 +295,7 @@ class CatalogModel(
      * How play would go on this device now, from the snapshot the player sends; null when it cannot
      * tell.
      */
-    suspend fun verdict(id: Long, facts: DeviceFacts): Verdict? = runCatching {
+    suspend fun verdict(id: String, facts: DeviceFacts): Verdict? = runCatching {
         val snapshot = Snapshot.snapshot(facts, api.endpoint, QualityChoice.Auto)
         api.call { playback.checkPlayability(id, snapshot) }.verdict
     }
@@ -329,7 +329,7 @@ class CatalogModel(
     }
 
     /** Drops the override, so the rating decides again. */
-    suspend fun useRating(id: Long) {
+    suspend fun useRating(id: String) {
         try {
             api.call { items.clearKidsContent(id) }
             catalog = catalog.with(api.call { items.getItem(id) })
@@ -339,7 +339,7 @@ class CatalogModel(
     }
 
     /** With no server, a downloaded title's change is kept for the next sync. */
-    private suspend fun write(id: Long, input: WatchStateInput): Unit? =
+    private suspend fun write(id: String, input: WatchStateInput): Unit? =
         try {
             val put = suspend { api.call { profiles.putWatchState(profileId, id, input) } }
             catalog =

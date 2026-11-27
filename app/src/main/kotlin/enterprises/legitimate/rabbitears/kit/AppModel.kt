@@ -467,7 +467,7 @@ class AppModel(
         activeProfile = activeProfile?.let { active -> known(active.id) ?: active }
     }
 
-    private fun known(id: Long): Account? = me?.let { me ->
+    private fun known(id: String): Account? = me?.let { me ->
         me.profiles.firstOrNull { it.id == id } ?: me.account.takeIf { it.id == id }
     }
 

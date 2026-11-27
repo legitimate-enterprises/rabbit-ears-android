@@ -45,7 +45,7 @@ import kotlinx.serialization.encoding.Encoder
 data class CustomImageInput (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long? = null,
+    val itemId: kotlin.String? = null,
 
     /* With itemId, which of its artwork; poster when absent. */
     @Contextual @SerialName(value = "kind")

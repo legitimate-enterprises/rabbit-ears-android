@@ -64,11 +64,11 @@ class AddKidFormTest {
         val app = AppModel(MemoryCredentialStore(), "Pixel", server.http)
         server.on("POST /auth/sign-in", 201, """{"token":"t","me":${Json.me()}}""")
         app.signIn("192.168.1.20", "a@example.com", "pw")
-        server.on("POST /profiles", 201, Json.account(5, "Joan", kind = "kid"))
+        server.on("POST /profiles", 201, Json.account("5", "Joan", kind = "kid"))
         server.on("PUT /profiles/5/pin", 204)
         server.on(
             "GET /me",
-            body = Json.me(1, Json.account(1, "Helga"), Json.account(5, "Joan", kind = "kid")),
+            body = Json.me(1, Json.account("1", "Helga"), Json.account("5", "Joan", kind = "kid")),
         )
         val form =
             AddKidForm(today).apply {

@@ -32,12 +32,14 @@ import kotlinx.serialization.Contextual
 
 /**
  * @param id
- * @param itemId The first item it belongs to; a file holding several episodes belongs to each. listMediaFiles lists it under every one.
  * @param path The base name unless the caller is an admin.
  * @param sizeBytes
- * @param modifiedAt
+ * @param fileModifiedAt The file's modification time on disk.
  * @param tracks Written by the prober; read-only here.
  * @param chapters
+ * @param createdAt
+ * @param modifiedAt
+ * @param itemId The first item it belongs to; a file holding several episodes belongs to each. listMediaFiles lists it under every one. Absent for a file of no item.
  * @param container
  * @param durationMs
  * @param bitrate Bits per second.
@@ -53,11 +55,7 @@ import kotlinx.serialization.Contextual
 data class MediaFile (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
-
-    /* The first item it belongs to; a file holding several episodes belongs to each. listMediaFiles lists it under every one. */
-    @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val id: kotlin.String,
 
     /* The base name unless the caller is an admin. */
     @SerialName(value = "path")
@@ -66,8 +64,9 @@ data class MediaFile (
     @SerialName(value = "sizeBytes")
     val sizeBytes: kotlin.Long,
 
-    @Contextual @SerialName(value = "modifiedAt")
-    val modifiedAt: java.time.OffsetDateTime,
+    /* The file's modification time on disk. */
+    @Contextual @SerialName(value = "fileModifiedAt")
+    val fileModifiedAt: java.time.OffsetDateTime,
 
     /* Written by the prober; read-only here. */
     @SerialName(value = "tracks")
@@ -75,6 +74,16 @@ data class MediaFile (
 
     @SerialName(value = "chapters")
     val chapters: kotlin.collections.List<Chapter>,
+
+    @Contextual @SerialName(value = "createdAt")
+    val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
+
+    /* The first item it belongs to; a file holding several episodes belongs to each. listMediaFiles lists it under every one. Absent for a file of no item. */
+    @SerialName(value = "itemId")
+    val itemId: kotlin.String? = null,
 
     @SerialName(value = "container")
     val container: kotlin.String? = null,
@@ -103,7 +112,7 @@ data class MediaFile (
 
     /* On listMediaFiles by problem only, the library of the first item it belongs to. */
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long? = null,
+    val libraryId: kotlin.String? = null,
 
     /* On listMediaFiles by problem only, the shown title of the first item it belongs to. */
     @SerialName(value = "title")

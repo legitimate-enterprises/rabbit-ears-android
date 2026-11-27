@@ -38,16 +38,17 @@ import kotlinx.serialization.Contextual
  * @param width
  * @param height
  * @param createdAt
+ * @param modifiedAt
  */
 @Serializable
 
 data class SeekPreview (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "mediaFileId")
-    val mediaFileId: kotlin.Long,
+    val mediaFileId: kotlin.String,
 
     /* Milliseconds between frames. */
     @SerialName(value = "intervalMs")
@@ -64,7 +65,10 @@ data class SeekPreview (
     val height: kotlin.Int,
 
     @Contextual @SerialName(value = "createdAt")
-    val createdAt: java.time.OffsetDateTime
+    val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime
 
 ) {
 

@@ -49,11 +49,11 @@ import kotlinx.serialization.encoding.Encoder
 data class PlaylistShare (
 
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long,
+    val playlistId: kotlin.String,
 
     /* The profile it is shared with. */
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     /* That profile's name. */
     @SerialName(value = "name")
@@ -74,7 +74,7 @@ data class PlaylistShare (
 
     /* The household to label the profile with: the first of the owner's households, their own first, that the profile is in; else the profile's own household. Always sent. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long? = null
+    val householdId: kotlin.String? = null
 
 ) {
 

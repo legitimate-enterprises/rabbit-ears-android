@@ -60,7 +60,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -79,7 +79,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun createDownload(profileId: kotlin.Long, downloadInput: DownloadInput) : Download {
+    fun createDownload(profileId: kotlin.String, downloadInput: DownloadInput) : Download {
         val localVarResponse = createDownloadWithHttpInfo(profileId = profileId, downloadInput = downloadInput)
 
         return when (localVarResponse.responseType) {
@@ -109,7 +109,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun createDownloadWithHttpInfo(profileId: kotlin.Long, downloadInput: DownloadInput) : ApiResponse<Download?> {
+    fun createDownloadWithHttpInfo(profileId: kotlin.String, downloadInput: DownloadInput) : ApiResponse<Download?> {
         val localVariableConfig = createDownloadRequestConfig(profileId = profileId, downloadInput = downloadInput)
 
         return request<DownloadInput, Download>(
@@ -124,7 +124,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param downloadInput 
      * @return RequestConfig
      */
-    fun createDownloadRequestConfig(profileId: kotlin.Long, downloadInput: DownloadInput) : RequestConfig<DownloadInput> {
+    fun createDownloadRequestConfig(profileId: kotlin.String, downloadInput: DownloadInput) : RequestConfig<DownloadInput> {
         val localVariableBody = downloadInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -156,7 +156,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun createDownloads(profileId: kotlin.Long, downloadBatchInput: DownloadBatchInput) : DownloadBatch {
+    fun createDownloads(profileId: kotlin.String, downloadBatchInput: DownloadBatchInput) : DownloadBatch {
         val localVarResponse = createDownloadsWithHttpInfo(profileId = profileId, downloadBatchInput = downloadBatchInput)
 
         return when (localVarResponse.responseType) {
@@ -186,7 +186,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun createDownloadsWithHttpInfo(profileId: kotlin.Long, downloadBatchInput: DownloadBatchInput) : ApiResponse<DownloadBatch?> {
+    fun createDownloadsWithHttpInfo(profileId: kotlin.String, downloadBatchInput: DownloadBatchInput) : ApiResponse<DownloadBatch?> {
         val localVariableConfig = createDownloadsRequestConfig(profileId = profileId, downloadBatchInput = downloadBatchInput)
 
         return request<DownloadBatchInput, DownloadBatch>(
@@ -201,7 +201,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param downloadBatchInput 
      * @return RequestConfig
      */
-    fun createDownloadsRequestConfig(profileId: kotlin.Long, downloadBatchInput: DownloadBatchInput) : RequestConfig<DownloadBatchInput> {
+    fun createDownloadsRequestConfig(profileId: kotlin.String, downloadBatchInput: DownloadBatchInput) : RequestConfig<DownloadBatchInput> {
         val localVariableBody = downloadBatchInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -232,7 +232,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteDownload(profileId: kotlin.Long, downloadId: kotlin.Long) : Unit {
+    fun deleteDownload(profileId: kotlin.String, downloadId: kotlin.String) : Unit {
         val localVarResponse = deleteDownloadWithHttpInfo(profileId = profileId, downloadId = downloadId)
 
         return when (localVarResponse.responseType) {
@@ -261,7 +261,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteDownloadWithHttpInfo(profileId: kotlin.Long, downloadId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteDownloadWithHttpInfo(profileId: kotlin.String, downloadId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteDownloadRequestConfig(profileId = profileId, downloadId = downloadId)
 
         return request<Unit, Unit>(
@@ -276,7 +276,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param downloadId 
      * @return RequestConfig
      */
-    fun deleteDownloadRequestConfig(profileId: kotlin.Long, downloadId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteDownloadRequestConfig(profileId: kotlin.String, downloadId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -307,7 +307,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getDownload(profileId: kotlin.Long, downloadId: kotlin.Long) : Download {
+    fun getDownload(profileId: kotlin.String, downloadId: kotlin.String) : Download {
         val localVarResponse = getDownloadWithHttpInfo(profileId = profileId, downloadId = downloadId)
 
         return when (localVarResponse.responseType) {
@@ -337,7 +337,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getDownloadWithHttpInfo(profileId: kotlin.Long, downloadId: kotlin.Long) : ApiResponse<Download?> {
+    fun getDownloadWithHttpInfo(profileId: kotlin.String, downloadId: kotlin.String) : ApiResponse<Download?> {
         val localVariableConfig = getDownloadRequestConfig(profileId = profileId, downloadId = downloadId)
 
         return request<Unit, Download>(
@@ -352,7 +352,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param downloadId 
      * @return RequestConfig
      */
-    fun getDownloadRequestConfig(profileId: kotlin.Long, downloadId: kotlin.Long) : RequestConfig<Unit> {
+    fun getDownloadRequestConfig(profileId: kotlin.String, downloadId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -384,7 +384,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listDownloads(profileId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : DownloadPage {
+    fun listDownloads(profileId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : DownloadPage {
         val localVarResponse = listDownloadsWithHttpInfo(profileId = profileId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -415,7 +415,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listDownloadsWithHttpInfo(profileId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<DownloadPage?> {
+    fun listDownloadsWithHttpInfo(profileId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<DownloadPage?> {
         val localVariableConfig = listDownloadsRequestConfig(profileId = profileId, limit = limit, offset = offset)
 
         return request<Unit, DownloadPage>(
@@ -431,7 +431,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listDownloadsRequestConfig(profileId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listDownloadsRequestConfig(profileId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -470,7 +470,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun resolveDownloads(profileId: kotlin.Long, downloadResolveInput: DownloadResolveInput) : DownloadResolution {
+    fun resolveDownloads(profileId: kotlin.String, downloadResolveInput: DownloadResolveInput) : DownloadResolution {
         val localVarResponse = resolveDownloadsWithHttpInfo(profileId = profileId, downloadResolveInput = downloadResolveInput)
 
         return when (localVarResponse.responseType) {
@@ -500,7 +500,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun resolveDownloadsWithHttpInfo(profileId: kotlin.Long, downloadResolveInput: DownloadResolveInput) : ApiResponse<DownloadResolution?> {
+    fun resolveDownloadsWithHttpInfo(profileId: kotlin.String, downloadResolveInput: DownloadResolveInput) : ApiResponse<DownloadResolution?> {
         val localVariableConfig = resolveDownloadsRequestConfig(profileId = profileId, downloadResolveInput = downloadResolveInput)
 
         return request<DownloadResolveInput, DownloadResolution>(
@@ -515,7 +515,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param downloadResolveInput 
      * @return RequestConfig
      */
-    fun resolveDownloadsRequestConfig(profileId: kotlin.Long, downloadResolveInput: DownloadResolveInput) : RequestConfig<DownloadResolveInput> {
+    fun resolveDownloadsRequestConfig(profileId: kotlin.String, downloadResolveInput: DownloadResolveInput) : RequestConfig<DownloadResolveInput> {
         val localVariableBody = downloadResolveInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -547,7 +547,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun syncDownloads(profileId: kotlin.Long, downloadSyncInput: DownloadSyncInput) : DownloadSync {
+    fun syncDownloads(profileId: kotlin.String, downloadSyncInput: DownloadSyncInput) : DownloadSync {
         val localVarResponse = syncDownloadsWithHttpInfo(profileId = profileId, downloadSyncInput = downloadSyncInput)
 
         return when (localVarResponse.responseType) {
@@ -577,7 +577,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun syncDownloadsWithHttpInfo(profileId: kotlin.Long, downloadSyncInput: DownloadSyncInput) : ApiResponse<DownloadSync?> {
+    fun syncDownloadsWithHttpInfo(profileId: kotlin.String, downloadSyncInput: DownloadSyncInput) : ApiResponse<DownloadSync?> {
         val localVariableConfig = syncDownloadsRequestConfig(profileId = profileId, downloadSyncInput = downloadSyncInput)
 
         return request<DownloadSyncInput, DownloadSync>(
@@ -592,7 +592,7 @@ open class DownloadsApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param downloadSyncInput 
      * @return RequestConfig
      */
-    fun syncDownloadsRequestConfig(profileId: kotlin.Long, downloadSyncInput: DownloadSyncInput) : RequestConfig<DownloadSyncInput> {
+    fun syncDownloadsRequestConfig(profileId: kotlin.String, downloadSyncInput: DownloadSyncInput) : RequestConfig<DownloadSyncInput> {
         val localVariableBody = downloadSyncInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

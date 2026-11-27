@@ -32,7 +32,7 @@ import enterprises.legitimate.rabbitears.ui.theme.Palette
 
 /** A person and every movie and show crediting them that the profile may see. */
 @Composable
-fun PersonScreen(id: Long) {
+fun PersonScreen(id: String) {
     val nav = LocalNav.current
     val c = nav.catalog.catalog
     var loaded by remember(id) { mutableStateOf(false) }

@@ -36,7 +36,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 /**
- * A device's claim on one title's file for a profile. Once status is ready, url is the file: a GET with the device's token as `Authorization: Bearer`, in ranges as the client likes, resumed with Range and If-Range (its ETag); after a failure the client asks again from where it stopped. The device's text subtitles are fetched the same way. A device locked at Who's watching is answered 403 device_locked until a profile is picked, and a signed-out one 401. A download that went answers 404: the client creates it again. estimated is set while sizeBytes is a prediction; progress is the share of a conversion made.  Instead of polling, a client may fetch the file before it is ready with `?wait=1`, at `/api/v1/downloads/{id}/file`, url's path once ready: the request is held until the conversion is ready and then served as above. A conversion that failed, or fails while held, answers 500 internal with its error as the message. A download that goes while held answers 404. Without wait, a file not yet ready answers 409. 
+ * A device's claim on one title's file for a profile. Once status is ready, url is the file: a GET with the device's token as `Authorization: Bearer`, in ranges as the client likes, resumed with Range and If-Range (its ETag); after a failure the client asks again from where it stopped. The device's text subtitles are fetched the same way. A device locked at Who's watching is answered 403 device_locked until a profile is picked, and a signed-out one 401. A download that went answers 404: the client creates it again. estimated is set while sizeBytes is a prediction; progress is the share of a conversion made.  Instead of polling, a client may fetch the file before it is ready with `?wait=1`, at `/api/v2/downloads/{id}/file`, url's path once ready: the request is held until the conversion is ready and then served as above. A conversion that failed, or fails while held, answers 500 internal with its error as the message. A download that goes while held answers 404. Without wait, a file not yet ready answers 409. 
  *
  * @param id
  * @param profileId
@@ -51,9 +51,12 @@ import kotlinx.serialization.encoding.Encoder
  * @param progress
  * @param subtitles
  * @param createdAt
+ * @param modifiedAt
  * @param editionId
  * @param error Why the conversion failed.
  * @param url Set once ready.
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  * @param expiresAt Absent while the conversion is still to finish.
  */
 @Serializable
@@ -61,16 +64,16 @@ import kotlinx.serialization.encoding.Encoder
 data class Download (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "mediaFileId")
-    val mediaFileId: kotlin.Long,
+    val mediaFileId: kotlin.String,
 
     @Contextual @SerialName(value = "quality")
     val quality: DownloadQuality,
@@ -99,8 +102,11 @@ data class Download (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
+
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     /* Why the conversion failed. */
     @SerialName(value = "error")
@@ -109,6 +115,14 @@ data class Download (
     /* Set once ready. */
     @SerialName(value = "url")
     val url: kotlin.String? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null,
 
     /* Absent while the conversion is still to finish. */
     @Contextual @SerialName(value = "expiresAt")

@@ -34,6 +34,7 @@ import kotlinx.serialization.encoding.Encoder
 
 /**
  * @param email
+ * @param joinCodeId The new join code's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409.
  * @param expiresInDays
  */
 @Serializable
@@ -42,6 +43,10 @@ data class MakeAdultInput (
 
     @SerialName(value = "email")
     val email: kotlin.String,
+
+    /* The new join code's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. */
+    @SerialName(value = "joinCodeId")
+    val joinCodeId: kotlin.String? = null,
 
     @SerialName(value = "expiresInDays")
     val expiresInDays: MakeAdultInput.ExpiresInDays? = ExpiresInDays._7

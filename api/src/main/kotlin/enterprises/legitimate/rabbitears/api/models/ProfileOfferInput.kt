@@ -31,17 +31,22 @@ import kotlinx.serialization.Contextual
 /**
  * @param profileId
  * @param toProfileId A linked adult.
+ * @param id On createProfileOffer: the new offer's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409.
  */
 @Serializable
 
 data class ProfileOfferInput (
 
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     /* A linked adult. */
     @SerialName(value = "toProfileId")
-    val toProfileId: kotlin.Long
+    val toProfileId: kotlin.String,
+
+    /* On createProfileOffer: the new offer's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null
 
 ) {
 

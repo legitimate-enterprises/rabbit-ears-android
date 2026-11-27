@@ -50,12 +50,12 @@ interface AudioOutput {
  */
 class MusicPlayer(
     val api: Api,
-    val profileId: Long,
+    val profileId: String,
     private val output: AudioOutput,
     private val capabilities: CapabilitySource,
     val scope: CoroutineScope,
     /** The song on the device, played in place of a session when [preferLocal] or offline. */
-    private val local: (songId: Long) -> LocalCopy? = { null },
+    private val local: (songId: String) -> LocalCopy? = { null },
     private val preferLocal: () -> Boolean = { false },
     private val unreachable: () -> Boolean = { false },
     /** How long a queued song waits between tries while the server can't be reached. */
@@ -113,7 +113,7 @@ class MusicPlayer(
         songs: List<MusicSong>,
         start: Int = 0,
         source: String,
-        playlistId: Long? = null,
+        playlistId: String? = null,
         shuffled: Boolean = false,
     ) {
         leaveStation()
@@ -398,7 +398,7 @@ class MusicPlayer(
             api.endpoint.resolveStream(started.streamUrl),
             started.streamKind == PlaybackStream.StreamKind.hls,
             song,
-            api.endpoint.resolve("/api/v1/items/${song.albumId}/artwork/poster"),
+            api.endpoint.resolve("/api/v2/items/${song.albumId}/artwork/poster"),
         )
         if (started.positionMs > 0) output.seek(started.positionMs)
         output.play()
@@ -424,7 +424,7 @@ class MusicPlayer(
         end(session, position)
     }
 
-    private suspend fun end(session: Long, position: Long) {
+    private suspend fun end(session: String, position: Long) {
         if (session == LocalPlayback.SESSION) return
         runCatching { api.call { playback.endPlayback(session, position) } }
     }

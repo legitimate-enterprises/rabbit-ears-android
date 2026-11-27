@@ -269,7 +269,7 @@ private fun OfferRow(offer: ProfileOffer, incoming: Boolean, actions: @Composabl
 private fun MemberRow(
     member: Account,
     actions: Set<MemberAction>,
-    ownerId: Long?,
+    ownerId: String?,
     act: (MemberAction) -> Unit,
 ) {
     var open by remember { mutableStateOf(false) }

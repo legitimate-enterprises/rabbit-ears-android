@@ -40,7 +40,7 @@ import kotlinx.serialization.Contextual
 data class Chapter (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "position")
     val position: kotlin.Int,

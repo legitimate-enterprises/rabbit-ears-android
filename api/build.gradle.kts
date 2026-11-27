@@ -16,6 +16,11 @@ openApiGenerate {
     packageName = "enterprises.legitimate.rabbitears.api"
     library = "jvm-okhttp4"
     configOptions = mapOf("serializationLibrary" to "kotlinx_serialization", "dateLibrary" to "java8")
+    // Ids are opaque to the app: kept as the server's canonical text, so routes, saved state and
+    // ledgers hold them as they are.
+    typeMappings = mapOf("UUID" to "kotlin.String")
+    // Untyped in the spec: an SQLite value, which only a JSON element carries as it is.
+    schemaMappings = mapOf("SyncScalar" to "kotlinx.serialization.json.JsonElement")
     generateApiDocumentation = false
     generateModelDocumentation = false
     generateApiTests = false

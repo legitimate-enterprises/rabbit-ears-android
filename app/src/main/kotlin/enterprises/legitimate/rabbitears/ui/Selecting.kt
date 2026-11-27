@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
  */
 fun Modifier.pick(
     selection: Selection?,
-    id: Long,
+    id: String,
     more: (() -> Unit)? = null,
     openLabel: String? = null,
     open: () -> Unit,
@@ -79,7 +79,7 @@ fun SelectToggle(selection: Selection, kind: SelectKind?) {
 fun SelectionBar(
     selection: Selection,
     kind: SelectKind?,
-    shown: List<Long>,
+    shown: List<String>,
     modifier: Modifier,
     changed: () -> Unit,
 ) {

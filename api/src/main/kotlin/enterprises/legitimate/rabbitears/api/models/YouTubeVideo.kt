@@ -51,13 +51,13 @@ import kotlinx.serialization.Contextual
 data class YouTubeVideo (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long,
+    val libraryId: kotlin.String,
 
     @SerialName(value = "channelId")
-    val channelId: kotlin.Long,
+    val channelId: kotlin.String,
 
     @SerialName(value = "channelTitle")
     val channelTitle: kotlin.String,

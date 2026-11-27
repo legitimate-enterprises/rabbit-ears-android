@@ -36,7 +36,7 @@ import kotlinx.serialization.Contextual
 data class AllowList (
 
     @SerialName(value = "itemIds")
-    val itemIds: kotlin.collections.List<kotlin.Long>
+    val itemIds: kotlin.collections.List<kotlin.String>
 
 ) {
 

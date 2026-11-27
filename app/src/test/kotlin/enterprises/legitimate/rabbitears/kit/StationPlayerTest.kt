@@ -56,9 +56,9 @@ class StationPlayerTest {
     private val scope = CoroutineScope(Job())
     private val onAir =
         StationJson.onAir("on_air", StationJson.lantern, StationJson.salt, 4_800_000)
-    private val held = HeldTuner(server, StationJson.decode(StationJson.station(3, onAir)), scope)
+    private val held = HeldTuner(server, StationJson.decode(StationJson.station("3", onAir)), scope)
     private val model =
-        PlayerModel(server.api(), 1, 0, output, capabilities, scope, station = held.tuner)
+        PlayerModel(server.api(), "1", "0", output, capabilities, scope, station = held.tuner)
 
     @get:Rule val timeout: Timeout = Timeout.seconds(10)
 
@@ -76,7 +76,7 @@ class StationPlayerTest {
         assertTrue(server.called("POST /playback/sessions").isEmpty())
         assertTrue(server.called("POST /stations/3/playback").single().body.contains("\"h264\""))
         assertEquals(
-            Triple("http://media.example.com:8477/api/v1/streams/s7/file", 4_800_000L, false),
+            Triple("http://media.example.com:8477/api/v2/streams/s7/file", 4_800_000L, false),
             output.loads.single(),
         )
         // 21:00 is 40 minutes after the clock's 20:20.
@@ -90,9 +90,10 @@ class StationPlayerTest {
     @Test
     fun aVideoStationPlaysItsOneStreamAndOnlyReadsWhatIsOnNext() = runBlocking {
         server.on("POST /stations/3/playback", 201, live(onAir))
-        val later = StationJson.program(9, "Later", "2025-01-03T21:30:00Z", "2025-01-03T23:00:00Z")
+        val later =
+            StationJson.program("9", "Later", "2025-01-03T21:30:00Z", "2025-01-03T23:00:00Z")
         val between = StationJson.onAir("between_programs", next = later)
-        server.on("GET /stations/3", 200, StationJson.station(3, between))
+        server.on("GET /stations/3", 200, StationJson.station("3", between))
         model.start(0)
         assertTrue(
             server.called("POST /stations/3/playback").single().body.contains("\"live\":true"),
@@ -105,14 +106,14 @@ class StationPlayerTest {
         assertEquals(4_200_000L, held.waits.receive())
         assertEquals(StationStatus.between_programs, held.tuner.onAir.status)
         assertEquals(1, server.called("POST /stations/3/playback").size)
-        assertEquals(7L, model.stream?.sessionId)
+        assertEquals("7", model.stream?.sessionId)
         assertEquals(1, output.loads.size)
     }
 
     @Test
     fun aLiveStreamsEndWaitsForItsProgramsEndThenAsksAgain() = runBlocking {
         server.on("POST /stations/3/playback", 201, live(onAir))
-        server.on("GET /stations/3", 200, StationJson.station(3, onAir))
+        server.on("GET /stations/3", 200, StationJson.station("3", onAir))
         server.on("DELETE /playback/sessions/7", 204)
         model.start(0)
         held.waits.receive()
@@ -135,7 +136,7 @@ class StationPlayerTest {
         // The server still plays it: this device's clock runs ahead.
         val over =
             StationJson.program(
-                7,
+                "7",
                 "The Lantern Keeper",
                 "2025-01-03T19:00:00Z",
                 "2025-01-03T20:19:00Z",
@@ -157,7 +158,7 @@ class StationPlayerTest {
         output.positionMs = 7_200_000
         answers(8, position = 0)
         held.wake.send(Unit)
-        eventually { model.stream?.sessionId == 8L }
+        eventually { model.stream?.sessionId == "8" }
         assertTrue(
             server.called("DELETE /playback/sessions/7").single().query!!.contains("7200000"),
         )
@@ -174,7 +175,7 @@ class StationPlayerTest {
         assertEquals(2_400_000L, held.waits.receive())
         answers(8, position = 0)
         held.wake.send(Unit)
-        eventually { model.stream?.sessionId == 8L }
+        eventually { model.stream?.sessionId == "8" }
         assertEquals(2, server.called("POST /stations/3/playback").size)
     }
 
@@ -188,10 +189,10 @@ class StationPlayerTest {
             "PUT /playback/sessions/7/tracks",
             body = """{"action":"continue","stream":${StationJson.stream(7, 4_800_000)}}""",
         )
-        model.selectSubtitles(SubtitleChoice.Track(5))
+        model.selectSubtitles(SubtitleChoice.Track("5"))
         answers(8, position = 0)
         held.wake.send(Unit)
-        eventually { model.stream?.sessionId == 8L }
+        eventually { model.stream?.sessionId == "8" }
         // The next program is another file: there the track names nothing, which the server
         // reads as no subtitles at all.
         val next = server.called("POST /stations/3/playback").last().body
@@ -209,7 +210,7 @@ class StationPlayerTest {
             launch { model.programEnded() }
         }
         assertEquals(1, server.called("DELETE /playback/sessions/7").size)
-        assertEquals(8L, model.stream?.sessionId)
+        assertEquals("8", model.stream?.sessionId)
         assertEquals(2, server.called("POST /stations/3/playback").size)
     }
 
@@ -220,7 +221,7 @@ class StationPlayerTest {
             "GET /stations/3",
             body =
                 StationJson.station(
-                    3,
+                    "3",
                     StationJson.onAir("between_programs", next = StationJson.salt),
                 ),
         )
@@ -232,7 +233,7 @@ class StationPlayerTest {
         answers(8, position = 0)
         held.wake.send(Unit)
         eventually { output.loads.size == 1 }
-        assertEquals(8L, model.stream?.sessionId)
+        assertEquals("8", model.stream?.sessionId)
         assertEquals(StationStatus.on_air, held.tuner.onAir.status)
     }
 
@@ -243,7 +244,7 @@ class StationPlayerTest {
         assertEquals(5_000L, held.waits.receive())
         answers(7)
         held.wake.send(Unit)
-        eventually { model.stream?.sessionId == 7L }
+        eventually { model.stream?.sessionId == "7" }
         assertNull(model.error)
         assertEquals(2, server.called("POST /stations/3/playback").size)
     }
@@ -261,7 +262,7 @@ class StationPlayerTest {
         server.on("POST /stations/3/playback", 409, StationJson.offAir(null))
         server.on(
             "GET /stations/3",
-            body = StationJson.station(3, StationJson.onAir("off_schedule")),
+            body = StationJson.station("3", StationJson.onAir("off_schedule")),
         )
         model.start(0)
         delay(50)
@@ -277,7 +278,7 @@ class StationPlayerTest {
         model.capabilitiesChanged(CapabilityGroup.Display)
         assertEquals(2, server.called("POST /stations/3/playback").size)
         assertTrue(server.called("PUT /playback/sessions/7/display").isEmpty())
-        assertEquals(8L, model.stream?.sessionId)
+        assertEquals("8", model.stream?.sessionId)
     }
 
     @Test
@@ -296,7 +297,7 @@ class StationPlayerTest {
 
         answers(8)
         model.start(0)
-        assertEquals(8L, model.stream?.sessionId)
+        assertEquals("8", model.stream?.sessionId)
         assertFalse(output.isPaused)
     }
 
@@ -307,7 +308,7 @@ class StationPlayerTest {
             "GET /stations/3",
             body =
                 StationJson.station(
-                    3,
+                    "3",
                     StationJson.onAir("between_programs", next = StationJson.salt),
                 ),
         )
@@ -348,23 +349,23 @@ class MusicStationTest {
         PlayerModelTest.Capabilities(
             DeviceFacts(emptyList(), ScreenFacts(2400, 1080, 60.0), emptyList(), PathFacts()),
         )
-    private val player = MusicPlayer(server.api(), 1, output, capabilities, scope)
-    private val songs = (1L..4).map { StationJson.decode<MusicSong>(MusicJson.song(it)) }
+    private val player = MusicPlayer(server.api(), "1", output, capabilities, scope)
+    private val songs = (1..4).map { StationJson.decode<MusicSong>(MusicJson.song("$it")) }
 
-    private fun song(id: Long, title: String) =
+    private fun song(id: String, title: String) =
         StationJson.program(id, title, "2025-01-03T20:18:00Z", "2025-01-03T20:22:00Z", "song")
 
     private val onAir =
         StationJson.onAir(
             "on_air",
-            song(21, "Paper Lanterns"),
-            song(22, "Slow Tide"),
+            song("21", "Paper Lanterns"),
+            song("22", "Slow Tide"),
             86_000,
-            listOf(song(22, "Slow Tide"), song(23, "Low Light"), song(24, "Paper Moon")),
+            listOf(song("22", "Slow Tide"), song("23", "Low Light"), song("24", "Paper Moon")),
         )
     private val station =
         StationJson.decode<Station>(
-            StationJson.station(5, onAir, name = "Kitchen Radio", kind = "music"),
+            StationJson.station("5", onAir, name = "Kitchen Radio", kind = "music"),
         )
     private val held = HeldTuner(server, station, scope)
 
@@ -386,9 +387,9 @@ class MusicStationTest {
         answers(9)
         player.tune(station, held.tuner)
         assertEquals(1, server.called("DELETE /playback/sessions/7").size)
-        assertEquals(21L, output.loads.last().second)
+        assertEquals("21", output.loads.last().second)
         assertEquals(86_000L, output.positionMs)
-        assertEquals(21L, player.current?.id)
+        assertEquals("21", player.current?.id)
         assertEquals(
             listOf("Slow Tide", "Low Light", "Paper Moon"),
             player.stationUpNext.map { it.title },
@@ -445,7 +446,7 @@ class MusicStationTest {
         server.before = {}
         answers(9)
         held.wake.send(Unit)
-        eventually { player.stream?.sessionId == 9L }
+        eventually { player.stream?.sessionId == "9" }
         assertEquals(2, server.called("POST /stations/5/playback").size)
     }
 
@@ -456,7 +457,7 @@ class MusicStationTest {
         answers(10)
         player.songEnded()
         assertEquals(1, server.called("DELETE /playback/sessions/9").size)
-        assertEquals(10L, player.stream?.sessionId)
+        assertEquals("10", player.stream?.sessionId)
     }
 
     @Test
@@ -466,6 +467,6 @@ class MusicStationTest {
         server.on("POST /playback/sessions", 201, MusicJson.stream(7))
         player.play(songs, source = "In Rainbows")
         assertNull(player.station)
-        assertEquals(1L, player.current?.id)
+        assertEquals("1", player.current?.id)
     }
 }

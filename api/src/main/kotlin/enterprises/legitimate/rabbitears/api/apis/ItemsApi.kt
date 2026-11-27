@@ -77,7 +77,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -95,7 +95,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addOccasionMember(occasionId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun addOccasionMember(occasionId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = addOccasionMemberWithHttpInfo(occasionId = occasionId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -124,7 +124,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun addOccasionMemberWithHttpInfo(occasionId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun addOccasionMemberWithHttpInfo(occasionId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = addOccasionMemberRequestConfig(occasionId = occasionId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -139,7 +139,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun addOccasionMemberRequestConfig(occasionId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun addOccasionMemberRequestConfig(occasionId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -168,7 +168,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun clearKidsContent(itemId: kotlin.Long) : Unit {
+    fun clearKidsContent(itemId: kotlin.String) : Unit {
         val localVarResponse = clearKidsContentWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -196,7 +196,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun clearKidsContentWithHttpInfo(itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun clearKidsContentWithHttpInfo(itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = clearKidsContentRequestConfig(itemId = itemId)
 
         return request<Unit, Unit>(
@@ -210,7 +210,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun clearKidsContentRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun clearKidsContentRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -461,7 +461,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteGenre(genreId: kotlin.Long) : Unit {
+    fun deleteGenre(genreId: kotlin.String) : Unit {
         val localVarResponse = deleteGenreWithHttpInfo(genreId = genreId)
 
         return when (localVarResponse.responseType) {
@@ -489,7 +489,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteGenreWithHttpInfo(genreId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteGenreWithHttpInfo(genreId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteGenreRequestConfig(genreId = genreId)
 
         return request<Unit, Unit>(
@@ -503,7 +503,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param genreId 
      * @return RequestConfig
      */
-    fun deleteGenreRequestConfig(genreId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteGenreRequestConfig(genreId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -532,7 +532,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteItem(itemId: kotlin.Long) : Unit {
+    fun deleteItem(itemId: kotlin.String) : Unit {
         val localVarResponse = deleteItemWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -560,7 +560,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteItemWithHttpInfo(itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteItemWithHttpInfo(itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteItemRequestConfig(itemId = itemId)
 
         return request<Unit, Unit>(
@@ -574,7 +574,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun deleteItemRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteItemRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -603,7 +603,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteItemMetadata(itemId: kotlin.Long) : Unit {
+    fun deleteItemMetadata(itemId: kotlin.String) : Unit {
         val localVarResponse = deleteItemMetadataWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -631,7 +631,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteItemMetadataWithHttpInfo(itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteItemMetadataWithHttpInfo(itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteItemMetadataRequestConfig(itemId = itemId)
 
         return request<Unit, Unit>(
@@ -645,7 +645,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun deleteItemMetadataRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteItemMetadataRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -674,7 +674,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteOccasion(occasionId: kotlin.Long) : Unit {
+    fun deleteOccasion(occasionId: kotlin.String) : Unit {
         val localVarResponse = deleteOccasionWithHttpInfo(occasionId = occasionId)
 
         return when (localVarResponse.responseType) {
@@ -702,7 +702,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteOccasionWithHttpInfo(occasionId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteOccasionWithHttpInfo(occasionId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteOccasionRequestConfig(occasionId = occasionId)
 
         return request<Unit, Unit>(
@@ -716,7 +716,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param occasionId 
      * @return RequestConfig
      */
-    fun deleteOccasionRequestConfig(occasionId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteOccasionRequestConfig(occasionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -746,7 +746,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getGenre(genreId: kotlin.Long) : Genre {
+    fun getGenre(genreId: kotlin.String) : Genre {
         val localVarResponse = getGenreWithHttpInfo(genreId = genreId)
 
         return when (localVarResponse.responseType) {
@@ -775,7 +775,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getGenreWithHttpInfo(genreId: kotlin.Long) : ApiResponse<Genre?> {
+    fun getGenreWithHttpInfo(genreId: kotlin.String) : ApiResponse<Genre?> {
         val localVariableConfig = getGenreRequestConfig(genreId = genreId)
 
         return request<Unit, Genre>(
@@ -789,7 +789,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param genreId 
      * @return RequestConfig
      */
-    fun getGenreRequestConfig(genreId: kotlin.Long) : RequestConfig<Unit> {
+    fun getGenreRequestConfig(genreId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -819,7 +819,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getIdentityReview(identityReviewId: kotlin.Long) : IdentityReview {
+    fun getIdentityReview(identityReviewId: kotlin.String) : IdentityReview {
         val localVarResponse = getIdentityReviewWithHttpInfo(identityReviewId = identityReviewId)
 
         return when (localVarResponse.responseType) {
@@ -848,7 +848,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getIdentityReviewWithHttpInfo(identityReviewId: kotlin.Long) : ApiResponse<IdentityReview?> {
+    fun getIdentityReviewWithHttpInfo(identityReviewId: kotlin.String) : ApiResponse<IdentityReview?> {
         val localVariableConfig = getIdentityReviewRequestConfig(identityReviewId = identityReviewId)
 
         return request<Unit, IdentityReview>(
@@ -862,7 +862,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param identityReviewId 
      * @return RequestConfig
      */
-    fun getIdentityReviewRequestConfig(identityReviewId: kotlin.Long) : RequestConfig<Unit> {
+    fun getIdentityReviewRequestConfig(identityReviewId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -892,7 +892,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getItem(itemId: kotlin.Long) : Item {
+    fun getItem(itemId: kotlin.String) : Item {
         val localVarResponse = getItemWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -921,7 +921,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getItemWithHttpInfo(itemId: kotlin.Long) : ApiResponse<Item?> {
+    fun getItemWithHttpInfo(itemId: kotlin.String) : ApiResponse<Item?> {
         val localVariableConfig = getItemRequestConfig(itemId = itemId)
 
         return request<Unit, Item>(
@@ -935,7 +935,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun getItemRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun getItemRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -968,7 +968,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getItemArtwork(itemId: kotlin.Long, kind: ArtworkKind, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
+    fun getItemArtwork(itemId: kotlin.String, kind: ArtworkKind, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
         val localVarResponse = getItemArtworkWithHttpInfo(itemId = itemId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
@@ -1000,7 +1000,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getItemArtworkWithHttpInfo(itemId: kotlin.Long, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+    fun getItemArtworkWithHttpInfo(itemId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
         val localVariableConfig = getItemArtworkRequestConfig(itemId = itemId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
@@ -1017,7 +1017,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getItemArtworkRequestConfig(itemId: kotlin.Long, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    fun getItemArtworkRequestConfig(itemId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1053,7 +1053,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getItemCredits(itemId: kotlin.Long) : ItemCredits {
+    fun getItemCredits(itemId: kotlin.String) : ItemCredits {
         val localVarResponse = getItemCreditsWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -1082,7 +1082,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getItemCreditsWithHttpInfo(itemId: kotlin.Long) : ApiResponse<ItemCredits?> {
+    fun getItemCreditsWithHttpInfo(itemId: kotlin.String) : ApiResponse<ItemCredits?> {
         val localVariableConfig = getItemCreditsRequestConfig(itemId = itemId)
 
         return request<Unit, ItemCredits>(
@@ -1096,7 +1096,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun getItemCreditsRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun getItemCreditsRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1126,7 +1126,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getItemRelated(itemId: kotlin.Long) : ItemRelated {
+    fun getItemRelated(itemId: kotlin.String) : ItemRelated {
         val localVarResponse = getItemRelatedWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -1155,7 +1155,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getItemRelatedWithHttpInfo(itemId: kotlin.Long) : ApiResponse<ItemRelated?> {
+    fun getItemRelatedWithHttpInfo(itemId: kotlin.String) : ApiResponse<ItemRelated?> {
         val localVariableConfig = getItemRelatedRequestConfig(itemId = itemId)
 
         return request<Unit, ItemRelated>(
@@ -1169,7 +1169,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun getItemRelatedRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun getItemRelatedRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1199,7 +1199,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getOccasion(occasionId: kotlin.Long) : Occasion {
+    fun getOccasion(occasionId: kotlin.String) : Occasion {
         val localVarResponse = getOccasionWithHttpInfo(occasionId = occasionId)
 
         return when (localVarResponse.responseType) {
@@ -1228,7 +1228,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getOccasionWithHttpInfo(occasionId: kotlin.Long) : ApiResponse<Occasion?> {
+    fun getOccasionWithHttpInfo(occasionId: kotlin.String) : ApiResponse<Occasion?> {
         val localVariableConfig = getOccasionRequestConfig(occasionId = occasionId)
 
         return request<Unit, Occasion>(
@@ -1242,7 +1242,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param occasionId 
      * @return RequestConfig
      */
-    fun getOccasionRequestConfig(occasionId: kotlin.Long) : RequestConfig<Unit> {
+    fun getOccasionRequestConfig(occasionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1274,7 +1274,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listGenres(libraryId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : GenrePage {
+    fun listGenres(libraryId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : GenrePage {
         val localVarResponse = listGenresWithHttpInfo(libraryId = libraryId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1305,7 +1305,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listGenresWithHttpInfo(libraryId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<GenrePage?> {
+    fun listGenresWithHttpInfo(libraryId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<GenrePage?> {
         val localVariableConfig = listGenresRequestConfig(libraryId = libraryId, limit = limit, offset = offset)
 
         return request<Unit, GenrePage>(
@@ -1321,7 +1321,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listGenresRequestConfig(libraryId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listGenresRequestConfig(libraryId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1436,7 +1436,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listIdentityReviews(libraryId: kotlin.Long? = null, reason: IdentityReviewReason? = null, dismissed: kotlin.Boolean? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : IdentityReviewPage {
+    fun listIdentityReviews(libraryId: kotlin.String? = null, reason: IdentityReviewReason? = null, dismissed: kotlin.Boolean? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : IdentityReviewPage {
         val localVarResponse = listIdentityReviewsWithHttpInfo(libraryId = libraryId, reason = reason, dismissed = dismissed, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1469,7 +1469,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listIdentityReviewsWithHttpInfo(libraryId: kotlin.Long?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<IdentityReviewPage?> {
+    fun listIdentityReviewsWithHttpInfo(libraryId: kotlin.String?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<IdentityReviewPage?> {
         val localVariableConfig = listIdentityReviewsRequestConfig(libraryId = libraryId, reason = reason, dismissed = dismissed, limit = limit, offset = offset)
 
         return request<Unit, IdentityReviewPage>(
@@ -1487,7 +1487,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listIdentityReviewsRequestConfig(libraryId: kotlin.Long?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listIdentityReviewsRequestConfig(libraryId: kotlin.String?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1545,7 +1545,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listItems(libraryId: kotlin.Long? = null, parentId: kotlin.Long? = null, kind: ItemKind? = null, q: kotlin.String? = null, genreId: kotlin.Long? = null, personId: kotlin.Long? = null, occasionId: kotlin.Long? = null, resolution: Resolution? = null, sort: ItemSort? = null, kidsContent: kotlin.Boolean? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ItemPage {
+    fun listItems(libraryId: kotlin.String? = null, parentId: kotlin.String? = null, kind: ItemKind? = null, q: kotlin.String? = null, genreId: kotlin.String? = null, personId: kotlin.String? = null, occasionId: kotlin.String? = null, resolution: Resolution? = null, sort: ItemSort? = null, kidsContent: kotlin.Boolean? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ItemPage {
         val localVarResponse = listItemsWithHttpInfo(libraryId = libraryId, parentId = parentId, kind = kind, q = q, genreId = genreId, personId = personId, occasionId = occasionId, resolution = resolution, sort = sort, kidsContent = kidsContent, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1585,7 +1585,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listItemsWithHttpInfo(libraryId: kotlin.Long?, parentId: kotlin.Long?, kind: ItemKind?, q: kotlin.String?, genreId: kotlin.Long?, personId: kotlin.Long?, occasionId: kotlin.Long?, resolution: Resolution?, sort: ItemSort?, kidsContent: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ItemPage?> {
+    fun listItemsWithHttpInfo(libraryId: kotlin.String?, parentId: kotlin.String?, kind: ItemKind?, q: kotlin.String?, genreId: kotlin.String?, personId: kotlin.String?, occasionId: kotlin.String?, resolution: Resolution?, sort: ItemSort?, kidsContent: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ItemPage?> {
         val localVariableConfig = listItemsRequestConfig(libraryId = libraryId, parentId = parentId, kind = kind, q = q, genreId = genreId, personId = personId, occasionId = occasionId, resolution = resolution, sort = sort, kidsContent = kidsContent, limit = limit, offset = offset)
 
         return request<Unit, ItemPage>(
@@ -1610,7 +1610,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listItemsRequestConfig(libraryId: kotlin.Long?, parentId: kotlin.Long?, kind: ItemKind?, q: kotlin.String?, genreId: kotlin.Long?, personId: kotlin.Long?, occasionId: kotlin.Long?, resolution: Resolution?, sort: ItemSort?, kidsContent: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listItemsRequestConfig(libraryId: kotlin.String?, parentId: kotlin.String?, kind: ItemKind?, q: kotlin.String?, genreId: kotlin.String?, personId: kotlin.String?, occasionId: kotlin.String?, resolution: Resolution?, sort: ItemSort?, kidsContent: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1680,7 +1680,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listOccasionMembers(occasionId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : OccasionMemberPage {
+    fun listOccasionMembers(occasionId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : OccasionMemberPage {
         val localVarResponse = listOccasionMembersWithHttpInfo(occasionId = occasionId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1711,7 +1711,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listOccasionMembersWithHttpInfo(occasionId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<OccasionMemberPage?> {
+    fun listOccasionMembersWithHttpInfo(occasionId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<OccasionMemberPage?> {
         val localVariableConfig = listOccasionMembersRequestConfig(occasionId = occasionId, limit = limit, offset = offset)
 
         return request<Unit, OccasionMemberPage>(
@@ -1727,7 +1727,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listOccasionMembersRequestConfig(occasionId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listOccasionMembersRequestConfig(occasionId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1850,7 +1850,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun putItemMetadata(itemId: kotlin.Long, itemMetadata: ItemMetadata) : Item {
+    fun putItemMetadata(itemId: kotlin.String, itemMetadata: ItemMetadata) : Item {
         val localVarResponse = putItemMetadataWithHttpInfo(itemId = itemId, itemMetadata = itemMetadata)
 
         return when (localVarResponse.responseType) {
@@ -1880,7 +1880,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun putItemMetadataWithHttpInfo(itemId: kotlin.Long, itemMetadata: ItemMetadata) : ApiResponse<Item?> {
+    fun putItemMetadataWithHttpInfo(itemId: kotlin.String, itemMetadata: ItemMetadata) : ApiResponse<Item?> {
         val localVariableConfig = putItemMetadataRequestConfig(itemId = itemId, itemMetadata = itemMetadata)
 
         return request<ItemMetadata, Item>(
@@ -1895,7 +1895,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemMetadata 
      * @return RequestConfig
      */
-    fun putItemMetadataRequestConfig(itemId: kotlin.Long, itemMetadata: ItemMetadata) : RequestConfig<ItemMetadata> {
+    fun putItemMetadataRequestConfig(itemId: kotlin.String, itemMetadata: ItemMetadata) : RequestConfig<ItemMetadata> {
         val localVariableBody = itemMetadata
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1926,7 +1926,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun removeOccasionMember(occasionId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun removeOccasionMember(occasionId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = removeOccasionMemberWithHttpInfo(occasionId = occasionId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -1955,7 +1955,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun removeOccasionMemberWithHttpInfo(occasionId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun removeOccasionMemberWithHttpInfo(occasionId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = removeOccasionMemberRequestConfig(occasionId = occasionId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -1970,7 +1970,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun removeOccasionMemberRequestConfig(occasionId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun removeOccasionMemberRequestConfig(occasionId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2001,7 +2001,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceGenre(genreId: kotlin.Long, genreInput: GenreInput) : Genre {
+    fun replaceGenre(genreId: kotlin.String, genreInput: GenreInput) : Genre {
         val localVarResponse = replaceGenreWithHttpInfo(genreId = genreId, genreInput = genreInput)
 
         return when (localVarResponse.responseType) {
@@ -2031,7 +2031,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceGenreWithHttpInfo(genreId: kotlin.Long, genreInput: GenreInput) : ApiResponse<Genre?> {
+    fun replaceGenreWithHttpInfo(genreId: kotlin.String, genreInput: GenreInput) : ApiResponse<Genre?> {
         val localVariableConfig = replaceGenreRequestConfig(genreId = genreId, genreInput = genreInput)
 
         return request<GenreInput, Genre>(
@@ -2046,7 +2046,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param genreInput 
      * @return RequestConfig
      */
-    fun replaceGenreRequestConfig(genreId: kotlin.Long, genreInput: GenreInput) : RequestConfig<GenreInput> {
+    fun replaceGenreRequestConfig(genreId: kotlin.String, genreInput: GenreInput) : RequestConfig<GenreInput> {
         val localVariableBody = genreInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2078,7 +2078,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceItem(itemId: kotlin.Long, itemInput: ItemInput) : Item {
+    fun replaceItem(itemId: kotlin.String, itemInput: ItemInput) : Item {
         val localVarResponse = replaceItemWithHttpInfo(itemId = itemId, itemInput = itemInput)
 
         return when (localVarResponse.responseType) {
@@ -2108,7 +2108,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceItemWithHttpInfo(itemId: kotlin.Long, itemInput: ItemInput) : ApiResponse<Item?> {
+    fun replaceItemWithHttpInfo(itemId: kotlin.String, itemInput: ItemInput) : ApiResponse<Item?> {
         val localVariableConfig = replaceItemRequestConfig(itemId = itemId, itemInput = itemInput)
 
         return request<ItemInput, Item>(
@@ -2123,7 +2123,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemInput 
      * @return RequestConfig
      */
-    fun replaceItemRequestConfig(itemId: kotlin.Long, itemInput: ItemInput) : RequestConfig<ItemInput> {
+    fun replaceItemRequestConfig(itemId: kotlin.String, itemInput: ItemInput) : RequestConfig<ItemInput> {
         val localVariableBody = itemInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2155,7 +2155,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceItemCredits(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : ItemCredits {
+    fun replaceItemCredits(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : ItemCredits {
         val localVarResponse = replaceItemCreditsWithHttpInfo(itemId = itemId, itemCreditsInput = itemCreditsInput)
 
         return when (localVarResponse.responseType) {
@@ -2185,7 +2185,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceItemCreditsWithHttpInfo(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : ApiResponse<ItemCredits?> {
+    fun replaceItemCreditsWithHttpInfo(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : ApiResponse<ItemCredits?> {
         val localVariableConfig = replaceItemCreditsRequestConfig(itemId = itemId, itemCreditsInput = itemCreditsInput)
 
         return request<ItemCreditsInput, ItemCredits>(
@@ -2200,7 +2200,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemCreditsInput 
      * @return RequestConfig
      */
-    fun replaceItemCreditsRequestConfig(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : RequestConfig<ItemCreditsInput> {
+    fun replaceItemCreditsRequestConfig(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : RequestConfig<ItemCreditsInput> {
         val localVariableBody = itemCreditsInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2232,7 +2232,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceOccasion(occasionId: kotlin.Long, occasionInput: OccasionInput) : Occasion {
+    fun replaceOccasion(occasionId: kotlin.String, occasionInput: OccasionInput) : Occasion {
         val localVarResponse = replaceOccasionWithHttpInfo(occasionId = occasionId, occasionInput = occasionInput)
 
         return when (localVarResponse.responseType) {
@@ -2262,7 +2262,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceOccasionWithHttpInfo(occasionId: kotlin.Long, occasionInput: OccasionInput) : ApiResponse<Occasion?> {
+    fun replaceOccasionWithHttpInfo(occasionId: kotlin.String, occasionInput: OccasionInput) : ApiResponse<Occasion?> {
         val localVariableConfig = replaceOccasionRequestConfig(occasionId = occasionId, occasionInput = occasionInput)
 
         return request<OccasionInput, Occasion>(
@@ -2277,7 +2277,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param occasionInput 
      * @return RequestConfig
      */
-    fun replaceOccasionRequestConfig(occasionId: kotlin.Long, occasionInput: OccasionInput) : RequestConfig<OccasionInput> {
+    fun replaceOccasionRequestConfig(occasionId: kotlin.String, occasionInput: OccasionInput) : RequestConfig<OccasionInput> {
         val localVariableBody = occasionInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2391,7 +2391,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun setKidsContent(itemId: kotlin.Long, kidsContentInput: KidsContentInput) : Item {
+    fun setKidsContent(itemId: kotlin.String, kidsContentInput: KidsContentInput) : Item {
         val localVarResponse = setKidsContentWithHttpInfo(itemId = itemId, kidsContentInput = kidsContentInput)
 
         return when (localVarResponse.responseType) {
@@ -2421,7 +2421,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun setKidsContentWithHttpInfo(itemId: kotlin.Long, kidsContentInput: KidsContentInput) : ApiResponse<Item?> {
+    fun setKidsContentWithHttpInfo(itemId: kotlin.String, kidsContentInput: KidsContentInput) : ApiResponse<Item?> {
         val localVariableConfig = setKidsContentRequestConfig(itemId = itemId, kidsContentInput = kidsContentInput)
 
         return request<KidsContentInput, Item>(
@@ -2436,7 +2436,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param kidsContentInput 
      * @return RequestConfig
      */
-    fun setKidsContentRequestConfig(itemId: kotlin.Long, kidsContentInput: KidsContentInput) : RequestConfig<KidsContentInput> {
+    fun setKidsContentRequestConfig(itemId: kotlin.String, kidsContentInput: KidsContentInput) : RequestConfig<KidsContentInput> {
         val localVariableBody = kidsContentInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2540,7 +2540,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun updateIdentityReview(identityReviewId: kotlin.Long, identityReviewInput: IdentityReviewInput) : IdentityReview {
+    fun updateIdentityReview(identityReviewId: kotlin.String, identityReviewInput: IdentityReviewInput) : IdentityReview {
         val localVarResponse = updateIdentityReviewWithHttpInfo(identityReviewId = identityReviewId, identityReviewInput = identityReviewInput)
 
         return when (localVarResponse.responseType) {
@@ -2570,7 +2570,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun updateIdentityReviewWithHttpInfo(identityReviewId: kotlin.Long, identityReviewInput: IdentityReviewInput) : ApiResponse<IdentityReview?> {
+    fun updateIdentityReviewWithHttpInfo(identityReviewId: kotlin.String, identityReviewInput: IdentityReviewInput) : ApiResponse<IdentityReview?> {
         val localVariableConfig = updateIdentityReviewRequestConfig(identityReviewId = identityReviewId, identityReviewInput = identityReviewInput)
 
         return request<IdentityReviewInput, IdentityReview>(
@@ -2585,7 +2585,7 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param identityReviewInput 
      * @return RequestConfig
      */
-    fun updateIdentityReviewRequestConfig(identityReviewId: kotlin.Long, identityReviewInput: IdentityReviewInput) : RequestConfig<IdentityReviewInput> {
+    fun updateIdentityReviewRequestConfig(identityReviewId: kotlin.String, identityReviewInput: IdentityReviewInput) : RequestConfig<IdentityReviewInput> {
         val localVariableBody = identityReviewInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

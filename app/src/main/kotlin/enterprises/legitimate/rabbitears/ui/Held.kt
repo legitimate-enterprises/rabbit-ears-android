@@ -14,7 +14,7 @@ import enterprises.legitimate.rabbitears.kit.TitleKind
 
 /** A movie, show, season, episode or video that a tile or row stands for. */
 sealed interface Held {
-    val id: Long
+    val id: String
 
     /** [local] is an action only this row has, which follows the shared ones. */
     class Title(
@@ -84,7 +84,7 @@ fun Hold(
 
 /** What a long press did before the menu: begin selecting with this one picked. */
 @Composable
-private fun SelectEntry(selection: Selection?, id: Long, close: () -> Unit) {
+private fun SelectEntry(selection: Selection?, id: String, close: () -> Unit) {
     if (selection == null) return
     MenuAction("Select") {
         close()

@@ -60,11 +60,11 @@ import kotlinx.serialization.encoding.Encoder
 data class PlaybackStream (
 
     @SerialName(value = "sessionId")
-    val sessionId: kotlin.Long,
+    val sessionId: kotlin.String,
 
     /* The file in play; the audio and subtitle menus list its tracks. */
     @SerialName(value = "mediaFileId")
-    val mediaFileId: kotlin.Long,
+    val mediaFileId: kotlin.String,
 
     @SerialName(value = "entry")
     val entry: PlanEntry,

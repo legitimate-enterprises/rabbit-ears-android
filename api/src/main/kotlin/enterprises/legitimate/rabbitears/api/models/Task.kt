@@ -35,6 +35,7 @@ import kotlinx.serialization.Contextual
  * @param kind
  * @param enabled
  * @param createdAt
+ * @param modifiedAt
  * @param intervalSeconds
  * @param nextRunAt
  * @param runRequestedAt Set while a Run now waits to start. Read-only.
@@ -45,7 +46,7 @@ import kotlinx.serialization.Contextual
 data class Task (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,
@@ -58,6 +59,9 @@ data class Task (
 
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     @SerialName(value = "intervalSeconds")
     val intervalSeconds: kotlin.Int? = null,

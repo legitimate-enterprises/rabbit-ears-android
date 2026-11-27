@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
  * starts playback. In the background nothing is asked.
  */
 @Composable
-fun rememberTogether(itemId: Long, title: String? = null): WatchTogetherModel? {
+fun rememberTogether(itemId: String, title: String? = null): WatchTogetherModel? {
     val nav = LocalNav.current
     val together = nav.together(itemId) ?: return null
     val scope = rememberCoroutineScope()

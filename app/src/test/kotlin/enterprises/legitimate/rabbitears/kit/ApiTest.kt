@@ -67,7 +67,7 @@ class ApiTest {
     @Test
     fun sendsTheDeviceTokenAndDecodesTheAnswer() {
         val server = FakeServer()
-        server.on("GET /items", body = Json.page(Json.item(7, "movie", "Flow", runtime = 85)))
+        server.on("GET /items", body = Json.page(Json.item("7", "movie", "Flow", runtime = 85)))
         val page = server.api("secret").items.listItems(kind = ItemKind.movie)
         assertEquals("Flow", page.items.single().metadata?.title)
         assertEquals(ItemKind.movie, page.items.single().kind)

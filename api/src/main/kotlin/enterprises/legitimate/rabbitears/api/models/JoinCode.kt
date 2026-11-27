@@ -35,15 +35,18 @@ import kotlinx.serialization.Contextual
  * @param accountId
  * @param expiresAt
  * @param createdAt
+ * @param modifiedAt
  * @param usedAt
  * @param revokedAt
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class JoinCode (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "code")
     val code: kotlin.String,
@@ -53,7 +56,7 @@ data class JoinCode (
     val link: kotlin.String,
 
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long,
+    val accountId: kotlin.String,
 
     @Contextual @SerialName(value = "expiresAt")
     val expiresAt: java.time.OffsetDateTime,
@@ -61,11 +64,22 @@ data class JoinCode (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
+
     @Contextual @SerialName(value = "usedAt")
     val usedAt: java.time.OffsetDateTime? = null,
 
     @Contextual @SerialName(value = "revokedAt")
-    val revokedAt: java.time.OffsetDateTime? = null
+    val revokedAt: java.time.OffsetDateTime? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

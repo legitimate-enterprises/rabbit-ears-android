@@ -30,13 +30,18 @@ import kotlinx.serialization.Contextual
 
 /**
  * @param path
+ * @param id On addLibraryFolder: the new folder's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceLibraryFolder, an id other than the path's answers 400.
  */
 @Serializable
 
 data class FolderInput (
 
     @SerialName(value = "path")
-    val path: kotlin.String
+    val path: kotlin.String,
+
+    /* On addLibraryFolder: the new folder's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceLibraryFolder, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null
 
 ) {
 

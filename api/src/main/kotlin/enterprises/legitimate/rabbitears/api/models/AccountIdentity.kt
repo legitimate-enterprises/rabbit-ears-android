@@ -34,6 +34,7 @@ import kotlinx.serialization.Contextual
  * @param providerId
  * @param subject The provider's ID for the user.
  * @param createdAt
+ * @param modifiedAt
  * @param email As the provider gave it when the identity was linked.
  */
 @Serializable
@@ -41,13 +42,13 @@ import kotlinx.serialization.Contextual
 data class AccountIdentity (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long,
+    val accountId: kotlin.String,
 
     @SerialName(value = "providerId")
-    val providerId: kotlin.Long,
+    val providerId: kotlin.String,
 
     /* The provider's ID for the user. */
     @SerialName(value = "subject")
@@ -55,6 +56,9 @@ data class AccountIdentity (
 
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* As the provider gave it when the identity was linked. */
     @SerialName(value = "email")

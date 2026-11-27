@@ -35,6 +35,8 @@ import kotlinx.serialization.encoding.Encoder
 /**
  * @param name
  * @param email
+ * @param id The new adult's account id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409.
+ * @param joinCodeId The new join code's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409.
  * @param expiresInDays
  */
 @Serializable
@@ -46,6 +48,14 @@ data class HouseholdAdultInput (
 
     @SerialName(value = "email")
     val email: kotlin.String,
+
+    /* The new adult's account id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
+
+    /* The new join code's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. */
+    @SerialName(value = "joinCodeId")
+    val joinCodeId: kotlin.String? = null,
 
     @SerialName(value = "expiresInDays")
     val expiresInDays: HouseholdAdultInput.ExpiresInDays? = ExpiresInDays._7

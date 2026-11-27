@@ -36,7 +36,7 @@ import kotlinx.serialization.Contextual
 data class DeviceHouseholdInput (
 
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long
+    val householdId: kotlin.String
 
 ) {
 

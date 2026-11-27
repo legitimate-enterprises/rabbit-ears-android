@@ -43,23 +43,25 @@ import kotlinx.serialization.encoding.Encoder
  * @param itemCount Rows of the play order now, as 48 songs; a container counts what it expands to.
  * @param durationMs The play order's rows' edition runtimes added up.
  * @param createdAt
- * @param updatedAt
+ * @param modifiedAt
  * @param shared For its owner, whether it is shared with any profile or household; for anyone else, true. Always sent; optional so a copy a client stored before the field existed still reads, as not shared. Clients draw a shared badge from it.
  * @param ownerName The owner's name, present when the playlist is shared with the profile or a household of theirs, for \"Shared by\".
  * @param artItemId The item whose poster stands for the playlist: the item of its first entry the active profile may see, which may be a show, season, artist or album, or for a collection its first such movie.
  * @param lastPlayedAt When playback last started with this playlistId.
  * @param imageUrl Server-relative URL of the custom image the owner set, served by getPlaylistImage with the device token like artwork; it changes whenever the image does. Absent while none is set, and while getPlaylistImage would not find it; the client then shows artItemId's poster.
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class Playlist (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     /* The owner's profile. */
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,
@@ -81,8 +83,8 @@ data class Playlist (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* For its owner, whether it is shared with any profile or household; for anyone else, true. Always sent; optional so a copy a client stored before the field existed still reads, as not shared. Clients draw a shared badge from it. */
     @SerialName(value = "shared")
@@ -94,7 +96,7 @@ data class Playlist (
 
     /* The item whose poster stands for the playlist: the item of its first entry the active profile may see, which may be a show, season, artist or album, or for a collection its first such movie. */
     @SerialName(value = "artItemId")
-    val artItemId: kotlin.Long? = null,
+    val artItemId: kotlin.String? = null,
 
     /* When playback last started with this playlistId. */
     @Contextual @SerialName(value = "lastPlayedAt")
@@ -102,7 +104,15 @@ data class Playlist (
 
     /* Server-relative URL of the custom image the owner set, served by getPlaylistImage with the device token like artwork; it changes whenever the image does. Absent while none is set, and while getPlaylistImage would not find it; the client then shows artItemId's poster. */
     @SerialName(value = "imageUrl")
-    val imageUrl: kotlin.String? = null
+    val imageUrl: kotlin.String? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

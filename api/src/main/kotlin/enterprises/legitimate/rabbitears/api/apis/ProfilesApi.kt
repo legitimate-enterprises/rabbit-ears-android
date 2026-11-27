@@ -38,10 +38,12 @@ import enterprises.legitimate.rabbitears.api.models.DeviceLinkPage
 import enterprises.legitimate.rabbitears.api.models.Error
 import enterprises.legitimate.rabbitears.api.models.HouseholdAdultInput
 import enterprises.legitimate.rabbitears.api.models.HouseholdInvite
+import enterprises.legitimate.rabbitears.api.models.JoinCodeResendInput
 import enterprises.legitimate.rabbitears.api.models.MakeAdultInput
 import enterprises.legitimate.rabbitears.api.models.MusicRecentKind
 import enterprises.legitimate.rabbitears.api.models.MusicRecentPage
 import enterprises.legitimate.rabbitears.api.models.PinRequest
+import enterprises.legitimate.rabbitears.api.models.PlayInput
 import enterprises.legitimate.rabbitears.api.models.ProfileInput
 import enterprises.legitimate.rabbitears.api.models.ProfileOffer
 import enterprises.legitimate.rabbitears.api.models.ProfileOfferInput
@@ -78,7 +80,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -95,7 +97,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun acceptProfileOffer(offerId: kotlin.Long) : Unit {
+    fun acceptProfileOffer(offerId: kotlin.String) : Unit {
         val localVarResponse = acceptProfileOfferWithHttpInfo(offerId = offerId)
 
         return when (localVarResponse.responseType) {
@@ -123,7 +125,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun acceptProfileOfferWithHttpInfo(offerId: kotlin.Long) : ApiResponse<Unit?> {
+    fun acceptProfileOfferWithHttpInfo(offerId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = acceptProfileOfferRequestConfig(offerId = offerId)
 
         return request<Unit, Unit>(
@@ -137,7 +139,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offerId 
      * @return RequestConfig
      */
-    fun acceptProfileOfferRequestConfig(offerId: kotlin.Long) : RequestConfig<Unit> {
+    fun acceptProfileOfferRequestConfig(offerId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -241,7 +243,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun allowItem(profileId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun allowItem(profileId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = allowItemWithHttpInfo(profileId = profileId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -270,7 +272,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun allowItemWithHttpInfo(profileId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun allowItemWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = allowItemRequestConfig(profileId = profileId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -285,7 +287,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param itemId 
      * @return RequestConfig
      */
-    fun allowItemRequestConfig(profileId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun allowItemRequestConfig(profileId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -314,7 +316,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun clearProfilePin(profileId: kotlin.Long) : Unit {
+    fun clearProfilePin(profileId: kotlin.String) : Unit {
         val localVarResponse = clearProfilePinWithHttpInfo(profileId = profileId)
 
         return when (localVarResponse.responseType) {
@@ -342,7 +344,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun clearProfilePinWithHttpInfo(profileId: kotlin.Long) : ApiResponse<Unit?> {
+    fun clearProfilePinWithHttpInfo(profileId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = clearProfilePinRequestConfig(profileId = profileId)
 
         return request<Unit, Unit>(
@@ -356,7 +358,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param profileId 
      * @return RequestConfig
      */
-    fun clearProfilePinRequestConfig(profileId: kotlin.Long) : RequestConfig<Unit> {
+    fun clearProfilePinRequestConfig(profileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -533,7 +535,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteHouseholdDeviceLink(linkId: kotlin.Long) : Unit {
+    fun deleteHouseholdDeviceLink(linkId: kotlin.String) : Unit {
         val localVarResponse = deleteHouseholdDeviceLinkWithHttpInfo(linkId = linkId)
 
         return when (localVarResponse.responseType) {
@@ -561,7 +563,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteHouseholdDeviceLinkWithHttpInfo(linkId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteHouseholdDeviceLinkWithHttpInfo(linkId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteHouseholdDeviceLinkRequestConfig(linkId = linkId)
 
         return request<Unit, Unit>(
@@ -575,7 +577,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param linkId 
      * @return RequestConfig
      */
-    fun deleteHouseholdDeviceLinkRequestConfig(linkId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteHouseholdDeviceLinkRequestConfig(linkId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -604,7 +606,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteProfile(profileId: kotlin.Long) : Unit {
+    fun deleteProfile(profileId: kotlin.String) : Unit {
         val localVarResponse = deleteProfileWithHttpInfo(profileId = profileId)
 
         return when (localVarResponse.responseType) {
@@ -632,7 +634,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteProfileWithHttpInfo(profileId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteProfileWithHttpInfo(profileId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteProfileRequestConfig(profileId = profileId)
 
         return request<Unit, Unit>(
@@ -646,7 +648,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param profileId 
      * @return RequestConfig
      */
-    fun deleteProfileRequestConfig(profileId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteProfileRequestConfig(profileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -675,7 +677,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteProfileOffer(offerId: kotlin.Long) : Unit {
+    fun deleteProfileOffer(offerId: kotlin.String) : Unit {
         val localVarResponse = deleteProfileOfferWithHttpInfo(offerId = offerId)
 
         return when (localVarResponse.responseType) {
@@ -703,7 +705,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteProfileOfferWithHttpInfo(offerId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteProfileOfferWithHttpInfo(offerId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteProfileOfferRequestConfig(offerId = offerId)
 
         return request<Unit, Unit>(
@@ -717,7 +719,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offerId 
      * @return RequestConfig
      */
-    fun deleteProfileOfferRequestConfig(offerId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteProfileOfferRequestConfig(offerId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -739,6 +741,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * 
      * @param profileId 
      * @param itemId 
+     * @param at When it was forgotten, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A state that changed later stays, and the answer is still 204. (optional)
      * @return void
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
@@ -747,8 +750,8 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteWatchState(profileId: kotlin.Long, itemId: kotlin.Long) : Unit {
-        val localVarResponse = deleteWatchStateWithHttpInfo(profileId = profileId, itemId = itemId)
+    fun deleteWatchState(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime? = null) : Unit {
+        val localVarResponse = deleteWatchStateWithHttpInfo(profileId = profileId, itemId = itemId, at = at)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> Unit
@@ -771,13 +774,14 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * 
      * @param profileId 
      * @param itemId 
+     * @param at When it was forgotten, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A state that changed later stays, and the answer is still 204. (optional)
      * @return ApiResponse<Unit?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteWatchStateWithHttpInfo(profileId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
-        val localVariableConfig = deleteWatchStateRequestConfig(profileId = profileId, itemId = itemId)
+    fun deleteWatchStateWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : ApiResponse<Unit?> {
+        val localVariableConfig = deleteWatchStateRequestConfig(profileId = profileId, itemId = itemId, at = at)
 
         return request<Unit, Unit>(
             localVariableConfig
@@ -789,11 +793,17 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      *
      * @param profileId 
      * @param itemId 
+     * @param at When it was forgotten, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A state that changed later stays, and the answer is still 204. (optional)
      * @return RequestConfig
      */
-    fun deleteWatchStateRequestConfig(profileId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteWatchStateRequestConfig(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : RequestConfig<Unit> {
         val localVariableBody = null
-        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (at != null) {
+                    put("at", listOf(parseDateToQueryString<java.time.OffsetDateTime>(at)))
+                }
+            }
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["Accept"] = "application/json"
 
@@ -821,7 +831,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun disallowItem(profileId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun disallowItem(profileId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = disallowItemWithHttpInfo(profileId = profileId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -850,7 +860,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun disallowItemWithHttpInfo(profileId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun disallowItemWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = disallowItemRequestConfig(profileId = profileId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -865,7 +875,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param itemId 
      * @return RequestConfig
      */
-    fun disallowItemRequestConfig(profileId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun disallowItemRequestConfig(profileId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -895,7 +905,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getProfile(profileId: kotlin.Long) : Account {
+    fun getProfile(profileId: kotlin.String) : Account {
         val localVarResponse = getProfileWithHttpInfo(profileId = profileId)
 
         return when (localVarResponse.responseType) {
@@ -924,7 +934,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getProfileWithHttpInfo(profileId: kotlin.Long) : ApiResponse<Account?> {
+    fun getProfileWithHttpInfo(profileId: kotlin.String) : ApiResponse<Account?> {
         val localVariableConfig = getProfileRequestConfig(profileId = profileId)
 
         return request<Unit, Account>(
@@ -938,7 +948,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param profileId 
      * @return RequestConfig
      */
-    fun getProfileRequestConfig(profileId: kotlin.Long) : RequestConfig<Unit> {
+    fun getProfileRequestConfig(profileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -968,7 +978,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getProfileAvatar(profileId: kotlin.Long) : java.io.File {
+    fun getProfileAvatar(profileId: kotlin.String) : java.io.File {
         val localVarResponse = getProfileAvatarWithHttpInfo(profileId = profileId)
 
         return when (localVarResponse.responseType) {
@@ -997,7 +1007,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getProfileAvatarWithHttpInfo(profileId: kotlin.Long) : ApiResponse<java.io.File?> {
+    fun getProfileAvatarWithHttpInfo(profileId: kotlin.String) : ApiResponse<java.io.File?> {
         val localVariableConfig = getProfileAvatarRequestConfig(profileId = profileId)
 
         return request<Unit, java.io.File>(
@@ -1011,7 +1021,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param profileId 
      * @return RequestConfig
      */
-    fun getProfileAvatarRequestConfig(profileId: kotlin.Long) : RequestConfig<Unit> {
+    fun getProfileAvatarRequestConfig(profileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1044,7 +1054,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getUpNext(profileId: kotlin.Long, itemId: kotlin.Long, playlistId: kotlin.Long? = null, index: kotlin.Int? = null) : UpNext {
+    fun getUpNext(profileId: kotlin.String, itemId: kotlin.String, playlistId: kotlin.String? = null, index: kotlin.Int? = null) : UpNext {
         val localVarResponse = getUpNextWithHttpInfo(profileId = profileId, itemId = itemId, playlistId = playlistId, index = index)
 
         return when (localVarResponse.responseType) {
@@ -1076,7 +1086,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getUpNextWithHttpInfo(profileId: kotlin.Long, itemId: kotlin.Long, playlistId: kotlin.Long?, index: kotlin.Int?) : ApiResponse<UpNext?> {
+    fun getUpNextWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String, playlistId: kotlin.String?, index: kotlin.Int?) : ApiResponse<UpNext?> {
         val localVariableConfig = getUpNextRequestConfig(profileId = profileId, itemId = itemId, playlistId = playlistId, index = index)
 
         return request<Unit, UpNext>(
@@ -1093,7 +1103,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param index The row of the play order playing, counted from 0; with playlistId only. (optional)
      * @return RequestConfig
      */
-    fun getUpNextRequestConfig(profileId: kotlin.Long, itemId: kotlin.Long, playlistId: kotlin.Long?, index: kotlin.Int?) : RequestConfig<Unit> {
+    fun getUpNextRequestConfig(profileId: kotlin.String, itemId: kotlin.String, playlistId: kotlin.String?, index: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1132,7 +1142,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getWatchState(profileId: kotlin.Long, itemId: kotlin.Long) : WatchState {
+    fun getWatchState(profileId: kotlin.String, itemId: kotlin.String) : WatchState {
         val localVarResponse = getWatchStateWithHttpInfo(profileId = profileId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -1162,7 +1172,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getWatchStateWithHttpInfo(profileId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<WatchState?> {
+    fun getWatchStateWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String) : ApiResponse<WatchState?> {
         val localVariableConfig = getWatchStateRequestConfig(profileId = profileId, itemId = itemId)
 
         return request<Unit, WatchState>(
@@ -1177,7 +1187,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param itemId 
      * @return RequestConfig
      */
-    fun getWatchStateRequestConfig(profileId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun getWatchStateRequestConfig(profileId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1209,7 +1219,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listActiveOccasions(profileId: kotlin.Long, date: java.time.LocalDate, itemId: kotlin.Long? = null) : ActiveOccasionList {
+    fun listActiveOccasions(profileId: kotlin.String, date: java.time.LocalDate, itemId: kotlin.String? = null) : ActiveOccasionList {
         val localVarResponse = listActiveOccasionsWithHttpInfo(profileId = profileId, date = date, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -1240,7 +1250,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listActiveOccasionsWithHttpInfo(profileId: kotlin.Long, date: java.time.LocalDate, itemId: kotlin.Long?) : ApiResponse<ActiveOccasionList?> {
+    fun listActiveOccasionsWithHttpInfo(profileId: kotlin.String, date: java.time.LocalDate, itemId: kotlin.String?) : ApiResponse<ActiveOccasionList?> {
         val localVariableConfig = listActiveOccasionsRequestConfig(profileId = profileId, date = date, itemId = itemId)
 
         return request<Unit, ActiveOccasionList>(
@@ -1256,7 +1266,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param itemId Only occasions with this movie or show among the members the profile can list. (optional)
      * @return RequestConfig
      */
-    fun listActiveOccasionsRequestConfig(profileId: kotlin.Long, date: java.time.LocalDate, itemId: kotlin.Long?) : RequestConfig<Unit> {
+    fun listActiveOccasionsRequestConfig(profileId: kotlin.String, date: java.time.LocalDate, itemId: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1292,7 +1302,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listAllowedFor(itemId: kotlin.Long) : AllowedFor {
+    fun listAllowedFor(itemId: kotlin.String) : AllowedFor {
         val localVarResponse = listAllowedForWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -1321,7 +1331,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listAllowedForWithHttpInfo(itemId: kotlin.Long) : ApiResponse<AllowedFor?> {
+    fun listAllowedForWithHttpInfo(itemId: kotlin.String) : ApiResponse<AllowedFor?> {
         val localVariableConfig = listAllowedForRequestConfig(itemId = itemId)
 
         return request<Unit, AllowedFor>(
@@ -1335,7 +1345,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param itemId 
      * @return RequestConfig
      */
-    fun listAllowedForRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun listAllowedForRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1365,7 +1375,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listAllowedItems(profileId: kotlin.Long) : AllowList {
+    fun listAllowedItems(profileId: kotlin.String) : AllowList {
         val localVarResponse = listAllowedItemsWithHttpInfo(profileId = profileId)
 
         return when (localVarResponse.responseType) {
@@ -1394,7 +1404,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listAllowedItemsWithHttpInfo(profileId: kotlin.Long) : ApiResponse<AllowList?> {
+    fun listAllowedItemsWithHttpInfo(profileId: kotlin.String) : ApiResponse<AllowList?> {
         val localVariableConfig = listAllowedItemsRequestConfig(profileId = profileId)
 
         return request<Unit, AllowList>(
@@ -1408,7 +1418,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param profileId 
      * @return RequestConfig
      */
-    fun listAllowedItemsRequestConfig(profileId: kotlin.Long) : RequestConfig<Unit> {
+    fun listAllowedItemsRequestConfig(profileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1749,7 +1759,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listRecentlyPlayedMusic(profileId: kotlin.Long, kind: MusicRecentKind? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicRecentPage {
+    fun listRecentlyPlayedMusic(profileId: kotlin.String, kind: MusicRecentKind? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MusicRecentPage {
         val localVarResponse = listRecentlyPlayedMusicWithHttpInfo(profileId = profileId, kind = kind, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1781,7 +1791,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listRecentlyPlayedMusicWithHttpInfo(profileId: kotlin.Long, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicRecentPage?> {
+    fun listRecentlyPlayedMusicWithHttpInfo(profileId: kotlin.String, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MusicRecentPage?> {
         val localVariableConfig = listRecentlyPlayedMusicRequestConfig(profileId = profileId, kind = kind, limit = limit, offset = offset)
 
         return request<Unit, MusicRecentPage>(
@@ -1798,7 +1808,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listRecentlyPlayedMusicRequestConfig(profileId: kotlin.Long, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listRecentlyPlayedMusicRequestConfig(profileId: kotlin.String, kind: MusicRecentKind?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1841,7 +1851,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listShowProgress(profileId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ShowProgressPage {
+    fun listShowProgress(profileId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ShowProgressPage {
         val localVarResponse = listShowProgressWithHttpInfo(profileId = profileId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1872,7 +1882,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listShowProgressWithHttpInfo(profileId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ShowProgressPage?> {
+    fun listShowProgressWithHttpInfo(profileId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ShowProgressPage?> {
         val localVariableConfig = listShowProgressRequestConfig(profileId = profileId, limit = limit, offset = offset)
 
         return request<Unit, ShowProgressPage>(
@@ -1888,7 +1898,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listShowProgressRequestConfig(profileId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listShowProgressRequestConfig(profileId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1929,7 +1939,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listWatchStates(profileId: kotlin.Long, parentId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : WatchStatePage {
+    fun listWatchStates(profileId: kotlin.String, parentId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : WatchStatePage {
         val localVarResponse = listWatchStatesWithHttpInfo(profileId = profileId, parentId = parentId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -1961,7 +1971,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listWatchStatesWithHttpInfo(profileId: kotlin.Long, parentId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<WatchStatePage?> {
+    fun listWatchStatesWithHttpInfo(profileId: kotlin.String, parentId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<WatchStatePage?> {
         val localVariableConfig = listWatchStatesRequestConfig(profileId = profileId, parentId = parentId, limit = limit, offset = offset)
 
         return request<Unit, WatchStatePage>(
@@ -1978,7 +1988,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listWatchStatesRequestConfig(profileId: kotlin.Long, parentId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listWatchStatesRequestConfig(profileId: kotlin.String, parentId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -2088,7 +2098,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun makeProfileAdult(profileId: kotlin.Long, makeAdultInput: MakeAdultInput) : HouseholdInvite {
+    fun makeProfileAdult(profileId: kotlin.String, makeAdultInput: MakeAdultInput) : HouseholdInvite {
         val localVarResponse = makeProfileAdultWithHttpInfo(profileId = profileId, makeAdultInput = makeAdultInput)
 
         return when (localVarResponse.responseType) {
@@ -2118,7 +2128,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun makeProfileAdultWithHttpInfo(profileId: kotlin.Long, makeAdultInput: MakeAdultInput) : ApiResponse<HouseholdInvite?> {
+    fun makeProfileAdultWithHttpInfo(profileId: kotlin.String, makeAdultInput: MakeAdultInput) : ApiResponse<HouseholdInvite?> {
         val localVariableConfig = makeProfileAdultRequestConfig(profileId = profileId, makeAdultInput = makeAdultInput)
 
         return request<MakeAdultInput, HouseholdInvite>(
@@ -2133,7 +2143,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param makeAdultInput 
      * @return RequestConfig
      */
-    fun makeProfileAdultRequestConfig(profileId: kotlin.Long, makeAdultInput: MakeAdultInput) : RequestConfig<MakeAdultInput> {
+    fun makeProfileAdultRequestConfig(profileId: kotlin.String, makeAdultInput: MakeAdultInput) : RequestConfig<MakeAdultInput> {
         val localVariableBody = makeAdultInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2238,7 +2248,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun putWatchState(profileId: kotlin.Long, itemId: kotlin.Long, watchStateInput: WatchStateInput) : WatchState {
+    fun putWatchState(profileId: kotlin.String, itemId: kotlin.String, watchStateInput: WatchStateInput) : WatchState {
         val localVarResponse = putWatchStateWithHttpInfo(profileId = profileId, itemId = itemId, watchStateInput = watchStateInput)
 
         return when (localVarResponse.responseType) {
@@ -2269,7 +2279,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun putWatchStateWithHttpInfo(profileId: kotlin.Long, itemId: kotlin.Long, watchStateInput: WatchStateInput) : ApiResponse<WatchState?> {
+    fun putWatchStateWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String, watchStateInput: WatchStateInput) : ApiResponse<WatchState?> {
         val localVariableConfig = putWatchStateRequestConfig(profileId = profileId, itemId = itemId, watchStateInput = watchStateInput)
 
         return request<WatchStateInput, WatchState>(
@@ -2285,7 +2295,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param watchStateInput 
      * @return RequestConfig
      */
-    fun putWatchStateRequestConfig(profileId: kotlin.Long, itemId: kotlin.Long, watchStateInput: WatchStateInput) : RequestConfig<WatchStateInput> {
+    fun putWatchStateRequestConfig(profileId: kotlin.String, itemId: kotlin.String, watchStateInput: WatchStateInput) : RequestConfig<WatchStateInput> {
         val localVariableBody = watchStateInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2316,7 +2326,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun putWatchStates(profileId: kotlin.Long, watchStateBatchInput: WatchStateBatchInput) : Unit {
+    fun putWatchStates(profileId: kotlin.String, watchStateBatchInput: WatchStateBatchInput) : Unit {
         val localVarResponse = putWatchStatesWithHttpInfo(profileId = profileId, watchStateBatchInput = watchStateBatchInput)
 
         return when (localVarResponse.responseType) {
@@ -2345,7 +2355,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun putWatchStatesWithHttpInfo(profileId: kotlin.Long, watchStateBatchInput: WatchStateBatchInput) : ApiResponse<Unit?> {
+    fun putWatchStatesWithHttpInfo(profileId: kotlin.String, watchStateBatchInput: WatchStateBatchInput) : ApiResponse<Unit?> {
         val localVariableConfig = putWatchStatesRequestConfig(profileId = profileId, watchStateBatchInput = watchStateBatchInput)
 
         return request<WatchStateBatchInput, Unit>(
@@ -2360,7 +2370,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param watchStateBatchInput 
      * @return RequestConfig
      */
-    fun putWatchStatesRequestConfig(profileId: kotlin.Long, watchStateBatchInput: WatchStateBatchInput) : RequestConfig<WatchStateBatchInput> {
+    fun putWatchStatesRequestConfig(profileId: kotlin.String, watchStateBatchInput: WatchStateBatchInput) : RequestConfig<WatchStateBatchInput> {
         val localVariableBody = watchStateBatchInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2392,7 +2402,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun putYouTubeChannelWatchState(profileId: kotlin.Long, channelId: kotlin.Long, youTubeChannelWatchInput: YouTubeChannelWatchInput) : Unit {
+    fun putYouTubeChannelWatchState(profileId: kotlin.String, channelId: kotlin.String, youTubeChannelWatchInput: YouTubeChannelWatchInput) : Unit {
         val localVarResponse = putYouTubeChannelWatchStateWithHttpInfo(profileId = profileId, channelId = channelId, youTubeChannelWatchInput = youTubeChannelWatchInput)
 
         return when (localVarResponse.responseType) {
@@ -2422,7 +2432,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun putYouTubeChannelWatchStateWithHttpInfo(profileId: kotlin.Long, channelId: kotlin.Long, youTubeChannelWatchInput: YouTubeChannelWatchInput) : ApiResponse<Unit?> {
+    fun putYouTubeChannelWatchStateWithHttpInfo(profileId: kotlin.String, channelId: kotlin.String, youTubeChannelWatchInput: YouTubeChannelWatchInput) : ApiResponse<Unit?> {
         val localVariableConfig = putYouTubeChannelWatchStateRequestConfig(profileId = profileId, channelId = channelId, youTubeChannelWatchInput = youTubeChannelWatchInput)
 
         return request<YouTubeChannelWatchInput, Unit>(
@@ -2438,7 +2448,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param youTubeChannelWatchInput 
      * @return RequestConfig
      */
-    fun putYouTubeChannelWatchStateRequestConfig(profileId: kotlin.Long, channelId: kotlin.Long, youTubeChannelWatchInput: YouTubeChannelWatchInput) : RequestConfig<YouTubeChannelWatchInput> {
+    fun putYouTubeChannelWatchStateRequestConfig(profileId: kotlin.String, channelId: kotlin.String, youTubeChannelWatchInput: YouTubeChannelWatchInput) : RequestConfig<YouTubeChannelWatchInput> {
         val localVariableBody = youTubeChannelWatchInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2448,6 +2458,86 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
         return RequestConfig(
             method = RequestMethod.PUT,
             path = "/profiles/{profileId}/youtube/channels/{channelId}/watch-state".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"channelId"+"}", encodeURIComponent(channelId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * POST /profiles/{profileId}/watch-state/{itemId}/plays
+     * Count one finished play the server did not see.
+     * For a play the server did not stream, such as of a downloaded file, sent once per play when it ends. playCount goes up by one, and lastPlayedAt becomes the latest play, in whatever order plays and putWatchState arrive. Over a state that changed no later than at, the item is watched and resumes from the start of the edition played; a state that changed later stays. Playback the server streams counts a play only when it marks the item watched, so a client sends no putWatchState with watched true for a play it records.
+     * @param profileId 
+     * @param itemId 
+     * @param playInput 
+     * @return WatchState
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun recordPlay(profileId: kotlin.String, itemId: kotlin.String, playInput: PlayInput) : WatchState {
+        val localVarResponse = recordPlayWithHttpInfo(profileId = profileId, itemId = itemId, playInput = playInput)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as WatchState
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * POST /profiles/{profileId}/watch-state/{itemId}/plays
+     * Count one finished play the server did not see.
+     * For a play the server did not stream, such as of a downloaded file, sent once per play when it ends. playCount goes up by one, and lastPlayedAt becomes the latest play, in whatever order plays and putWatchState arrive. Over a state that changed no later than at, the item is watched and resumes from the start of the edition played; a state that changed later stays. Playback the server streams counts a play only when it marks the item watched, so a client sends no putWatchState with watched true for a play it records.
+     * @param profileId 
+     * @param itemId 
+     * @param playInput 
+     * @return ApiResponse<WatchState?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun recordPlayWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String, playInput: PlayInput) : ApiResponse<WatchState?> {
+        val localVariableConfig = recordPlayRequestConfig(profileId = profileId, itemId = itemId, playInput = playInput)
+
+        return request<PlayInput, WatchState>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation recordPlay
+     *
+     * @param profileId 
+     * @param itemId 
+     * @param playInput 
+     * @return RequestConfig
+     */
+    fun recordPlayRequestConfig(profileId: kotlin.String, itemId: kotlin.String, playInput: PlayInput) : RequestConfig<PlayInput> {
+        val localVariableBody = playInput
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Content-Type"] = "application/json"
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.POST,
+            path = "/profiles/{profileId}/watch-state/{itemId}/plays".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"itemId"+"}", encodeURIComponent(itemId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,
@@ -2470,7 +2560,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceProfile(profileId: kotlin.Long, profileInput: ProfileInput) : Account {
+    fun replaceProfile(profileId: kotlin.String, profileInput: ProfileInput) : Account {
         val localVarResponse = replaceProfileWithHttpInfo(profileId = profileId, profileInput = profileInput)
 
         return when (localVarResponse.responseType) {
@@ -2500,7 +2590,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceProfileWithHttpInfo(profileId: kotlin.Long, profileInput: ProfileInput) : ApiResponse<Account?> {
+    fun replaceProfileWithHttpInfo(profileId: kotlin.String, profileInput: ProfileInput) : ApiResponse<Account?> {
         val localVariableConfig = replaceProfileRequestConfig(profileId = profileId, profileInput = profileInput)
 
         return request<ProfileInput, Account>(
@@ -2515,7 +2605,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param profileInput 
      * @return RequestConfig
      */
-    fun replaceProfileRequestConfig(profileId: kotlin.Long, profileInput: ProfileInput) : RequestConfig<ProfileInput> {
+    fun replaceProfileRequestConfig(profileId: kotlin.String, profileInput: ProfileInput) : RequestConfig<ProfileInput> {
         val localVariableBody = profileInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2537,6 +2627,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * The owner gives a pending adult a new 7-day code, revoking their unused ones.
      * 
      * @param profileId 
+     * @param joinCodeResendInput  (optional)
      * @return HouseholdInvite
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
@@ -2546,8 +2637,8 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun resendProfileJoinCode(profileId: kotlin.Long) : HouseholdInvite {
-        val localVarResponse = resendProfileJoinCodeWithHttpInfo(profileId = profileId)
+    fun resendProfileJoinCode(profileId: kotlin.String, joinCodeResendInput: JoinCodeResendInput? = null) : HouseholdInvite {
+        val localVarResponse = resendProfileJoinCodeWithHttpInfo(profileId = profileId, joinCodeResendInput = joinCodeResendInput)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as HouseholdInvite
@@ -2569,16 +2660,17 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * The owner gives a pending adult a new 7-day code, revoking their unused ones.
      * 
      * @param profileId 
+     * @param joinCodeResendInput  (optional)
      * @return ApiResponse<HouseholdInvite?>
      * @throws IllegalStateException If the request is not correctly configured
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun resendProfileJoinCodeWithHttpInfo(profileId: kotlin.Long) : ApiResponse<HouseholdInvite?> {
-        val localVariableConfig = resendProfileJoinCodeRequestConfig(profileId = profileId)
+    fun resendProfileJoinCodeWithHttpInfo(profileId: kotlin.String, joinCodeResendInput: JoinCodeResendInput?) : ApiResponse<HouseholdInvite?> {
+        val localVariableConfig = resendProfileJoinCodeRequestConfig(profileId = profileId, joinCodeResendInput = joinCodeResendInput)
 
-        return request<Unit, HouseholdInvite>(
+        return request<JoinCodeResendInput, HouseholdInvite>(
             localVariableConfig
         )
     }
@@ -2587,12 +2679,14 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * To obtain the request config of the operation resendProfileJoinCode
      *
      * @param profileId 
+     * @param joinCodeResendInput  (optional)
      * @return RequestConfig
      */
-    fun resendProfileJoinCodeRequestConfig(profileId: kotlin.Long) : RequestConfig<Unit> {
-        val localVariableBody = null
+    fun resendProfileJoinCodeRequestConfig(profileId: kotlin.String, joinCodeResendInput: JoinCodeResendInput?) : RequestConfig<JoinCodeResendInput> {
+        val localVariableBody = joinCodeResendInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Content-Type"] = "application/json"
         localVariableHeaders["Accept"] = "application/json"
 
         return RequestConfig(
@@ -2619,7 +2713,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun setProfilePin(profileId: kotlin.Long, pinRequest: PinRequest) : Unit {
+    fun setProfilePin(profileId: kotlin.String, pinRequest: PinRequest) : Unit {
         val localVarResponse = setProfilePinWithHttpInfo(profileId = profileId, pinRequest = pinRequest)
 
         return when (localVarResponse.responseType) {
@@ -2648,7 +2742,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun setProfilePinWithHttpInfo(profileId: kotlin.Long, pinRequest: PinRequest) : ApiResponse<Unit?> {
+    fun setProfilePinWithHttpInfo(profileId: kotlin.String, pinRequest: PinRequest) : ApiResponse<Unit?> {
         val localVariableConfig = setProfilePinRequestConfig(profileId = profileId, pinRequest = pinRequest)
 
         return request<PinRequest, Unit>(
@@ -2663,7 +2757,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param pinRequest 
      * @return RequestConfig
      */
-    fun setProfilePinRequestConfig(profileId: kotlin.Long, pinRequest: PinRequest) : RequestConfig<PinRequest> {
+    fun setProfilePinRequestConfig(profileId: kotlin.String, pinRequest: PinRequest) : RequestConfig<PinRequest> {
         val localVariableBody = pinRequest
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2695,7 +2789,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun setProfilePreferences(profileId: kotlin.Long, profilePreferences: ProfilePreferences) : Account {
+    fun setProfilePreferences(profileId: kotlin.String, profilePreferences: ProfilePreferences) : Account {
         val localVarResponse = setProfilePreferencesWithHttpInfo(profileId = profileId, profilePreferences = profilePreferences)
 
         return when (localVarResponse.responseType) {
@@ -2725,7 +2819,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun setProfilePreferencesWithHttpInfo(profileId: kotlin.Long, profilePreferences: ProfilePreferences) : ApiResponse<Account?> {
+    fun setProfilePreferencesWithHttpInfo(profileId: kotlin.String, profilePreferences: ProfilePreferences) : ApiResponse<Account?> {
         val localVariableConfig = setProfilePreferencesRequestConfig(profileId = profileId, profilePreferences = profilePreferences)
 
         return request<ProfilePreferences, Account>(
@@ -2740,7 +2834,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param profilePreferences 
      * @return RequestConfig
      */
-    fun setProfilePreferencesRequestConfig(profileId: kotlin.Long, profilePreferences: ProfilePreferences) : RequestConfig<ProfilePreferences> {
+    fun setProfilePreferencesRequestConfig(profileId: kotlin.String, profilePreferences: ProfilePreferences) : RequestConfig<ProfilePreferences> {
         val localVariableBody = profilePreferences
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2847,7 +2941,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun unlockProfile(profileId: kotlin.Long, unlockRequest: UnlockRequest) : Unit {
+    fun unlockProfile(profileId: kotlin.String, unlockRequest: UnlockRequest) : Unit {
         val localVarResponse = unlockProfileWithHttpInfo(profileId = profileId, unlockRequest = unlockRequest)
 
         return when (localVarResponse.responseType) {
@@ -2876,7 +2970,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun unlockProfileWithHttpInfo(profileId: kotlin.Long, unlockRequest: UnlockRequest) : ApiResponse<Unit?> {
+    fun unlockProfileWithHttpInfo(profileId: kotlin.String, unlockRequest: UnlockRequest) : ApiResponse<Unit?> {
         val localVariableConfig = unlockProfileRequestConfig(profileId = profileId, unlockRequest = unlockRequest)
 
         return request<UnlockRequest, Unit>(
@@ -2891,7 +2985,7 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param unlockRequest 
      * @return RequestConfig
      */
-    fun unlockProfileRequestConfig(profileId: kotlin.Long, unlockRequest: UnlockRequest) : RequestConfig<UnlockRequest> {
+    fun unlockProfileRequestConfig(profileId: kotlin.String, unlockRequest: UnlockRequest) : RequestConfig<UnlockRequest> {
         val localVariableBody = unlockRequest
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

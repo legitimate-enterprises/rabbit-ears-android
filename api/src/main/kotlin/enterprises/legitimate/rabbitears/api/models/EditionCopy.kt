@@ -46,7 +46,7 @@ import kotlinx.serialization.encoding.Encoder
 data class EditionCopy (
 
     @SerialName(value = "mediaFileId")
-    val mediaFileId: kotlin.Long,
+    val mediaFileId: kotlin.String,
 
     /* 4K (at least 3200 wide or 2000 tall), 1080p (1600 or 1000), 720p (1200 or 700) or SD; absent without video. */
     @SerialName(value = "quality")

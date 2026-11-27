@@ -46,10 +46,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun MoreMenu(
     kind: PlaylistKind,
-    id: Long,
+    id: String,
     item: Item? = null,
     collection: Boolean = false,
-    editionId: Long? = null,
+    editionId: String? = null,
     onCollected: () -> Unit = {},
     /** What Download names it in Preferences; a title [item] names itself. */
     name: String? = null,
@@ -85,10 +85,10 @@ fun ActionMenu(
     open: Boolean,
     close: () -> Unit,
     kind: PlaylistKind,
-    id: Long,
+    id: String,
     item: Item? = null,
     collection: Boolean = false,
-    editionId: Long? = null,
+    editionId: String? = null,
     onCollected: () -> Unit = {},
     name: String? = null,
     extras: (@Composable (close: () -> Unit) -> Unit)? = null,
@@ -212,7 +212,7 @@ private fun ItemActions(shown: Item, actions: List<TitleAction>) {
  * the household has no such kid.
  */
 @Composable
-fun AllowedForKids(id: Long, kids: List<Account>) {
+fun AllowedForKids(id: String, kids: List<Account>) {
     if (kids.isEmpty()) return
     val api = LocalNav.current.catalog.api
     val allow = remember(id) { KidAllowList(api, id) }

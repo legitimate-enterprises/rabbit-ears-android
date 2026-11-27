@@ -40,6 +40,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param accountId
  * @param householdId
  * @param createdAt
+ * @param modifiedAt
  * @param lastSeenAt
  * @param revokedAt
  */
@@ -48,7 +49,7 @@ import kotlinx.serialization.encoding.Encoder
 data class Device (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,
@@ -57,13 +58,16 @@ data class Device (
     val platform: Platform,
 
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long,
+    val accountId: kotlin.String,
 
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long,
+    val householdId: kotlin.String,
 
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     @Contextual @SerialName(value = "lastSeenAt")
     val lastSeenAt: java.time.OffsetDateTime? = null,

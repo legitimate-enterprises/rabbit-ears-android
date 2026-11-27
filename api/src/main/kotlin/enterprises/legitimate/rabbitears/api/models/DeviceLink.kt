@@ -42,6 +42,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param status
  * @param expiresAt
  * @param createdAt
+ * @param modifiedAt
  * @param accountId The adult who approved or denied it.
  * @param householdId That adult's household, which the device shows.
  * @param deviceId The device created once it collected its token.
@@ -52,7 +53,7 @@ import kotlinx.serialization.encoding.Encoder
 data class DeviceLink (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "code")
     val code: kotlin.String,
@@ -72,17 +73,20 @@ data class DeviceLink (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
+
     /* The adult who approved or denied it. */
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long? = null,
+    val accountId: kotlin.String? = null,
 
     /* That adult's household, which the device shows. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long? = null,
+    val householdId: kotlin.String? = null,
 
     /* The device created once it collected its token. */
     @SerialName(value = "deviceId")
-    val deviceId: kotlin.Long? = null,
+    val deviceId: kotlin.String? = null,
 
     @Contextual @SerialName(value = "decidedAt")
     val decidedAt: java.time.OffsetDateTime? = null

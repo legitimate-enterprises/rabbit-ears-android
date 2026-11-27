@@ -23,11 +23,11 @@ import okhttp3.RequestBody.Companion.toRequestBody
 sealed interface ImageTarget {
     val path: String
 
-    data class Playlist(val profileId: Long, val playlistId: Long) : ImageTarget {
+    data class Playlist(val profileId: String, val playlistId: String) : ImageTarget {
         override val path = "profiles/$profileId/playlists/$playlistId/image"
     }
 
-    data class Station(val id: Long) : ImageTarget {
+    data class Station(val id: String) : ImageTarget {
         override val path = "stations/$id/image"
     }
 }
@@ -36,22 +36,22 @@ sealed interface ImageSource {
     /** An image from the device, already made a JPEG the server takes. */
     class File(val bytes: ByteArray) : ImageSource
 
-    data class Artwork(val itemId: Long, val kind: ArtworkKind) : ImageSource
+    data class Artwork(val itemId: String, val kind: ArtworkKind) : ImageSource
 
     /** A link the server fetches once. */
     data class Link(val url: String) : ImageSource
 }
 
 /** One choice of "Pick a title's artwork". */
-data class ArtChoice(val itemId: Long, val kind: ArtworkKind, val label: String)
+data class ArtChoice(val itemId: String, val kind: ArtworkKind, val label: String)
 
 /** An owner's Set image request: where it goes, and the playlist whose titles it may pick from. */
-data class ImageRequest(val target: ImageTarget, val profileId: Long, val playlistId: Long) {
+data class ImageRequest(val target: ImageTarget, val profileId: String, val playlistId: String) {
     companion object {
-        fun of(playlist: Playlist, profileId: Long) =
+        fun of(playlist: Playlist, profileId: String) =
             ImageRequest(ImageTarget.Playlist(profileId, playlist.id), profileId, playlist.id)
 
-        fun of(station: Station, profileId: Long) =
+        fun of(station: Station, profileId: String) =
             ImageRequest(ImageTarget.Station(station.id), profileId, station.playlistId)
     }
 }
@@ -62,7 +62,7 @@ object CustomImage {
      * music has only covers, and a collection offers none.
      */
     fun choices(entries: List<PlaylistEntry>): List<ArtChoice> {
-        val seen = mutableSetOf<Long>()
+        val seen = mutableSetOf<String>()
         return entries.flatMap { entry ->
             val id = entry.itemId
             if (id == null || !seen.add(id)) return@flatMap emptyList()
@@ -85,7 +85,7 @@ class CustomImageModel(private val api: Api) {
     /**
      * What "Pick a title's artwork" offers from the playlist's entries; empty when none or unread.
      */
-    suspend fun choices(profileId: Long, playlistId: Long): List<ArtChoice> =
+    suspend fun choices(profileId: String, playlistId: String): List<ArtChoice> =
         CustomImage.choices(PlaylistsModel(api, profileId).entries(playlistId).orEmpty())
 
     /** True once the server keeps it. */

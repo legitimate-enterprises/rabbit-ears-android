@@ -42,7 +42,7 @@ import kotlinx.serialization.encoding.Encoder
 data class PlaylistShareInput (
 
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     @Contextual @SerialName(value = "access")
     val access: PlaylistShareAccess

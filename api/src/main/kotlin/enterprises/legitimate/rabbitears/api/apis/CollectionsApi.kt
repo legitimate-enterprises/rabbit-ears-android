@@ -57,7 +57,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -75,7 +75,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addCollectionMovie(collectionId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun addCollectionMovie(collectionId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = addCollectionMovieWithHttpInfo(collectionId = collectionId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -104,7 +104,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun addCollectionMovieWithHttpInfo(collectionId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun addCollectionMovieWithHttpInfo(collectionId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = addCollectionMovieRequestConfig(collectionId = collectionId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -119,7 +119,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param itemId 
      * @return RequestConfig
      */
-    fun addCollectionMovieRequestConfig(collectionId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun addCollectionMovieRequestConfig(collectionId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -222,7 +222,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteCollection(collectionId: kotlin.Long) : Unit {
+    fun deleteCollection(collectionId: kotlin.String) : Unit {
         val localVarResponse = deleteCollectionWithHttpInfo(collectionId = collectionId)
 
         return when (localVarResponse.responseType) {
@@ -250,7 +250,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteCollectionWithHttpInfo(collectionId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteCollectionWithHttpInfo(collectionId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteCollectionRequestConfig(collectionId = collectionId)
 
         return request<Unit, Unit>(
@@ -264,7 +264,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param collectionId 
      * @return RequestConfig
      */
-    fun deleteCollectionRequestConfig(collectionId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteCollectionRequestConfig(collectionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -294,7 +294,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getCollection(collectionId: kotlin.Long) : Collection {
+    fun getCollection(collectionId: kotlin.String) : Collection {
         val localVarResponse = getCollectionWithHttpInfo(collectionId = collectionId)
 
         return when (localVarResponse.responseType) {
@@ -323,7 +323,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getCollectionWithHttpInfo(collectionId: kotlin.Long) : ApiResponse<Collection?> {
+    fun getCollectionWithHttpInfo(collectionId: kotlin.String) : ApiResponse<Collection?> {
         val localVariableConfig = getCollectionRequestConfig(collectionId = collectionId)
 
         return request<Unit, Collection>(
@@ -337,7 +337,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param collectionId 
      * @return RequestConfig
      */
-    fun getCollectionRequestConfig(collectionId: kotlin.Long) : RequestConfig<Unit> {
+    fun getCollectionRequestConfig(collectionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -370,7 +370,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getCollectionArtwork(collectionId: kotlin.Long, kind: ArtworkKind, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
+    fun getCollectionArtwork(collectionId: kotlin.String, kind: ArtworkKind, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
         val localVarResponse = getCollectionArtworkWithHttpInfo(collectionId = collectionId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
@@ -402,7 +402,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getCollectionArtworkWithHttpInfo(collectionId: kotlin.Long, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+    fun getCollectionArtworkWithHttpInfo(collectionId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
         val localVariableConfig = getCollectionArtworkRequestConfig(collectionId = collectionId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
@@ -419,7 +419,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getCollectionArtworkRequestConfig(collectionId: kotlin.Long, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    fun getCollectionArtworkRequestConfig(collectionId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -457,7 +457,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listCollectionMovies(collectionId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ItemPage {
+    fun listCollectionMovies(collectionId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : ItemPage {
         val localVarResponse = listCollectionMoviesWithHttpInfo(collectionId = collectionId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -488,7 +488,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listCollectionMoviesWithHttpInfo(collectionId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ItemPage?> {
+    fun listCollectionMoviesWithHttpInfo(collectionId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<ItemPage?> {
         val localVariableConfig = listCollectionMoviesRequestConfig(collectionId = collectionId, limit = limit, offset = offset)
 
         return request<Unit, ItemPage>(
@@ -504,7 +504,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listCollectionMoviesRequestConfig(collectionId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listCollectionMoviesRequestConfig(collectionId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -626,7 +626,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun removeCollectionMovie(collectionId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun removeCollectionMovie(collectionId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = removeCollectionMovieWithHttpInfo(collectionId = collectionId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -655,7 +655,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun removeCollectionMovieWithHttpInfo(collectionId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun removeCollectionMovieWithHttpInfo(collectionId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = removeCollectionMovieRequestConfig(collectionId = collectionId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -670,7 +670,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param itemId 
      * @return RequestConfig
      */
-    fun removeCollectionMovieRequestConfig(collectionId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun removeCollectionMovieRequestConfig(collectionId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -701,7 +701,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceCollection(collectionId: kotlin.Long, collectionInput: CollectionInput) : Collection {
+    fun replaceCollection(collectionId: kotlin.String, collectionInput: CollectionInput) : Collection {
         val localVarResponse = replaceCollectionWithHttpInfo(collectionId = collectionId, collectionInput = collectionInput)
 
         return when (localVarResponse.responseType) {
@@ -731,7 +731,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceCollectionWithHttpInfo(collectionId: kotlin.Long, collectionInput: CollectionInput) : ApiResponse<Collection?> {
+    fun replaceCollectionWithHttpInfo(collectionId: kotlin.String, collectionInput: CollectionInput) : ApiResponse<Collection?> {
         val localVariableConfig = replaceCollectionRequestConfig(collectionId = collectionId, collectionInput = collectionInput)
 
         return request<CollectionInput, Collection>(
@@ -746,7 +746,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param collectionInput 
      * @return RequestConfig
      */
-    fun replaceCollectionRequestConfig(collectionId: kotlin.Long, collectionInput: CollectionInput) : RequestConfig<CollectionInput> {
+    fun replaceCollectionRequestConfig(collectionId: kotlin.String, collectionInput: CollectionInput) : RequestConfig<CollectionInput> {
         val localVariableBody = collectionInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -779,7 +779,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceCollectionMoviePosition(collectionId: kotlin.Long, itemId: kotlin.Long, collectionMoviePositionInput: CollectionMoviePositionInput) : Collection {
+    fun replaceCollectionMoviePosition(collectionId: kotlin.String, itemId: kotlin.String, collectionMoviePositionInput: CollectionMoviePositionInput) : Collection {
         val localVarResponse = replaceCollectionMoviePositionWithHttpInfo(collectionId = collectionId, itemId = itemId, collectionMoviePositionInput = collectionMoviePositionInput)
 
         return when (localVarResponse.responseType) {
@@ -810,7 +810,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceCollectionMoviePositionWithHttpInfo(collectionId: kotlin.Long, itemId: kotlin.Long, collectionMoviePositionInput: CollectionMoviePositionInput) : ApiResponse<Collection?> {
+    fun replaceCollectionMoviePositionWithHttpInfo(collectionId: kotlin.String, itemId: kotlin.String, collectionMoviePositionInput: CollectionMoviePositionInput) : ApiResponse<Collection?> {
         val localVariableConfig = replaceCollectionMoviePositionRequestConfig(collectionId = collectionId, itemId = itemId, collectionMoviePositionInput = collectionMoviePositionInput)
 
         return request<CollectionMoviePositionInput, Collection>(
@@ -826,7 +826,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param collectionMoviePositionInput 
      * @return RequestConfig
      */
-    fun replaceCollectionMoviePositionRequestConfig(collectionId: kotlin.Long, itemId: kotlin.Long, collectionMoviePositionInput: CollectionMoviePositionInput) : RequestConfig<CollectionMoviePositionInput> {
+    fun replaceCollectionMoviePositionRequestConfig(collectionId: kotlin.String, itemId: kotlin.String, collectionMoviePositionInput: CollectionMoviePositionInput) : RequestConfig<CollectionMoviePositionInput> {
         val localVariableBody = collectionMoviePositionInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -857,7 +857,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun resetCollectionOrder(collectionId: kotlin.Long) : Collection {
+    fun resetCollectionOrder(collectionId: kotlin.String) : Collection {
         val localVarResponse = resetCollectionOrderWithHttpInfo(collectionId = collectionId)
 
         return when (localVarResponse.responseType) {
@@ -886,7 +886,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun resetCollectionOrderWithHttpInfo(collectionId: kotlin.Long) : ApiResponse<Collection?> {
+    fun resetCollectionOrderWithHttpInfo(collectionId: kotlin.String) : ApiResponse<Collection?> {
         val localVariableConfig = resetCollectionOrderRequestConfig(collectionId = collectionId)
 
         return request<Unit, Collection>(
@@ -900,7 +900,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      * @param collectionId 
      * @return RequestConfig
      */
-    fun resetCollectionOrderRequestConfig(collectionId: kotlin.Long) : RequestConfig<Unit> {
+    fun resetCollectionOrderRequestConfig(collectionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

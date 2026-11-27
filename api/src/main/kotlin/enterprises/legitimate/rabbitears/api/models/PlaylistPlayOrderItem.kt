@@ -54,17 +54,17 @@ data class PlaylistPlayOrderItem (
 
     /* The entry it comes from. */
     @SerialName(value = "entryId")
-    val entryId: kotlin.Long,
+    val entryId: kotlin.String,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @Contextual @SerialName(value = "kind")
     val kind: PlaylistEntryKind,
 
     /* The edition it plays; absent for an item with none. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     /* The name of that edition; present only while its title has more than one edition with files. */
     @SerialName(value = "editionName")

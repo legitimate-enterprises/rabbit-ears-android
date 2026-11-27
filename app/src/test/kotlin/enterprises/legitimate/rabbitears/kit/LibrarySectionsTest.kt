@@ -12,15 +12,15 @@ class LibrarySectionsTest {
     private val server = FakeServer()
     private val store = MemoryCredentialStore()
 
-    private fun library(id: Long, kind: String) =
+    private fun library(id: String, kind: String) =
         """{"id":$id,"name":"Library $id","kind":"$kind","scanHour":3,"watchFiles":false,""" +
             """"folders":[],"stats":{"movies":0,"shows":0,"seasons":0,"episodes":0,"files":0,""" +
-            """"bytes":0,"unmatched":0},"createdAt":"${Json.T}","updatedAt":"${Json.T}"}"""
+            """"bytes":0,"unmatched":0},"createdAt":"${Json.T}","modifiedAt":"${Json.T}"}"""
 
     private fun answer(vararg kinds: String) =
         server.on(
             "GET /libraries",
-            body = Json.page(*kinds.mapIndexed { i, k -> library(i + 1L, k) }.toTypedArray()),
+            body = Json.page(*kinds.mapIndexed { i, k -> library("${i + 1}", k) }.toTypedArray()),
         )
 
     private suspend fun signedIn(
@@ -94,18 +94,18 @@ class LibrarySectionsTest {
     @Test
     fun aPullAsksTheServerInsteadOfTheKeptAnswerAndReturnsOnceItIsApplied() = runBlocking {
         val cache = ResponseCache(Files.createTempDirectory("responses").toFile())
-        server.on("GET /items", body = Json.page(Json.item(1, "movie", "Dune")))
+        server.on("GET /items", body = Json.page(Json.item("1", "movie", "Dune")))
         server.on("GET /profiles/1/watch-state", body = Json.page())
         answer("movies")
         val app = signedIn(AppModel(store, "Pixel 9", server.http, cache = cache))
-        val catalog = CatalogModel(app.api!!, profileId = 1)
+        val catalog = CatalogModel(app.api!!, profileId = "1")
         catalog.load()
-        server.on("GET /items", body = Json.page(Json.item(2, "movie", "Flow")))
+        server.on("GET /items", body = Json.page(Json.item("2", "movie", "Flow")))
         answer("movies", "music")
 
         app.refresh { catalog.reload() }
 
-        assertNotNull(catalog.catalog.item(2))
+        assertNotNull(catalog.catalog.item("2"))
         assertEquals(setOf(LibrarySection.movies, LibrarySection.music), app.librarySections)
     }
 }

@@ -10,7 +10,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import okio.Buffer
 
 /**
- * Answers the generated client without a network: routes are "METHOD /path" under /api/v1, query
+ * Answers the generated client without a network: routes are "METHOD /path" under /api/v2, query
  * ignored, and every request is recorded with its body and Authorization header.
  */
 class FakeServer {
@@ -41,7 +41,7 @@ class FakeServer {
             .addInterceptor(
                 Interceptor { chain ->
                     val request = chain.request()
-                    val path = request.url.encodedPath.removePrefix("/api/v1")
+                    val path = request.url.encodedPath.removePrefix("/api/v2")
                     val route = "${request.method} $path"
                     val body = Buffer().also { request.body?.writeTo(it) }.readUtf8()
                     synchronized(calls) {
@@ -70,7 +70,7 @@ object Json {
     const val T = "2025-01-01T00:00:00Z"
 
     fun account(
-        id: Long,
+        id: String,
         name: String,
         kind: String = "adult",
         hasPin: Boolean = false,
@@ -80,19 +80,19 @@ object Json {
         hide: Boolean? = null,
     ) =
         """{"id":$id,"kind":"$kind","name":"$name","isAdmin":false,"hasPin":$hasPin,"pinLocked":false,""" +
-            """"pending":$pending,"filterMode":"$filterMode","createdAt":"$T","updatedAt":"$T"""" +
+            """"pending":$pending,"filterMode":"$filterMode","createdAt":"$T","modifiedAt":"$T"""" +
             (color?.let { ""","color":"$it"""" } ?: "") +
             (hide?.let { ""","hideKidsContent":$it""" } ?: "") +
             "}"
 
-    fun me(active: Long = 1, vararg profiles: String = arrayOf(account(1, "Helga"))) =
-        """{"device":{"id":9,"name":"Pixel","platform":"android","accountId":1,"householdId":1,""" +
-            """"createdAt":"$T"},"account":${account(1, "Helga")},"activeProfileId":$active,""" +
+    fun me(active: Long = 1, vararg profiles: String = arrayOf(account("1", "Helga"))) =
+        """{"device":{"id":"9","name":"Pixel","platform":"android","accountId":"1","householdId":"1",""" +
+            """"createdAt":"$T","modifiedAt":"$T"},"account":${account("1", "Helga")},"activeProfileId":$active,""" +
             """"profiles":[${profiles.joinToString(",")}],""" +
-            """"household":{"id":1,"name":"Helga","adultId":1,"createdAt":"$T"}}"""
+            """"household":{"id":"1","name":"Helga","adultId":"1","createdAt":"$T","modifiedAt":"$T"}}"""
 
     fun item(
-        id: Long,
+        id: String,
         kind: String,
         title: String = "Item $id",
         parent: Long? = null,
@@ -117,25 +117,25 @@ object Json {
             runtime?.let { add(""""runtimeMinutes":$it""") }
             rating?.let { add(""""contentRating":"$it"""") }
         }
-        return """{"id":$id,"libraryId":1,"kind":"$kind","parsedTitle":"$title","addedAt":"$added",""" +
-            """"updatedAt":"$T","metadata":{${meta.joinToString(",")}},"genres":$genres""" +
+        return """{"id":$id,"libraryId":"1","kind":"$kind","parsedTitle":"$title","addedAt":"$added",""" +
+            """"createdAt":"$T","modifiedAt":"$T","metadata":{${meta.joinToString(",")}},"genres":$genres""" +
             extra.joinToString("") { ",$it" } +
             "}"
     }
 
     fun watch(item: Long, position: Long = 0, watched: Boolean = false, played: String = T) =
         """{"itemId":$item,"positionMs":$position,"watched":$watched,"playCount":0,""" +
-            """"updatedAt":"$T","lastPlayedAt":"$played"}"""
+            """"changedAt":"$T","lastPlayedAt":"$played"}"""
 
     fun collection(
-        id: Long,
+        id: String,
         name: String,
         source: String = "custom",
         movies: Int = 2,
         customOrder: Boolean = false,
     ) =
         """{"id":$id,"source":"$source","name":"$name","movieCount":$movies,"customOrder":$customOrder,""" +
-            """"createdAt":"$T","updatedAt":"$T"}"""
+            """"createdAt":"$T","modifiedAt":"$T"}"""
 
     fun page(vararg items: String) =
         """{"items":[${items.joinToString(",")}],"total":${items.size}}"""

@@ -30,7 +30,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -105,7 +104,7 @@ fun NewCollection(onDone: () -> Unit) {
 
 /** Picks one of the household's custom collections, or names a new one, and adds the movie. */
 @Composable
-fun AddToCollection(itemId: Long, onDone: () -> Unit) {
+fun AddToCollection(itemId: String, onDone: () -> Unit) {
     val model = LocalNav.current.collections
     val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
@@ -167,14 +166,14 @@ fun MovieCollections(collections: List<Collection>, tileWidth: Dp) {
  * editable by adults; a TMDB one, and any one to a kid, is read-only.
  */
 @Composable
-fun CollectionScreen(id: Long) {
+fun CollectionScreen(id: String) {
     val nav = LocalNav.current
     val model = nav.collections
     val scope = rememberCoroutineScope()
     var version by remember { mutableStateOf(0) }
     var renaming by remember { mutableStateOf(false) }
     var ordering by remember { mutableStateOf(false) }
-    var dragged by remember { mutableLongStateOf(-1L) }
+    var dragged by remember { mutableStateOf<String?>(null) }
     var startAt by remember { mutableIntStateOf(0) }
     var offset by remember { mutableFloatStateOf(0f) }
     // The reload that follows a move clears the model's error, so a refusal is kept here.
@@ -186,7 +185,7 @@ fun CollectionScreen(id: Long) {
     val loaded = rememberLoaded(id, version) { model.movies(id) }
     // Sends a movie that now sits elsewhere than [from], then shows the server's order. Only the
     // newest interaction's reload is applied, so an older one cannot undo a move shown since.
-    val settle = { movieId: Long, from: Int ->
+    val settle = { movieId: String, from: Int ->
         moves += 1
         val mine = moves
         val at = loaded.value.orEmpty().indexOfFirst { it.id == movieId }
@@ -195,7 +194,7 @@ fun CollectionScreen(id: Long) {
             if (mine == moves) loaded.reload()
         }
     }
-    val step = { movieId: Long, index: Int, by: Int ->
+    val step = { movieId: String, index: Int, by: Int ->
         refused = null
         loaded.value = loaded.value.orEmpty().moved(movieId, index + by)
         settle(movieId, index)
@@ -351,11 +350,11 @@ fun CollectionScreen(id: Long) {
                                             }
                                     },
                                     onDragEnd = {
-                                        dragged = -1
+                                        dragged = null
                                         settle(movie.id, startAt)
                                     },
                                     onDragCancel = {
-                                        dragged = -1
+                                        dragged = null
                                         settle(
                                             movie.id,
                                             loaded.value.orEmpty().indexOfFirst {

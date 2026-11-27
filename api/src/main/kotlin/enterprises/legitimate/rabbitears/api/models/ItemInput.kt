@@ -48,7 +48,7 @@ import kotlinx.serialization.encoding.Encoder
 data class ItemInput (
 
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long,
+    val libraryId: kotlin.String,
 
     @Contextual @SerialName(value = "kind")
     val kind: ItemKind,
@@ -57,7 +57,7 @@ data class ItemInput (
     val parsedTitle: kotlin.String,
 
     @SerialName(value = "parentId")
-    val parentId: kotlin.Long? = null,
+    val parentId: kotlin.String? = null,
 
     @SerialName(value = "path")
     val path: kotlin.String? = null,

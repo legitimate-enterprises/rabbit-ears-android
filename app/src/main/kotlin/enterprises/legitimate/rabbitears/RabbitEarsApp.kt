@@ -76,7 +76,7 @@ class RabbitEarsApp : Application() {
     }
 
     /** The profile's music player, ending another profile's playback first. */
-    fun music(api: Api, profileId: Long): MusicPlayer {
+    fun music(api: Api, profileId: String): MusicPlayer {
         music?.let { if (it.api === api && it.profileId == profileId) return it }
         stopMusic()
         val store = downloads.store

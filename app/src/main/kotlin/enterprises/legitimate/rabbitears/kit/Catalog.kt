@@ -33,7 +33,7 @@ sealed interface Resumable {
 data class HomeLead(val hero: Resumable?, val also: List<Resumable>)
 
 /** What Play starts: a title, where in it, and the edition a resume keeps. */
-data class Start(val itemId: Long, val positionMs: Long, val editionId: Long? = null)
+data class Start(val itemId: String, val positionMs: Long, val editionId: String? = null)
 
 enum class GridSort(val label: String) {
     RecentlyAdded("Recently added"),
@@ -55,7 +55,7 @@ class Catalog(
     private val items = items.associateBy { it.id }
     private val kids = kids.associateBy { it.id }
     private val watch = watch.associateBy { it.itemId }.toMutableMap()
-    private val childIds: Map<Long, List<Long>> =
+    private val childIds: Map<String, List<String>> =
         (this.items.values + this.kids.values)
             .filter { it.parentId != null }
             .distinctBy { it.id }
@@ -71,7 +71,7 @@ class Catalog(
     /** A copy with one item's watch state replaced, so Compose sees a new value. */
     fun with(state: WatchState): Catalog = copy(watch = watch.values + state)
 
-    fun without(id: Long): Catalog = copy(watch = (watch - id).values)
+    fun without(id: String): Catalog = copy(watch = (watch - id).values)
 
     fun with(states: List<WatchState>): Catalog =
         copy(watch = (watch + states.associateBy { it.itemId }).values)
@@ -84,11 +84,11 @@ class Catalog(
 
     fun withoutKids(): Catalog = copy(kids = emptyList())
 
-    fun item(id: Long): Item? = items[id] ?: kids[id]
+    fun item(id: String): Item? = items[id] ?: kids[id]
 
-    fun watchState(id: Long): WatchState? = watch[id]
+    fun watchState(id: String): WatchState? = watch[id]
 
-    fun children(id: Long): List<Item> = childIds[id].orEmpty().mapNotNull { item(it) }
+    fun children(id: String): List<Item> = childIds[id].orEmpty().mapNotNull { item(it) }
 
     fun parent(item: Item): Item? = item.parentId?.let { item(it) }
 
@@ -96,7 +96,7 @@ class Catalog(
         generateSequence(item) { parent(it) }.firstOrNull { it.kind == ItemKind.show }
 
     /** Every episode under a show or season, in viewing order with specials last. */
-    fun episodes(id: Long): List<Item> {
+    fun episodes(id: String): List<Item> {
         val item = item(id) ?: return emptyList()
         return when (item.kind) {
             ItemKind.episode -> listOf(item)
@@ -115,26 +115,26 @@ class Catalog(
         return if (at < 0) emptyList() else all.drop(at + 1).take(2)
     }
 
-    fun isWatched(id: Long) = watch[id]?.watched == true
+    fun isWatched(id: String) = watch[id]?.watched == true
 
-    fun isInProgress(id: Long) = watch[id]?.let { it.positionMs > 0 } == true
+    fun isInProgress(id: String) = watch[id]?.let { it.positionMs > 0 } == true
 
-    fun unwatchedCount(id: Long): Int {
+    fun unwatchedCount(id: String): Int {
         val item = item(id) ?: return 0
         if (item.kind == ItemKind.movie || item.kind == ItemKind.episode)
             return if (isWatched(id)) 0 else 1
         return episodes(id).count { !isWatched(it.id) }
     }
 
-    fun durationMs(id: Long): Long? = item(id)?.metadata?.runtimeMinutes?.let { it * 60_000L }
+    fun durationMs(id: String): Long? = item(id)?.metadata?.runtimeMinutes?.let { it * 60_000L }
 
-    fun progress(id: Long): Double? {
+    fun progress(id: String): Double? {
         if (!isInProgress(id)) return null
         val duration = durationMs(id)?.takeIf { it > 0 } ?: return null
         return minOf(1.0, watch[id]!!.positionMs.toDouble() / duration)
     }
 
-    fun remainingMs(id: Long): Long? {
+    fun remainingMs(id: String): Long? {
         if (!isInProgress(id)) return null
         val duration = durationMs(id) ?: return null
         return maxOf(0, duration - watch[id]!!.positionMs)
@@ -185,7 +185,7 @@ class Catalog(
                 .take(20)
 
     /** The episode Play or Resume starts for a show or season. */
-    fun resumeTarget(id: Long): Item? {
+    fun resumeTarget(id: String): Item? {
         val all = episodes(id)
         val episodes = all.filter { it.seasonNumber != 0 }.ifEmpty { all }
         latestPlayed(episodes.filter { isInProgress(it.id) })?.let {
@@ -218,7 +218,7 @@ class Catalog(
         kind: ItemKind,
         filter: GridFilter = GridFilter.All,
         sort: GridSort = GridSort.RecentlyAdded,
-        genre: Long? = null,
+        genre: String? = null,
     ): List<Item> =
         (if (filter == GridFilter.Kids) items.values + kids.values else items.values)
             .distinctBy { it.id }
@@ -280,7 +280,7 @@ class Catalog(
             if (item.kind == ItemKind.episode) ", ${Format.episodeCode(item)}" else ""
 
     /** A show's seasons without specials. */
-    fun seasons(showId: Long): List<Item> =
+    fun seasons(showId: String): List<Item> =
         children(showId).filter { it.kind == ItemKind.season && it.seasonNumber != 0 }
 
     private fun showStarted(item: Item): Boolean {

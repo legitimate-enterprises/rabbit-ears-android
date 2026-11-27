@@ -36,11 +36,11 @@ object LocalChecks {
         server.respond = { request ->
             val path = request.url.encodedPath
             when {
-                path == "/api/v1/local-checks" ->
+                path == "/api/v2/local-checks" ->
                     201 to
                         """{"id":"c1","key":"${Base64.getEncoder().encodeToString(key)}",""" +
                             """"addresses":[$list],"expiresAt":"2026-01-01T00:01:00Z"}"""
-                path == "/api/v1/local-checks/c1/confirmation" &&
+                path == "/api/v2/local-checks/c1/confirmation" &&
                     "${request.url.scheme}://${request.url.host}:${request.url.port}" == LAN -> {
                     val body = okio.Buffer().also { request.body?.writeTo(it) }.readUtf8()
                     200 to """{"proof":"${reply(nonce(body) ?: "")}"}"""
@@ -56,7 +56,7 @@ class HomeLinkTest {
     private val server = FakeServer()
     private val api = server.api()
     private val endpoint = api.endpoint
-    private val stream = "/api/v1/streams/k/0/master.m3u8"
+    private val stream = "/api/v2/streams/k/0/master.m3u8"
 
     init {
         LocalChecks.serve(server)

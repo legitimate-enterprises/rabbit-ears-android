@@ -33,6 +33,7 @@ import kotlinx.serialization.Contextual
  *
  * @param from
  * @param to
+ * @param id Always sent. On createStation and replaceStation: the range's id, a UUIDv7 the client chose; absent, the server chooses one. A range replaceStation is given keeps its id when it sends it again; an id in use by another station's range, or given twice, answers 409.
  */
 @Serializable
 
@@ -42,7 +43,11 @@ data class StationTimeRange (
     val from: kotlin.String,
 
     @SerialName(value = "to")
-    val to: kotlin.String
+    val to: kotlin.String,
+
+    /* Always sent. On createStation and replaceStation: the range's id, a UUIDv7 the client chose; absent, the server chooses one. A range replaceStation is given keeps its id when it sends it again; an id in use by another station's range, or given twice, answers 409. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null
 
 ) {
 

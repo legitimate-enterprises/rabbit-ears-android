@@ -31,28 +31,38 @@ import kotlinx.serialization.Contextual
 /**
  * Exactly one of itemId and collectionId; both or neither answers 400. On replacePlaylistEntry an editionId other than the entry's answers 400 and an absent one keeps it.
  *
+ * @param id On addPlaylistEntry and addPlaylistEntries: the new entry's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use, or given twice in one batch, answers 409. On replacePlaylistEntry, an id other than the path's answers 400.
  * @param itemId
  * @param collectionId
- * @param position Where it goes, from 0; past the end or absent puts it last.
+ * @param position Where it goes, from 0; past the end or absent puts it last. It takes a rank between its new neighbours', so a late replay can land elsewhere; between two of equal rank it goes after both.
+ * @param rank Where it goes, as PlaylistEntry.rank orders it: a key that generateKeyBetween of rocicorp/fractional-indexing makes with its default alphabet from the neighbours' ranks. Taken as given; not with position. A string that is not such a key answers 400.
  * @param editionId An edition of itemId; required when that movie, episode or song has more than one.
  */
 @Serializable
 
 data class PlaylistEntryInput (
 
+    /* On addPlaylistEntry and addPlaylistEntries: the new entry's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use, or given twice in one batch, answers 409. On replacePlaylistEntry, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
+
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long? = null,
+    val itemId: kotlin.String? = null,
 
     @SerialName(value = "collectionId")
-    val collectionId: kotlin.Long? = null,
+    val collectionId: kotlin.String? = null,
 
-    /* Where it goes, from 0; past the end or absent puts it last. */
+    /* Where it goes, from 0; past the end or absent puts it last. It takes a rank between its new neighbours', so a late replay can land elsewhere; between two of equal rank it goes after both. */
     @SerialName(value = "position")
     val position: kotlin.Int? = null,
 
+    /* Where it goes, as PlaylistEntry.rank orders it: a key that generateKeyBetween of rocicorp/fractional-indexing makes with its default alphabet from the neighbours' ranks. Taken as given; not with position. A string that is not such a key answers 400. */
+    @SerialName(value = "rank")
+    val rank: kotlin.String? = null,
+
     /* An edition of itemId; required when that movie, episode or song has more than one. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null
+    val editionId: kotlin.String? = null
 
 ) {
 

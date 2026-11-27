@@ -36,6 +36,7 @@ import kotlinx.serialization.encoding.Encoder
 /**
  * @param name
  * @param kind
+ * @param id On createLibrary: the new library's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceLibrary, an id other than the path's answers 400.
  * @param scanHour
  * @param watchFiles
  */
@@ -48,6 +49,10 @@ data class LibraryInput (
 
     @Contextual @SerialName(value = "kind")
     val kind: LibraryKind,
+
+    /* On createLibrary: the new library's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceLibrary, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
 
     @SerialName(value = "scanHour")
     val scanHour: kotlin.Int? = 3,

@@ -275,7 +275,7 @@ private fun time(at: OffsetDateTime) =
     Stations.time(at, ZoneId.systemDefault(), Locale.getDefault())
 
 @Composable
-fun StationScreen(id: Long) {
+fun StationScreen(id: String) {
     val nav = LocalNav.current
     val process = LocalContext.current.applicationContext as RabbitEarsApp
     val model = nav.stations
@@ -288,7 +288,7 @@ fun StationScreen(id: Long) {
             value = station?.takeIf { owned }?.let { nav.playlists.entries(it.playlistId) }
         }
     val programs by
-        produceState<List<StationProgram>?>(null, id, station?.updatedAt) {
+        produceState<List<StationProgram>?>(null, id, station?.modifiedAt) {
             value = model.schedule(id, LocalDate.now())
         }
     val wide = LocalWidth.current != WidthClass.Compact
@@ -537,7 +537,7 @@ fun RescheduleQuestion(station: Station, onDone: () -> Unit) {
 
 /** The type is chosen once, when the station is made. A 400's field errors show on their fields. */
 @Composable
-fun StationEditor(stationId: Long?) {
+fun StationEditor(stationId: String?) {
     val nav = LocalNav.current
     val model = nav.stations
     val scope = rememberCoroutineScope()

@@ -39,7 +39,7 @@ import kotlinx.serialization.Contextual
 data class CreditInput (
 
     @SerialName(value = "personId")
-    val personId: kotlin.Long,
+    val personId: kotlin.String,
 
     @SerialName(value = "character")
     val character: kotlin.String? = null,

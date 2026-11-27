@@ -39,18 +39,20 @@ import kotlinx.serialization.encoding.Encoder
  * @param name
  * @param movieCount Its movies the active profile may see.
  * @param createdAt
- * @param updatedAt
+ * @param modifiedAt
  * @param overview TMDB's overview; a custom collection has none.
  * @param householdId The household of a custom collection; absent for TMDB.
  * @param tmdbId The TMDB collection id; absent for custom.
  * @param customOrder True while a custom collection's movies are in a hand order, set by replaceCollectionMoviePosition; false for release order, and always for TMDB. Always sent; optional so a copy a client stored before the field existed still reads.
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class Collection (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @Contextual @SerialName(value = "source")
     val source: CollectionSource,
@@ -65,8 +67,8 @@ data class Collection (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* TMDB's overview; a custom collection has none. */
     @SerialName(value = "overview")
@@ -74,7 +76,7 @@ data class Collection (
 
     /* The household of a custom collection; absent for TMDB. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long? = null,
+    val householdId: kotlin.String? = null,
 
     /* The TMDB collection id; absent for custom. */
     @SerialName(value = "tmdbId")
@@ -82,7 +84,15 @@ data class Collection (
 
     /* True while a custom collection's movies are in a hand order, set by replaceCollectionMoviePosition; false for release order, and always for TMDB. Always sent; optional so a copy a client stored before the field existed still reads. */
     @SerialName(value = "customOrder")
-    val customOrder: kotlin.Boolean? = null
+    val customOrder: kotlin.Boolean? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

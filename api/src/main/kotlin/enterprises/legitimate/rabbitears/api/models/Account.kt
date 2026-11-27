@@ -46,7 +46,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param pending An adult who has not accepted a join link yet.
  * @param filterMode
  * @param createdAt
- * @param updatedAt
+ * @param modifiedAt
  * @param email Adults only.
  * @param householdId An adult's own household, where they are an adult; one of a kid's households, which stands no differently from the others.
  * @param householdIds On the admin operations on accounts only: every household the profile is in, `householdId` first.
@@ -61,13 +61,15 @@ import kotlinx.serialization.encoding.Encoder
  * @param hideKidsContent Adults only: whether this adult's browsing leaves out kids' content (Item.kidsContent movies and shows with their seasons and episodes, and YouTubeChannel.forKids channels with their videos), in every list that browses titles: items, search, collections, genres, people, playlists, stations and YouTube. Opening one item, playing it and listItems with kidsContent=true are not affected. Set with setProfilePreferences.
  * @param autoplay Always present. Whether Up next plays the next item when a movie, episode or video ends, after a 10-second countdown; on for a new profile. Set with setProfilePreferences.
  * @param revokedAt
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class Account (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @Contextual @SerialName(value = "kind")
     val kind: AccountKind,
@@ -95,8 +97,8 @@ data class Account (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* Adults only. */
     @SerialName(value = "email")
@@ -104,11 +106,11 @@ data class Account (
 
     /* An adult's own household, where they are an adult; one of a kid's households, which stands no differently from the others. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long? = null,
+    val householdId: kotlin.String? = null,
 
     /* On the admin operations on accounts only: every household the profile is in, `householdId` first. */
     @SerialName(value = "householdIds")
-    val householdIds: kotlin.collections.List<kotlin.Long>? = null,
+    val householdIds: kotlin.collections.List<kotlin.String>? = null,
 
     /* On getMe, listProfiles and the profile operations: how many households the profile is in. More than one marks a profile shared with another household. */
     @SerialName(value = "households")
@@ -148,7 +150,15 @@ data class Account (
     val autoplay: kotlin.Boolean? = null,
 
     @Contextual @SerialName(value = "revokedAt")
-    val revokedAt: java.time.OffsetDateTime? = null
+    val revokedAt: java.time.OffsetDateTime? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

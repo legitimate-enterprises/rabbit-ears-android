@@ -37,15 +37,17 @@ import kotlinx.serialization.Contextual
  * @param linksByEmail The operator controls this provider's accounts, so a first sign-in links the one account with the ID token's email when the token's email_verified claim is true.
  * @param enabled
  * @param createdAt
- * @param updatedAt
+ * @param modifiedAt
  * @param requiredGroup When set, the ID token's groups claim must hold it.
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class SsoProvider (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,
@@ -70,12 +72,20 @@ data class SsoProvider (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* When set, the ID token's groups claim must hold it. */
     @SerialName(value = "requiredGroup")
-    val requiredGroup: kotlin.String? = null
+    val requiredGroup: kotlin.String? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

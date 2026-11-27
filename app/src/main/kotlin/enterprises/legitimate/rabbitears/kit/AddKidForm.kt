@@ -85,9 +85,9 @@ class AddKidForm(private val today: LocalDate = LocalDate.now(), val editing: Ac
             return ProfileInput(
                 trimmedName,
                 birthday,
-                filterMode,
-                if (ratings) movieCeiling else null,
-                if (ratings) tvCeiling else null,
+                filterMode = filterMode,
+                movieCeiling = if (ratings) movieCeiling else null,
+                tvCeiling = if (ratings) tvCeiling else null,
             )
         }
 

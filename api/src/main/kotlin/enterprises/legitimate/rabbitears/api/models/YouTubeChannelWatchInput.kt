@@ -30,13 +30,18 @@ import kotlinx.serialization.Contextual
 
 /**
  * @param watched
+ * @param at As WatchStateInput.at, for each video.
  */
 @Serializable
 
 data class YouTubeChannelWatchInput (
 
     @SerialName(value = "watched")
-    val watched: kotlin.Boolean
+    val watched: kotlin.Boolean,
+
+    /* As WatchStateInput.at, for each video. */
+    @Contextual @SerialName(value = "at")
+    val at: java.time.OffsetDateTime? = null
 
 ) {
 

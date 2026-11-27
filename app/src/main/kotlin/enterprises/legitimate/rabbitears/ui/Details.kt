@@ -78,7 +78,7 @@ import kotlinx.coroutines.launch
 
 /** Movie, Show, Season or Episode details, by the item's kind. */
 @Composable
-fun Details(id: Long) {
+fun Details(id: String) {
     val nav = LocalNav.current
     // A search can find a title the catalog has not loaded yet; ask the server for it.
     val fetched by
@@ -97,13 +97,13 @@ fun Details(id: Long) {
 }
 
 @Composable
-private fun credits(id: Long): ItemCredits? {
+private fun credits(id: String): ItemCredits? {
     val nav = LocalNav.current
     return produceState<ItemCredits?>(null, id) { value = nav.catalog.credits(id) }.value
 }
 
 @Composable
-private fun occasionRows(id: Long): List<OccasionShelf> {
+private fun occasionRows(id: String): List<OccasionShelf> {
     val nav = LocalNav.current
     return produceState(emptyList<OccasionShelf>(), id) { value = nav.occasions.containing(id) }
         .value
@@ -128,13 +128,13 @@ private fun LazyListScope.occasionStrips(rows: List<OccasionShelf>, width: @Comp
 }
 
 @Composable
-private fun related(id: Long): ItemRelated? {
+private fun related(id: String): ItemRelated? {
     val nav = LocalNav.current
     return produceState<ItemRelated?>(null, id) { value = nav.catalog.related(id) }.value
 }
 
 @Composable
-private fun media(id: Long, fileId: Long? = null): MediaSummary? {
+private fun media(id: String, fileId: String? = null): MediaSummary? {
     val nav = LocalNav.current
     return produceState<MediaSummary?>(null, id, fileId) { value = nav.catalog.media(id, fileId) }
         .value
@@ -142,7 +142,7 @@ private fun media(id: Long, fileId: Long? = null): MediaSummary? {
 
 /** How play would go on this device, asked again when the network changes. */
 @Composable
-private fun verdict(id: Long): Verdict? {
+private fun verdict(id: String): Verdict? {
     val nav = LocalNav.current
     val context = LocalContext.current
     val capabilities = remember { SystemCapabilities(context) }
@@ -333,8 +333,8 @@ private fun DetailLines(
     lines: List<Pair<String, String>>,
     media: MediaSummary?,
     episode: Boolean,
-    audio: Long?,
-    onAudio: (Long) -> Unit,
+    audio: String?,
+    onAudio: (String) -> Unit,
     title: Boolean = true,
     verdict: Verdict? = null,
 ) {
@@ -430,7 +430,7 @@ private fun Movie(item: Item, editions: List<Edition>) {
     val occasions = occasionRows(item.id)
     val together = rememberTogether(item.id)
     val watch = c.watchState(item.id)
-    var picked by remember(item.id) { mutableStateOf<Long?>(null) }
+    var picked by remember(item.id) { mutableStateOf<String?>(null) }
     // Watch together always plays the default edition, so neither member picks one.
     val choosing = editions.size > 1 && together?.current == null
     val edition =
@@ -442,7 +442,7 @@ private fun Movie(item: Item, editions: List<Edition>) {
     val media = media(item.id, fileId)
     val verdict = verdict(item.id)
     // An audio pick names a track of the described file, so it goes when the file does.
-    var audio by remember(item.id, fileId) { mutableStateOf<Long?>(null) }
+    var audio by remember(item.id, fileId) { mutableStateOf<String?>(null) }
     val resuming = Editions.resumes(editions, edition, watch)
     val position = watch?.positionMs ?: 0
     val scope = rememberCoroutineScope()

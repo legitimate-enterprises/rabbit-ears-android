@@ -43,7 +43,7 @@ import kotlinx.serialization.Contextual
 data class Edition (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     /* The tag's name; an untagged cut is \"Standard\", or \"N-minute cut\" while the title has several untagged cuts. */
     @SerialName(value = "name")

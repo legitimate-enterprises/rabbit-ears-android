@@ -56,27 +56,27 @@ data class Event (
     val change: kotlin.String? = null,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long? = null,
+    val itemId: kotlin.String? = null,
 
     /* The playback session of a playback event. On a watch_together `opened`, the session it was opened from: the device playing that session joins at once and plays, as Watch together in \"Playing on\" asks. */
     @SerialName(value = "sessionId")
-    val sessionId: kotlin.Long? = null,
+    val sessionId: kotlin.String? = null,
 
     /* The device of a playback event's session. */
     @SerialName(value = "deviceId")
-    val deviceId: kotlin.Long? = null,
+    val deviceId: kotlin.String? = null,
 
     @SerialName(value = "stationId")
-    val stationId: kotlin.Long? = null,
+    val stationId: kotlin.String? = null,
 
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long? = null,
+    val playlistId: kotlin.String? = null,
 
     @SerialName(value = "watchTogetherId")
-    val watchTogetherId: kotlin.Long? = null,
+    val watchTogetherId: kotlin.String? = null,
 
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long? = null
+    val libraryId: kotlin.String? = null
 
 ) {
 

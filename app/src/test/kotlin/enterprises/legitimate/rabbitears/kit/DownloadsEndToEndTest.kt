@@ -199,7 +199,7 @@ class DownloadsEndToEndTest {
     }
 
     /** The album "First Light" once a Music library over the fixtures has scanned its songs. */
-    private suspend fun scannedAlbum(api: Api): Long {
+    private suspend fun scannedAlbum(api: Api): String {
         val found = api.call { libraries.listLibraries() }.items
         if (found.none { it.kind == LibraryKind.music }) {
             val library = api.call {
@@ -231,7 +231,7 @@ class DownloadsEndToEndTest {
     }
 
     /** Toy Story once a Movies library over the fixtures has scanned it. */
-    private suspend fun scannedMovie(api: Api): Long {
+    private suspend fun scannedMovie(api: Api): String {
         val found = api.call { libraries.listLibraries() }.items
         if (found.none { it.kind == LibraryKind.movies }) {
             val library = api.call {

@@ -46,7 +46,7 @@ import kotlinx.serialization.encoding.Encoder
 data class ShareCandidate (
 
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,
@@ -64,7 +64,7 @@ data class ShareCandidate (
 
     /* The household to label the profile with: the first of the owner's households, their own first, that the profile is in; else the profile's own household. Always sent. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long? = null
+    val householdId: kotlin.String? = null
 
 ) {
 

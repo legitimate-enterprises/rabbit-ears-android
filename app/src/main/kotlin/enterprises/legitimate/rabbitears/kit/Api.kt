@@ -117,7 +117,7 @@ class Api(
             throw e
         }
 
-    /** The bytes at a server path, such as `/api/v1/items/7/artwork/poster`, with the status. */
+    /** The bytes at a server path, such as `/api/v2/items/7/artwork/poster`, with the status. */
     fun bytes(path: String): Fetched = runCatching {
         http.newCall(Request.Builder().url(endpoint.resolve(path)).build()).execute().use {
             Fetched(it.code, if (it.isSuccessful) it.body.bytes() else null)

@@ -37,7 +37,7 @@ data class AllowedFor (
 
     /* The kids of the device household on a manual allow list whose list holds the item itself, by id. */
     @SerialName(value = "profileIds")
-    val profileIds: kotlin.collections.List<kotlin.Long>
+    val profileIds: kotlin.collections.List<kotlin.String>
 
 ) {
 

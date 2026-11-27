@@ -56,13 +56,13 @@ import kotlinx.serialization.encoding.Encoder
 data class DownloadTitle (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "kind")
     val kind: DownloadTitle.Kind,
 
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long,
+    val libraryId: kotlin.String,
 
     /* The device can keep a file of it now. */
     @SerialName(value = "available")
@@ -75,7 +75,7 @@ data class DownloadTitle (
     val positionMs: kotlin.Long,
 
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     @SerialName(value = "runtimeMs")
     val runtimeMs: kotlin.Long? = null,

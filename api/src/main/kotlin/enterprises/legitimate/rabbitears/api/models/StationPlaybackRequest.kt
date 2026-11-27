@@ -43,10 +43,10 @@ data class StationPlaybackRequest (
     val snapshot: CapabilitySnapshot,
 
     @SerialName(value = "audioTrackId")
-    val audioTrackId: kotlin.Long? = null,
+    val audioTrackId: kotlin.String? = null,
 
     @SerialName(value = "subtitleTrackId")
-    val subtitleTrackId: kotlin.Long? = null,
+    val subtitleTrackId: kotlin.String? = null,
 
     /* The client plays a movies or tv station as one continuous stream. Absent means false. */
     @SerialName(value = "live")

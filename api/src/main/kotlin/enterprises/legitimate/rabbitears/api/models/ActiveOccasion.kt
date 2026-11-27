@@ -44,7 +44,7 @@ import kotlinx.serialization.Contextual
 data class ActiveOccasion (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,

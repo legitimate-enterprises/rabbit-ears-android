@@ -111,11 +111,12 @@ class ArtworkStore(
 
         val CACHE_BYTES = (Runtime.getRuntime().maxMemory() / 8).toInt()
 
-        fun item(id: Long, kind: String = "poster") = "/api/v1/items/$id/artwork/$kind"
+        fun item(id: String, kind: String = "poster") = "/api/v2/items/$id/artwork/$kind"
 
-        fun collection(id: Long, kind: String = "poster") = "/api/v1/collections/$id/artwork/$kind"
+        fun collection(id: String, kind: String = "poster") =
+            "/api/v2/collections/$id/artwork/$kind"
 
-        fun person(id: Long) = "/api/v1/people/$id/artwork"
+        fun person(id: String) = "/api/v2/people/$id/artwork"
     }
 }
 
@@ -138,9 +139,10 @@ private val ART =
 /** Cast and crew placeholders; the server's profile colors, which profiles take from it alone. */
 private val AVATARS = ProfileColors.PALETTE.map { it.removePrefix("#").toLong(16) }
 
-fun artColor(id: Long) = Color(0xFF000000 or ART[(id % ART.size).toInt()])
+fun artColor(id: String) = Color(0xFF000000 or ART[Math.floorMod(id.hashCode(), ART.size)])
 
-fun avatarColor(id: Long) = Color(0xFF000000 or AVATARS[(id % AVATARS.size).toInt()])
+fun avatarColor(id: String) =
+    Color(0xFF000000 or AVATARS[Math.floorMod(id.hashCode(), AVATARS.size)])
 
 /** A colored box that paints the image at [path] over itself once it loads. */
 @Composable

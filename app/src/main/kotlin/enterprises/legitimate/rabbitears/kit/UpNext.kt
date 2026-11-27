@@ -9,16 +9,16 @@ const val UP_NEXT_SECONDS = 10
 /** What Up next plays, as the player opens it: [run] is the playlist row, from a playlist. */
 data class UpNextPlay(
     val title: String,
-    val itemId: Long,
+    val itemId: String,
     val run: PlaylistRun?,
-    val editionId: Long?,
+    val editionId: String?,
 )
 
 /**
  * What the server plays after [itemId] for the profile, from [run]'s row when it was played from a
  * playlist; null for nothing.
  */
-suspend fun Api.upNext(profileId: Long, itemId: Long, run: PlaylistRun?): UpNextPlay? {
+suspend fun Api.upNext(profileId: String, itemId: String, run: PlaylistRun?): UpNextPlay? {
     val answer = call {
         profiles.getUpNextWithHttpInfo(profileId, itemId, run?.playlistId, run?.index)
     }

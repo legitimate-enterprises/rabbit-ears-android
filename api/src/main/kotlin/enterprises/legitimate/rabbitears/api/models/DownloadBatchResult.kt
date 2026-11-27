@@ -42,7 +42,7 @@ import kotlinx.serialization.Contextual
 data class DownloadBatchResult (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "download")
     val download: Download? = null,

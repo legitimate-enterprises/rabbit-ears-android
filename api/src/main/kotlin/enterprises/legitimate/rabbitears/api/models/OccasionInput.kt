@@ -35,6 +35,7 @@ import kotlinx.serialization.Contextual
  * @param daysBefore
  * @param daysAfter
  * @param keywordIds
+ * @param id On createOccasion: the new occasion's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceOccasion, an id other than the path's answers 400.
  * @param holiday A key of listHolidays.
  * @param month
  * @param day
@@ -56,6 +57,10 @@ data class OccasionInput (
 
     @SerialName(value = "keywordIds")
     val keywordIds: kotlin.collections.List<kotlin.Long>,
+
+    /* On createOccasion: the new occasion's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceOccasion, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
 
     /* A key of listHolidays. */
     @SerialName(value = "holiday")

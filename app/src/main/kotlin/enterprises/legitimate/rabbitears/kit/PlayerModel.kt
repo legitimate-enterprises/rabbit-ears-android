@@ -76,7 +76,7 @@ sealed interface SubtitleChoice {
 
     data object ForcedOnly : SubtitleChoice
 
-    data class Track(val id: Long) : SubtitleChoice
+    data class Track(val id: String) : SubtitleChoice
 }
 
 data class SubtitleOption(val choice: SubtitleChoice, val name: String, val detail: String? = null)
@@ -115,13 +115,13 @@ object Telemetry {
  */
 class PlayerModel(
     private val api: Api,
-    private val profileId: Long,
-    val itemId: Long,
+    private val profileId: String,
+    val itemId: String,
     val output: VideoOutput,
     private val capabilities: CapabilitySource,
     private val scope: CoroutineScope,
-    private val playlistId: Long? = null,
-    private val editionId: Long? = null,
+    private val playlistId: String? = null,
+    private val editionId: String? = null,
     private val station: StationTuner? = null,
     /** The title on the device, played in place of a session when [preferLocal] or offline. */
     private val local: LocalCopy? = null,
@@ -151,7 +151,7 @@ class PlayerModel(
         private set
 
     private var cues by mutableStateOf(emptyList<SubtitleCue>())
-    private var audioTrackId: Long? = null
+    private var audioTrackId: String? = null
     private var sent: CapabilitySnapshot? = null
     private var reporter: Job? = null
     private var stopped = false
@@ -261,7 +261,7 @@ class PlayerModel(
         return if (index < 0) null else chapters[index].title ?: "Chapter ${index + 1}"
     }
 
-    suspend fun start(startMs: Long, audioTrackId: Long? = null) {
+    suspend fun start(startMs: Long, audioTrackId: String? = null) {
         this.audioTrackId = audioTrackId
         error = null
         if (station == null && local != null && (preferLocal || offline?.isUnreachable == true))
@@ -529,7 +529,7 @@ class PlayerModel(
     }
 
     /** A station's next program is another file; a session keeps the one it started on. */
-    private suspend fun loadMedia(fileId: Long) {
+    private suspend fun loadMedia(fileId: String) {
         if (media?.file?.id == fileId) return
         media = null
         val file = runCatching { api.call { media.getMediaFile(fileId) } }.getOrNull() ?: return
@@ -624,7 +624,7 @@ class PlayerModel(
 }
 
 /** The episode after [id] in its show's viewing order; null for a movie or the last episode. */
-fun Catalog.nextEpisode(id: Long): Item? {
+fun Catalog.nextEpisode(id: String): Item? {
     val item = item(id)?.takeIf { it.kind == ItemKind.episode } ?: return null
     val episodes = show(item)?.let { episodes(it.id) } ?: return null
     val index = episodes.indexOfFirst { it.id == id }

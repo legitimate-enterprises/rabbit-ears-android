@@ -909,7 +909,7 @@ private fun StationPlayerScreen(station: Station) {
         PlayerModel(
             nav.catalog.api,
             nav.catalog.profileId,
-            0,
+            "",
             output,
             capabilities,
             scope,

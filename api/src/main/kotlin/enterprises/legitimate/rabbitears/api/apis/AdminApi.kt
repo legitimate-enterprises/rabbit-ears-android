@@ -118,7 +118,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -137,7 +137,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addLibraryFolder(libraryId: kotlin.Long, folderInput: FolderInput) : Folder {
+    fun addLibraryFolder(libraryId: kotlin.String, folderInput: FolderInput) : Folder {
         val localVarResponse = addLibraryFolderWithHttpInfo(libraryId = libraryId, folderInput = folderInput)
 
         return when (localVarResponse.responseType) {
@@ -167,7 +167,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun addLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderInput: FolderInput) : ApiResponse<Folder?> {
+    fun addLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderInput: FolderInput) : ApiResponse<Folder?> {
         val localVariableConfig = addLibraryFolderRequestConfig(libraryId = libraryId, folderInput = folderInput)
 
         return request<FolderInput, Folder>(
@@ -182,7 +182,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param folderInput 
      * @return RequestConfig
      */
-    fun addLibraryFolderRequestConfig(libraryId: kotlin.Long, folderInput: FolderInput) : RequestConfig<FolderInput> {
+    fun addLibraryFolderRequestConfig(libraryId: kotlin.String, folderInput: FolderInput) : RequestConfig<FolderInput> {
         val localVariableBody = folderInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -213,7 +213,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addOccasionMember(occasionId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun addOccasionMember(occasionId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = addOccasionMemberWithHttpInfo(occasionId = occasionId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -242,7 +242,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun addOccasionMemberWithHttpInfo(occasionId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun addOccasionMemberWithHttpInfo(occasionId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = addOccasionMemberRequestConfig(occasionId = occasionId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -257,7 +257,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun addOccasionMemberRequestConfig(occasionId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun addOccasionMemberRequestConfig(occasionId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1324,7 +1324,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteAccount(accountId: kotlin.Long) : Unit {
+    fun deleteAccount(accountId: kotlin.String) : Unit {
         val localVarResponse = deleteAccountWithHttpInfo(accountId = accountId)
 
         return when (localVarResponse.responseType) {
@@ -1352,7 +1352,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteAccountWithHttpInfo(accountId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteAccountWithHttpInfo(accountId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteAccountRequestConfig(accountId = accountId)
 
         return request<Unit, Unit>(
@@ -1366,7 +1366,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param accountId 
      * @return RequestConfig
      */
-    fun deleteAccountRequestConfig(accountId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteAccountRequestConfig(accountId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1396,7 +1396,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteAccountIdentity(accountId: kotlin.Long, identityId: kotlin.Long) : Unit {
+    fun deleteAccountIdentity(accountId: kotlin.String, identityId: kotlin.String) : Unit {
         val localVarResponse = deleteAccountIdentityWithHttpInfo(accountId = accountId, identityId = identityId)
 
         return when (localVarResponse.responseType) {
@@ -1425,7 +1425,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteAccountIdentityWithHttpInfo(accountId: kotlin.Long, identityId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteAccountIdentityWithHttpInfo(accountId: kotlin.String, identityId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteAccountIdentityRequestConfig(accountId = accountId, identityId = identityId)
 
         return request<Unit, Unit>(
@@ -1440,7 +1440,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param identityId 
      * @return RequestConfig
      */
-    fun deleteAccountIdentityRequestConfig(accountId: kotlin.Long, identityId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteAccountIdentityRequestConfig(accountId: kotlin.String, identityId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1470,7 +1470,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteAdultLink(accountId: kotlin.Long, otherAccountId: kotlin.Long) : Unit {
+    fun deleteAdultLink(accountId: kotlin.String, otherAccountId: kotlin.String) : Unit {
         val localVarResponse = deleteAdultLinkWithHttpInfo(accountId = accountId, otherAccountId = otherAccountId)
 
         return when (localVarResponse.responseType) {
@@ -1499,7 +1499,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteAdultLinkWithHttpInfo(accountId: kotlin.Long, otherAccountId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteAdultLinkWithHttpInfo(accountId: kotlin.String, otherAccountId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteAdultLinkRequestConfig(accountId = accountId, otherAccountId = otherAccountId)
 
         return request<Unit, Unit>(
@@ -1514,7 +1514,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param otherAccountId The other adult; the two ids name the link in either order.
      * @return RequestConfig
      */
-    fun deleteAdultLinkRequestConfig(accountId: kotlin.Long, otherAccountId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteAdultLinkRequestConfig(accountId: kotlin.String, otherAccountId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1543,7 +1543,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteConversion(conversionId: kotlin.Long) : Unit {
+    fun deleteConversion(conversionId: kotlin.String) : Unit {
         val localVarResponse = deleteConversionWithHttpInfo(conversionId = conversionId)
 
         return when (localVarResponse.responseType) {
@@ -1571,7 +1571,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteConversionWithHttpInfo(conversionId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteConversionWithHttpInfo(conversionId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteConversionRequestConfig(conversionId = conversionId)
 
         return request<Unit, Unit>(
@@ -1585,7 +1585,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param conversionId 
      * @return RequestConfig
      */
-    fun deleteConversionRequestConfig(conversionId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteConversionRequestConfig(conversionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1614,7 +1614,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteDevice(deviceId: kotlin.Long) : Unit {
+    fun deleteDevice(deviceId: kotlin.String) : Unit {
         val localVarResponse = deleteDeviceWithHttpInfo(deviceId = deviceId)
 
         return when (localVarResponse.responseType) {
@@ -1642,7 +1642,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteDeviceWithHttpInfo(deviceId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteDeviceWithHttpInfo(deviceId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteDeviceRequestConfig(deviceId = deviceId)
 
         return request<Unit, Unit>(
@@ -1656,7 +1656,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param deviceId 
      * @return RequestConfig
      */
-    fun deleteDeviceRequestConfig(deviceId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteDeviceRequestConfig(deviceId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1685,7 +1685,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteDeviceLink(linkId: kotlin.Long) : Unit {
+    fun deleteDeviceLink(linkId: kotlin.String) : Unit {
         val localVarResponse = deleteDeviceLinkWithHttpInfo(linkId = linkId)
 
         return when (localVarResponse.responseType) {
@@ -1713,7 +1713,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteDeviceLinkWithHttpInfo(linkId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteDeviceLinkWithHttpInfo(linkId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteDeviceLinkRequestConfig(linkId = linkId)
 
         return request<Unit, Unit>(
@@ -1727,7 +1727,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param linkId 
      * @return RequestConfig
      */
-    fun deleteDeviceLinkRequestConfig(linkId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteDeviceLinkRequestConfig(linkId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1756,7 +1756,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteGenre(genreId: kotlin.Long) : Unit {
+    fun deleteGenre(genreId: kotlin.String) : Unit {
         val localVarResponse = deleteGenreWithHttpInfo(genreId = genreId)
 
         return when (localVarResponse.responseType) {
@@ -1784,7 +1784,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteGenreWithHttpInfo(genreId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteGenreWithHttpInfo(genreId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteGenreRequestConfig(genreId = genreId)
 
         return request<Unit, Unit>(
@@ -1798,7 +1798,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param genreId 
      * @return RequestConfig
      */
-    fun deleteGenreRequestConfig(genreId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteGenreRequestConfig(genreId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1827,7 +1827,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteHousehold(householdId: kotlin.Long) : Unit {
+    fun deleteHousehold(householdId: kotlin.String) : Unit {
         val localVarResponse = deleteHouseholdWithHttpInfo(householdId = householdId)
 
         return when (localVarResponse.responseType) {
@@ -1855,7 +1855,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteHouseholdWithHttpInfo(householdId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteHouseholdWithHttpInfo(householdId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteHouseholdRequestConfig(householdId = householdId)
 
         return request<Unit, Unit>(
@@ -1869,7 +1869,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param householdId 
      * @return RequestConfig
      */
-    fun deleteHouseholdRequestConfig(householdId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteHouseholdRequestConfig(householdId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1899,7 +1899,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteHouseholdMember(householdId: kotlin.Long, accountId: kotlin.Long) : Unit {
+    fun deleteHouseholdMember(householdId: kotlin.String, accountId: kotlin.String) : Unit {
         val localVarResponse = deleteHouseholdMemberWithHttpInfo(householdId = householdId, accountId = accountId)
 
         return when (localVarResponse.responseType) {
@@ -1928,7 +1928,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteHouseholdMemberWithHttpInfo(householdId: kotlin.Long, accountId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteHouseholdMemberWithHttpInfo(householdId: kotlin.String, accountId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteHouseholdMemberRequestConfig(householdId = householdId, accountId = accountId)
 
         return request<Unit, Unit>(
@@ -1943,7 +1943,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param accountId 
      * @return RequestConfig
      */
-    fun deleteHouseholdMemberRequestConfig(householdId: kotlin.Long, accountId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteHouseholdMemberRequestConfig(householdId: kotlin.String, accountId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1972,7 +1972,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteItem(itemId: kotlin.Long) : Unit {
+    fun deleteItem(itemId: kotlin.String) : Unit {
         val localVarResponse = deleteItemWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -2000,7 +2000,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteItemWithHttpInfo(itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteItemWithHttpInfo(itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteItemRequestConfig(itemId = itemId)
 
         return request<Unit, Unit>(
@@ -2014,7 +2014,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun deleteItemRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteItemRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2043,7 +2043,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteItemMetadata(itemId: kotlin.Long) : Unit {
+    fun deleteItemMetadata(itemId: kotlin.String) : Unit {
         val localVarResponse = deleteItemMetadataWithHttpInfo(itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -2071,7 +2071,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteItemMetadataWithHttpInfo(itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteItemMetadataWithHttpInfo(itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteItemMetadataRequestConfig(itemId = itemId)
 
         return request<Unit, Unit>(
@@ -2085,7 +2085,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun deleteItemMetadataRequestConfig(itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteItemMetadataRequestConfig(itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2114,7 +2114,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteLibrary(libraryId: kotlin.Long) : Unit {
+    fun deleteLibrary(libraryId: kotlin.String) : Unit {
         val localVarResponse = deleteLibraryWithHttpInfo(libraryId = libraryId)
 
         return when (localVarResponse.responseType) {
@@ -2142,7 +2142,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteLibraryWithHttpInfo(libraryId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteLibraryWithHttpInfo(libraryId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteLibraryRequestConfig(libraryId = libraryId)
 
         return request<Unit, Unit>(
@@ -2156,7 +2156,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param libraryId 
      * @return RequestConfig
      */
-    fun deleteLibraryRequestConfig(libraryId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteLibraryRequestConfig(libraryId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2185,7 +2185,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteMediaFile(mediaFileId: kotlin.Long) : Unit {
+    fun deleteMediaFile(mediaFileId: kotlin.String) : Unit {
         val localVarResponse = deleteMediaFileWithHttpInfo(mediaFileId = mediaFileId)
 
         return when (localVarResponse.responseType) {
@@ -2213,7 +2213,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteMediaFileWithHttpInfo(mediaFileId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteMediaFileWithHttpInfo(mediaFileId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteMediaFileRequestConfig(mediaFileId = mediaFileId)
 
         return request<Unit, Unit>(
@@ -2227,7 +2227,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param mediaFileId 
      * @return RequestConfig
      */
-    fun deleteMediaFileRequestConfig(mediaFileId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteMediaFileRequestConfig(mediaFileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2256,7 +2256,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteOccasion(occasionId: kotlin.Long) : Unit {
+    fun deleteOccasion(occasionId: kotlin.String) : Unit {
         val localVarResponse = deleteOccasionWithHttpInfo(occasionId = occasionId)
 
         return when (localVarResponse.responseType) {
@@ -2284,7 +2284,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteOccasionWithHttpInfo(occasionId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteOccasionWithHttpInfo(occasionId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteOccasionRequestConfig(occasionId = occasionId)
 
         return request<Unit, Unit>(
@@ -2298,7 +2298,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param occasionId 
      * @return RequestConfig
      */
-    fun deleteOccasionRequestConfig(occasionId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteOccasionRequestConfig(occasionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2327,7 +2327,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deletePerson(personId: kotlin.Long) : Unit {
+    fun deletePerson(personId: kotlin.String) : Unit {
         val localVarResponse = deletePersonWithHttpInfo(personId = personId)
 
         return when (localVarResponse.responseType) {
@@ -2355,7 +2355,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deletePersonWithHttpInfo(personId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deletePersonWithHttpInfo(personId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deletePersonRequestConfig(personId = personId)
 
         return request<Unit, Unit>(
@@ -2369,7 +2369,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param personId 
      * @return RequestConfig
      */
-    fun deletePersonRequestConfig(personId: kotlin.Long) : RequestConfig<Unit> {
+    fun deletePersonRequestConfig(personId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2398,7 +2398,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteSession(sessionId: kotlin.Long) : Unit {
+    fun deleteSession(sessionId: kotlin.String) : Unit {
         val localVarResponse = deleteSessionWithHttpInfo(sessionId = sessionId)
 
         return when (localVarResponse.responseType) {
@@ -2426,7 +2426,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteSessionWithHttpInfo(sessionId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteSessionWithHttpInfo(sessionId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteSessionRequestConfig(sessionId = sessionId)
 
         return request<Unit, Unit>(
@@ -2440,7 +2440,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param sessionId 
      * @return RequestConfig
      */
-    fun deleteSessionRequestConfig(sessionId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteSessionRequestConfig(sessionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2469,7 +2469,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteSsoProvider(providerId: kotlin.Long) : Unit {
+    fun deleteSsoProvider(providerId: kotlin.String) : Unit {
         val localVarResponse = deleteSsoProviderWithHttpInfo(providerId = providerId)
 
         return when (localVarResponse.responseType) {
@@ -2497,7 +2497,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteSsoProviderWithHttpInfo(providerId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteSsoProviderWithHttpInfo(providerId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteSsoProviderRequestConfig(providerId = providerId)
 
         return request<Unit, Unit>(
@@ -2511,7 +2511,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param providerId 
      * @return RequestConfig
      */
-    fun deleteSsoProviderRequestConfig(providerId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteSsoProviderRequestConfig(providerId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2540,7 +2540,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteTask(taskId: kotlin.Long) : Unit {
+    fun deleteTask(taskId: kotlin.String) : Unit {
         val localVarResponse = deleteTaskWithHttpInfo(taskId = taskId)
 
         return when (localVarResponse.responseType) {
@@ -2568,7 +2568,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteTaskWithHttpInfo(taskId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteTaskWithHttpInfo(taskId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteTaskRequestConfig(taskId = taskId)
 
         return request<Unit, Unit>(
@@ -2582,7 +2582,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param taskId 
      * @return RequestConfig
      */
-    fun deleteTaskRequestConfig(taskId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteTaskRequestConfig(taskId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2714,7 +2714,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getAccount(accountId: kotlin.Long) : Account {
+    fun getAccount(accountId: kotlin.String) : Account {
         val localVarResponse = getAccountWithHttpInfo(accountId = accountId)
 
         return when (localVarResponse.responseType) {
@@ -2743,7 +2743,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getAccountWithHttpInfo(accountId: kotlin.Long) : ApiResponse<Account?> {
+    fun getAccountWithHttpInfo(accountId: kotlin.String) : ApiResponse<Account?> {
         val localVariableConfig = getAccountRequestConfig(accountId = accountId)
 
         return request<Unit, Account>(
@@ -2757,7 +2757,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param accountId 
      * @return RequestConfig
      */
-    fun getAccountRequestConfig(accountId: kotlin.Long) : RequestConfig<Unit> {
+    fun getAccountRequestConfig(accountId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2788,7 +2788,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getAdultLink(accountId: kotlin.Long, otherAccountId: kotlin.Long) : AdultLink {
+    fun getAdultLink(accountId: kotlin.String, otherAccountId: kotlin.String) : AdultLink {
         val localVarResponse = getAdultLinkWithHttpInfo(accountId = accountId, otherAccountId = otherAccountId)
 
         return when (localVarResponse.responseType) {
@@ -2818,7 +2818,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getAdultLinkWithHttpInfo(accountId: kotlin.Long, otherAccountId: kotlin.Long) : ApiResponse<AdultLink?> {
+    fun getAdultLinkWithHttpInfo(accountId: kotlin.String, otherAccountId: kotlin.String) : ApiResponse<AdultLink?> {
         val localVariableConfig = getAdultLinkRequestConfig(accountId = accountId, otherAccountId = otherAccountId)
 
         return request<Unit, AdultLink>(
@@ -2833,7 +2833,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param otherAccountId The other adult; the two ids name the link in either order.
      * @return RequestConfig
      */
-    fun getAdultLinkRequestConfig(accountId: kotlin.Long, otherAccountId: kotlin.Long) : RequestConfig<Unit> {
+    fun getAdultLinkRequestConfig(accountId: kotlin.String, otherAccountId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -2933,7 +2933,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getConversion(conversionId: kotlin.Long) : Conversion {
+    fun getConversion(conversionId: kotlin.String) : Conversion {
         val localVarResponse = getConversionWithHttpInfo(conversionId = conversionId)
 
         return when (localVarResponse.responseType) {
@@ -2962,7 +2962,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getConversionWithHttpInfo(conversionId: kotlin.Long) : ApiResponse<Conversion?> {
+    fun getConversionWithHttpInfo(conversionId: kotlin.String) : ApiResponse<Conversion?> {
         val localVariableConfig = getConversionRequestConfig(conversionId = conversionId)
 
         return request<Unit, Conversion>(
@@ -2976,7 +2976,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param conversionId 
      * @return RequestConfig
      */
-    fun getConversionRequestConfig(conversionId: kotlin.Long) : RequestConfig<Unit> {
+    fun getConversionRequestConfig(conversionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3006,7 +3006,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getDevice(deviceId: kotlin.Long) : Device {
+    fun getDevice(deviceId: kotlin.String) : Device {
         val localVarResponse = getDeviceWithHttpInfo(deviceId = deviceId)
 
         return when (localVarResponse.responseType) {
@@ -3035,7 +3035,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getDeviceWithHttpInfo(deviceId: kotlin.Long) : ApiResponse<Device?> {
+    fun getDeviceWithHttpInfo(deviceId: kotlin.String) : ApiResponse<Device?> {
         val localVariableConfig = getDeviceRequestConfig(deviceId = deviceId)
 
         return request<Unit, Device>(
@@ -3049,7 +3049,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param deviceId 
      * @return RequestConfig
      */
-    fun getDeviceRequestConfig(deviceId: kotlin.Long) : RequestConfig<Unit> {
+    fun getDeviceRequestConfig(deviceId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3079,7 +3079,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getHousehold(householdId: kotlin.Long) : Household {
+    fun getHousehold(householdId: kotlin.String) : Household {
         val localVarResponse = getHouseholdWithHttpInfo(householdId = householdId)
 
         return when (localVarResponse.responseType) {
@@ -3108,7 +3108,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getHouseholdWithHttpInfo(householdId: kotlin.Long) : ApiResponse<Household?> {
+    fun getHouseholdWithHttpInfo(householdId: kotlin.String) : ApiResponse<Household?> {
         val localVariableConfig = getHouseholdRequestConfig(householdId = householdId)
 
         return request<Unit, Household>(
@@ -3122,7 +3122,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param householdId 
      * @return RequestConfig
      */
-    fun getHouseholdRequestConfig(householdId: kotlin.Long) : RequestConfig<Unit> {
+    fun getHouseholdRequestConfig(householdId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3152,7 +3152,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getIdentityReview(identityReviewId: kotlin.Long) : IdentityReview {
+    fun getIdentityReview(identityReviewId: kotlin.String) : IdentityReview {
         val localVarResponse = getIdentityReviewWithHttpInfo(identityReviewId = identityReviewId)
 
         return when (localVarResponse.responseType) {
@@ -3181,7 +3181,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getIdentityReviewWithHttpInfo(identityReviewId: kotlin.Long) : ApiResponse<IdentityReview?> {
+    fun getIdentityReviewWithHttpInfo(identityReviewId: kotlin.String) : ApiResponse<IdentityReview?> {
         val localVariableConfig = getIdentityReviewRequestConfig(identityReviewId = identityReviewId)
 
         return request<Unit, IdentityReview>(
@@ -3195,7 +3195,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param identityReviewId 
      * @return RequestConfig
      */
-    fun getIdentityReviewRequestConfig(identityReviewId: kotlin.Long) : RequestConfig<Unit> {
+    fun getIdentityReviewRequestConfig(identityReviewId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3225,7 +3225,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getJoinCode(joinCodeId: kotlin.Long) : JoinCode {
+    fun getJoinCode(joinCodeId: kotlin.String) : JoinCode {
         val localVarResponse = getJoinCodeWithHttpInfo(joinCodeId = joinCodeId)
 
         return when (localVarResponse.responseType) {
@@ -3254,7 +3254,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getJoinCodeWithHttpInfo(joinCodeId: kotlin.Long) : ApiResponse<JoinCode?> {
+    fun getJoinCodeWithHttpInfo(joinCodeId: kotlin.String) : ApiResponse<JoinCode?> {
         val localVariableConfig = getJoinCodeRequestConfig(joinCodeId = joinCodeId)
 
         return request<Unit, JoinCode>(
@@ -3268,7 +3268,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param joinCodeId 
      * @return RequestConfig
      */
-    fun getJoinCodeRequestConfig(joinCodeId: kotlin.Long) : RequestConfig<Unit> {
+    fun getJoinCodeRequestConfig(joinCodeId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3299,7 +3299,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getLibraryFolder(libraryId: kotlin.Long, folderId: kotlin.Long) : Folder {
+    fun getLibraryFolder(libraryId: kotlin.String, folderId: kotlin.String) : Folder {
         val localVarResponse = getLibraryFolderWithHttpInfo(libraryId = libraryId, folderId = folderId)
 
         return when (localVarResponse.responseType) {
@@ -3329,7 +3329,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderId: kotlin.Long) : ApiResponse<Folder?> {
+    fun getLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderId: kotlin.String) : ApiResponse<Folder?> {
         val localVariableConfig = getLibraryFolderRequestConfig(libraryId = libraryId, folderId = folderId)
 
         return request<Unit, Folder>(
@@ -3344,7 +3344,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param folderId 
      * @return RequestConfig
      */
-    fun getLibraryFolderRequestConfig(libraryId: kotlin.Long, folderId: kotlin.Long) : RequestConfig<Unit> {
+    fun getLibraryFolderRequestConfig(libraryId: kotlin.String, folderId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3374,7 +3374,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getSeekPreview(seekPreviewId: kotlin.Long) : SeekPreview {
+    fun getSeekPreview(seekPreviewId: kotlin.String) : SeekPreview {
         val localVarResponse = getSeekPreviewWithHttpInfo(seekPreviewId = seekPreviewId)
 
         return when (localVarResponse.responseType) {
@@ -3403,7 +3403,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getSeekPreviewWithHttpInfo(seekPreviewId: kotlin.Long) : ApiResponse<SeekPreview?> {
+    fun getSeekPreviewWithHttpInfo(seekPreviewId: kotlin.String) : ApiResponse<SeekPreview?> {
         val localVariableConfig = getSeekPreviewRequestConfig(seekPreviewId = seekPreviewId)
 
         return request<Unit, SeekPreview>(
@@ -3417,7 +3417,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param seekPreviewId 
      * @return RequestConfig
      */
-    fun getSeekPreviewRequestConfig(seekPreviewId: kotlin.Long) : RequestConfig<Unit> {
+    fun getSeekPreviewRequestConfig(seekPreviewId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3447,7 +3447,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getSession(sessionId: kotlin.Long) : Session {
+    fun getSession(sessionId: kotlin.String) : Session {
         val localVarResponse = getSessionWithHttpInfo(sessionId = sessionId)
 
         return when (localVarResponse.responseType) {
@@ -3476,7 +3476,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getSessionWithHttpInfo(sessionId: kotlin.Long) : ApiResponse<Session?> {
+    fun getSessionWithHttpInfo(sessionId: kotlin.String) : ApiResponse<Session?> {
         val localVariableConfig = getSessionRequestConfig(sessionId = sessionId)
 
         return request<Unit, Session>(
@@ -3490,7 +3490,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param sessionId 
      * @return RequestConfig
      */
-    fun getSessionRequestConfig(sessionId: kotlin.Long) : RequestConfig<Unit> {
+    fun getSessionRequestConfig(sessionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3590,7 +3590,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getSsoProvider(providerId: kotlin.Long) : SsoProvider {
+    fun getSsoProvider(providerId: kotlin.String) : SsoProvider {
         val localVarResponse = getSsoProviderWithHttpInfo(providerId = providerId)
 
         return when (localVarResponse.responseType) {
@@ -3619,7 +3619,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getSsoProviderWithHttpInfo(providerId: kotlin.Long) : ApiResponse<SsoProvider?> {
+    fun getSsoProviderWithHttpInfo(providerId: kotlin.String) : ApiResponse<SsoProvider?> {
         val localVariableConfig = getSsoProviderRequestConfig(providerId = providerId)
 
         return request<Unit, SsoProvider>(
@@ -3633,7 +3633,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param providerId 
      * @return RequestConfig
      */
-    fun getSsoProviderRequestConfig(providerId: kotlin.Long) : RequestConfig<Unit> {
+    fun getSsoProviderRequestConfig(providerId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3733,7 +3733,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getTask(taskId: kotlin.Long) : Task {
+    fun getTask(taskId: kotlin.String) : Task {
         val localVarResponse = getTaskWithHttpInfo(taskId = taskId)
 
         return when (localVarResponse.responseType) {
@@ -3762,7 +3762,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getTaskWithHttpInfo(taskId: kotlin.Long) : ApiResponse<Task?> {
+    fun getTaskWithHttpInfo(taskId: kotlin.String) : ApiResponse<Task?> {
         val localVariableConfig = getTaskRequestConfig(taskId = taskId)
 
         return request<Unit, Task>(
@@ -3776,7 +3776,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param taskId 
      * @return RequestConfig
      */
-    fun getTaskRequestConfig(taskId: kotlin.Long) : RequestConfig<Unit> {
+    fun getTaskRequestConfig(taskId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3807,7 +3807,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getTaskRun(taskId: kotlin.Long, runId: kotlin.Long) : TaskRun {
+    fun getTaskRun(taskId: kotlin.String, runId: kotlin.String) : TaskRun {
         val localVarResponse = getTaskRunWithHttpInfo(taskId = taskId, runId = runId)
 
         return when (localVarResponse.responseType) {
@@ -3837,7 +3837,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getTaskRunWithHttpInfo(taskId: kotlin.Long, runId: kotlin.Long) : ApiResponse<TaskRun?> {
+    fun getTaskRunWithHttpInfo(taskId: kotlin.String, runId: kotlin.String) : ApiResponse<TaskRun?> {
         val localVariableConfig = getTaskRunRequestConfig(taskId = taskId, runId = runId)
 
         return request<Unit, TaskRun>(
@@ -3852,7 +3852,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param runId 
      * @return RequestConfig
      */
-    fun getTaskRunRequestConfig(taskId: kotlin.Long, runId: kotlin.Long) : RequestConfig<Unit> {
+    fun getTaskRunRequestConfig(taskId: kotlin.String, runId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -3884,7 +3884,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listAccountIdentities(accountId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : AccountIdentityPage {
+    fun listAccountIdentities(accountId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : AccountIdentityPage {
         val localVarResponse = listAccountIdentitiesWithHttpInfo(accountId = accountId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -3915,7 +3915,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listAccountIdentitiesWithHttpInfo(accountId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<AccountIdentityPage?> {
+    fun listAccountIdentitiesWithHttpInfo(accountId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<AccountIdentityPage?> {
         val localVariableConfig = listAccountIdentitiesRequestConfig(accountId = accountId, limit = limit, offset = offset)
 
         return request<Unit, AccountIdentityPage>(
@@ -3931,7 +3931,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listAccountIdentitiesRequestConfig(accountId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listAccountIdentitiesRequestConfig(accountId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -4409,7 +4409,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listDevices(accountId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : DevicePage {
+    fun listDevices(accountId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : DevicePage {
         val localVarResponse = listDevicesWithHttpInfo(accountId = accountId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -4440,7 +4440,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listDevicesWithHttpInfo(accountId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<DevicePage?> {
+    fun listDevicesWithHttpInfo(accountId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<DevicePage?> {
         val localVariableConfig = listDevicesRequestConfig(accountId = accountId, limit = limit, offset = offset)
 
         return request<Unit, DevicePage>(
@@ -4456,7 +4456,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listDevicesRequestConfig(accountId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listDevicesRequestConfig(accountId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -4585,7 +4585,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listIdentityReviews(libraryId: kotlin.Long? = null, reason: IdentityReviewReason? = null, dismissed: kotlin.Boolean? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : IdentityReviewPage {
+    fun listIdentityReviews(libraryId: kotlin.String? = null, reason: IdentityReviewReason? = null, dismissed: kotlin.Boolean? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : IdentityReviewPage {
         val localVarResponse = listIdentityReviewsWithHttpInfo(libraryId = libraryId, reason = reason, dismissed = dismissed, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -4618,7 +4618,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listIdentityReviewsWithHttpInfo(libraryId: kotlin.Long?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<IdentityReviewPage?> {
+    fun listIdentityReviewsWithHttpInfo(libraryId: kotlin.String?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<IdentityReviewPage?> {
         val localVariableConfig = listIdentityReviewsRequestConfig(libraryId = libraryId, reason = reason, dismissed = dismissed, limit = limit, offset = offset)
 
         return request<Unit, IdentityReviewPage>(
@@ -4636,7 +4636,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listIdentityReviewsRequestConfig(libraryId: kotlin.Long?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listIdentityReviewsRequestConfig(libraryId: kotlin.String?, reason: IdentityReviewReason?, dismissed: kotlin.Boolean?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -4685,7 +4685,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listJoinCodes(accountId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : JoinCodePage {
+    fun listJoinCodes(accountId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : JoinCodePage {
         val localVarResponse = listJoinCodesWithHttpInfo(accountId = accountId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -4716,7 +4716,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listJoinCodesWithHttpInfo(accountId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<JoinCodePage?> {
+    fun listJoinCodesWithHttpInfo(accountId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<JoinCodePage?> {
         val localVariableConfig = listJoinCodesRequestConfig(accountId = accountId, limit = limit, offset = offset)
 
         return request<Unit, JoinCodePage>(
@@ -4732,7 +4732,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listJoinCodesRequestConfig(accountId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listJoinCodesRequestConfig(accountId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -4771,7 +4771,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listLibraryFolders(libraryId: kotlin.Long) : FolderPage {
+    fun listLibraryFolders(libraryId: kotlin.String) : FolderPage {
         val localVarResponse = listLibraryFoldersWithHttpInfo(libraryId = libraryId)
 
         return when (localVarResponse.responseType) {
@@ -4800,7 +4800,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listLibraryFoldersWithHttpInfo(libraryId: kotlin.Long) : ApiResponse<FolderPage?> {
+    fun listLibraryFoldersWithHttpInfo(libraryId: kotlin.String) : ApiResponse<FolderPage?> {
         val localVariableConfig = listLibraryFoldersRequestConfig(libraryId = libraryId)
 
         return request<Unit, FolderPage>(
@@ -4814,7 +4814,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param libraryId 
      * @return RequestConfig
      */
-    fun listLibraryFoldersRequestConfig(libraryId: kotlin.Long) : RequestConfig<Unit> {
+    fun listLibraryFoldersRequestConfig(libraryId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -4960,7 +4960,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listOccasionMembers(occasionId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : OccasionMemberPage {
+    fun listOccasionMembers(occasionId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : OccasionMemberPage {
         val localVarResponse = listOccasionMembersWithHttpInfo(occasionId = occasionId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -4991,7 +4991,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listOccasionMembersWithHttpInfo(occasionId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<OccasionMemberPage?> {
+    fun listOccasionMembersWithHttpInfo(occasionId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<OccasionMemberPage?> {
         val localVariableConfig = listOccasionMembersRequestConfig(occasionId = occasionId, limit = limit, offset = offset)
 
         return request<Unit, OccasionMemberPage>(
@@ -5007,7 +5007,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listOccasionMembersRequestConfig(occasionId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listOccasionMembersRequestConfig(occasionId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -5047,7 +5047,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listSeekPreviews(mediaFileId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : SeekPreviewPage {
+    fun listSeekPreviews(mediaFileId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : SeekPreviewPage {
         val localVarResponse = listSeekPreviewsWithHttpInfo(mediaFileId = mediaFileId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -5078,7 +5078,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listSeekPreviewsWithHttpInfo(mediaFileId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<SeekPreviewPage?> {
+    fun listSeekPreviewsWithHttpInfo(mediaFileId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<SeekPreviewPage?> {
         val localVariableConfig = listSeekPreviewsRequestConfig(mediaFileId = mediaFileId, limit = limit, offset = offset)
 
         return request<Unit, SeekPreviewPage>(
@@ -5094,7 +5094,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listSeekPreviewsRequestConfig(mediaFileId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listSeekPreviewsRequestConfig(mediaFileId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -5311,7 +5311,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listTaskRuns(taskId: kotlin.Long, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : TaskRunPage {
+    fun listTaskRuns(taskId: kotlin.String, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : TaskRunPage {
         val localVarResponse = listTaskRunsWithHttpInfo(taskId = taskId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -5342,7 +5342,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listTaskRunsWithHttpInfo(taskId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<TaskRunPage?> {
+    fun listTaskRunsWithHttpInfo(taskId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<TaskRunPage?> {
         val localVariableConfig = listTaskRunsRequestConfig(taskId = taskId, limit = limit, offset = offset)
 
         return request<Unit, TaskRunPage>(
@@ -5358,7 +5358,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listTaskRunsRequestConfig(taskId: kotlin.Long, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listTaskRunsRequestConfig(taskId: kotlin.String, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -5479,7 +5479,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun probeMediaFile(mediaFileId: kotlin.Long) : Unit {
+    fun probeMediaFile(mediaFileId: kotlin.String) : Unit {
         val localVarResponse = probeMediaFileWithHttpInfo(mediaFileId = mediaFileId)
 
         return when (localVarResponse.responseType) {
@@ -5507,7 +5507,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun probeMediaFileWithHttpInfo(mediaFileId: kotlin.Long) : ApiResponse<Unit?> {
+    fun probeMediaFileWithHttpInfo(mediaFileId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = probeMediaFileRequestConfig(mediaFileId = mediaFileId)
 
         return request<Unit, Unit>(
@@ -5521,7 +5521,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param mediaFileId 
      * @return RequestConfig
      */
-    fun probeMediaFileRequestConfig(mediaFileId: kotlin.Long) : RequestConfig<Unit> {
+    fun probeMediaFileRequestConfig(mediaFileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -5551,7 +5551,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun putHouseholdMember(householdId: kotlin.Long, accountId: kotlin.Long) : Unit {
+    fun putHouseholdMember(householdId: kotlin.String, accountId: kotlin.String) : Unit {
         val localVarResponse = putHouseholdMemberWithHttpInfo(householdId = householdId, accountId = accountId)
 
         return when (localVarResponse.responseType) {
@@ -5580,7 +5580,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun putHouseholdMemberWithHttpInfo(householdId: kotlin.Long, accountId: kotlin.Long) : ApiResponse<Unit?> {
+    fun putHouseholdMemberWithHttpInfo(householdId: kotlin.String, accountId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = putHouseholdMemberRequestConfig(householdId = householdId, accountId = accountId)
 
         return request<Unit, Unit>(
@@ -5595,7 +5595,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param accountId 
      * @return RequestConfig
      */
-    fun putHouseholdMemberRequestConfig(householdId: kotlin.Long, accountId: kotlin.Long) : RequestConfig<Unit> {
+    fun putHouseholdMemberRequestConfig(householdId: kotlin.String, accountId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -5626,7 +5626,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun putItemMetadata(itemId: kotlin.Long, itemMetadata: ItemMetadata) : Item {
+    fun putItemMetadata(itemId: kotlin.String, itemMetadata: ItemMetadata) : Item {
         val localVarResponse = putItemMetadataWithHttpInfo(itemId = itemId, itemMetadata = itemMetadata)
 
         return when (localVarResponse.responseType) {
@@ -5656,7 +5656,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun putItemMetadataWithHttpInfo(itemId: kotlin.Long, itemMetadata: ItemMetadata) : ApiResponse<Item?> {
+    fun putItemMetadataWithHttpInfo(itemId: kotlin.String, itemMetadata: ItemMetadata) : ApiResponse<Item?> {
         val localVariableConfig = putItemMetadataRequestConfig(itemId = itemId, itemMetadata = itemMetadata)
 
         return request<ItemMetadata, Item>(
@@ -5671,7 +5671,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemMetadata 
      * @return RequestConfig
      */
-    fun putItemMetadataRequestConfig(itemId: kotlin.Long, itemMetadata: ItemMetadata) : RequestConfig<ItemMetadata> {
+    fun putItemMetadataRequestConfig(itemId: kotlin.String, itemMetadata: ItemMetadata) : RequestConfig<ItemMetadata> {
         val localVariableBody = itemMetadata
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -5770,7 +5770,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun removeLibraryFolder(libraryId: kotlin.Long, folderId: kotlin.Long) : Unit {
+    fun removeLibraryFolder(libraryId: kotlin.String, folderId: kotlin.String) : Unit {
         val localVarResponse = removeLibraryFolderWithHttpInfo(libraryId = libraryId, folderId = folderId)
 
         return when (localVarResponse.responseType) {
@@ -5799,7 +5799,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun removeLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderId: kotlin.Long) : ApiResponse<Unit?> {
+    fun removeLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = removeLibraryFolderRequestConfig(libraryId = libraryId, folderId = folderId)
 
         return request<Unit, Unit>(
@@ -5814,7 +5814,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param folderId 
      * @return RequestConfig
      */
-    fun removeLibraryFolderRequestConfig(libraryId: kotlin.Long, folderId: kotlin.Long) : RequestConfig<Unit> {
+    fun removeLibraryFolderRequestConfig(libraryId: kotlin.String, folderId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -5844,7 +5844,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun removeOccasionMember(occasionId: kotlin.Long, itemId: kotlin.Long) : Unit {
+    fun removeOccasionMember(occasionId: kotlin.String, itemId: kotlin.String) : Unit {
         val localVarResponse = removeOccasionMemberWithHttpInfo(occasionId = occasionId, itemId = itemId)
 
         return when (localVarResponse.responseType) {
@@ -5873,7 +5873,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun removeOccasionMemberWithHttpInfo(occasionId: kotlin.Long, itemId: kotlin.Long) : ApiResponse<Unit?> {
+    fun removeOccasionMemberWithHttpInfo(occasionId: kotlin.String, itemId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = removeOccasionMemberRequestConfig(occasionId = occasionId, itemId = itemId)
 
         return request<Unit, Unit>(
@@ -5888,7 +5888,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemId 
      * @return RequestConfig
      */
-    fun removeOccasionMemberRequestConfig(occasionId: kotlin.Long, itemId: kotlin.Long) : RequestConfig<Unit> {
+    fun removeOccasionMemberRequestConfig(occasionId: kotlin.String, itemId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -5919,7 +5919,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceAccount(accountId: kotlin.Long, accountInput: AccountInput) : Account {
+    fun replaceAccount(accountId: kotlin.String, accountInput: AccountInput) : Account {
         val localVarResponse = replaceAccountWithHttpInfo(accountId = accountId, accountInput = accountInput)
 
         return when (localVarResponse.responseType) {
@@ -5949,7 +5949,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceAccountWithHttpInfo(accountId: kotlin.Long, accountInput: AccountInput) : ApiResponse<Account?> {
+    fun replaceAccountWithHttpInfo(accountId: kotlin.String, accountInput: AccountInput) : ApiResponse<Account?> {
         val localVariableConfig = replaceAccountRequestConfig(accountId = accountId, accountInput = accountInput)
 
         return request<AccountInput, Account>(
@@ -5964,7 +5964,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param accountInput 
      * @return RequestConfig
      */
-    fun replaceAccountRequestConfig(accountId: kotlin.Long, accountInput: AccountInput) : RequestConfig<AccountInput> {
+    fun replaceAccountRequestConfig(accountId: kotlin.String, accountInput: AccountInput) : RequestConfig<AccountInput> {
         val localVariableBody = accountInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -5997,7 +5997,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceAdultLink(accountId: kotlin.Long, otherAccountId: kotlin.Long, adultLinkUpdate: AdultLinkUpdate) : AdultLink {
+    fun replaceAdultLink(accountId: kotlin.String, otherAccountId: kotlin.String, adultLinkUpdate: AdultLinkUpdate) : AdultLink {
         val localVarResponse = replaceAdultLinkWithHttpInfo(accountId = accountId, otherAccountId = otherAccountId, adultLinkUpdate = adultLinkUpdate)
 
         return when (localVarResponse.responseType) {
@@ -6028,7 +6028,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceAdultLinkWithHttpInfo(accountId: kotlin.Long, otherAccountId: kotlin.Long, adultLinkUpdate: AdultLinkUpdate) : ApiResponse<AdultLink?> {
+    fun replaceAdultLinkWithHttpInfo(accountId: kotlin.String, otherAccountId: kotlin.String, adultLinkUpdate: AdultLinkUpdate) : ApiResponse<AdultLink?> {
         val localVariableConfig = replaceAdultLinkRequestConfig(accountId = accountId, otherAccountId = otherAccountId, adultLinkUpdate = adultLinkUpdate)
 
         return request<AdultLinkUpdate, AdultLink>(
@@ -6044,7 +6044,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param adultLinkUpdate 
      * @return RequestConfig
      */
-    fun replaceAdultLinkRequestConfig(accountId: kotlin.Long, otherAccountId: kotlin.Long, adultLinkUpdate: AdultLinkUpdate) : RequestConfig<AdultLinkUpdate> {
+    fun replaceAdultLinkRequestConfig(accountId: kotlin.String, otherAccountId: kotlin.String, adultLinkUpdate: AdultLinkUpdate) : RequestConfig<AdultLinkUpdate> {
         val localVariableBody = adultLinkUpdate
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6076,7 +6076,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceDevice(deviceId: kotlin.Long, deviceInput: DeviceInput) : Device {
+    fun replaceDevice(deviceId: kotlin.String, deviceInput: DeviceInput) : Device {
         val localVarResponse = replaceDeviceWithHttpInfo(deviceId = deviceId, deviceInput = deviceInput)
 
         return when (localVarResponse.responseType) {
@@ -6106,7 +6106,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceDeviceWithHttpInfo(deviceId: kotlin.Long, deviceInput: DeviceInput) : ApiResponse<Device?> {
+    fun replaceDeviceWithHttpInfo(deviceId: kotlin.String, deviceInput: DeviceInput) : ApiResponse<Device?> {
         val localVariableConfig = replaceDeviceRequestConfig(deviceId = deviceId, deviceInput = deviceInput)
 
         return request<DeviceInput, Device>(
@@ -6121,7 +6121,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param deviceInput 
      * @return RequestConfig
      */
-    fun replaceDeviceRequestConfig(deviceId: kotlin.Long, deviceInput: DeviceInput) : RequestConfig<DeviceInput> {
+    fun replaceDeviceRequestConfig(deviceId: kotlin.String, deviceInput: DeviceInput) : RequestConfig<DeviceInput> {
         val localVariableBody = deviceInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6153,7 +6153,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceGenre(genreId: kotlin.Long, genreInput: GenreInput) : Genre {
+    fun replaceGenre(genreId: kotlin.String, genreInput: GenreInput) : Genre {
         val localVarResponse = replaceGenreWithHttpInfo(genreId = genreId, genreInput = genreInput)
 
         return when (localVarResponse.responseType) {
@@ -6183,7 +6183,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceGenreWithHttpInfo(genreId: kotlin.Long, genreInput: GenreInput) : ApiResponse<Genre?> {
+    fun replaceGenreWithHttpInfo(genreId: kotlin.String, genreInput: GenreInput) : ApiResponse<Genre?> {
         val localVariableConfig = replaceGenreRequestConfig(genreId = genreId, genreInput = genreInput)
 
         return request<GenreInput, Genre>(
@@ -6198,7 +6198,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param genreInput 
      * @return RequestConfig
      */
-    fun replaceGenreRequestConfig(genreId: kotlin.Long, genreInput: GenreInput) : RequestConfig<GenreInput> {
+    fun replaceGenreRequestConfig(genreId: kotlin.String, genreInput: GenreInput) : RequestConfig<GenreInput> {
         val localVariableBody = genreInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6230,7 +6230,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceHousehold(householdId: kotlin.Long, householdInput: HouseholdInput) : Household {
+    fun replaceHousehold(householdId: kotlin.String, householdInput: HouseholdInput) : Household {
         val localVarResponse = replaceHouseholdWithHttpInfo(householdId = householdId, householdInput = householdInput)
 
         return when (localVarResponse.responseType) {
@@ -6260,7 +6260,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceHouseholdWithHttpInfo(householdId: kotlin.Long, householdInput: HouseholdInput) : ApiResponse<Household?> {
+    fun replaceHouseholdWithHttpInfo(householdId: kotlin.String, householdInput: HouseholdInput) : ApiResponse<Household?> {
         val localVariableConfig = replaceHouseholdRequestConfig(householdId = householdId, householdInput = householdInput)
 
         return request<HouseholdInput, Household>(
@@ -6275,7 +6275,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param householdInput 
      * @return RequestConfig
      */
-    fun replaceHouseholdRequestConfig(householdId: kotlin.Long, householdInput: HouseholdInput) : RequestConfig<HouseholdInput> {
+    fun replaceHouseholdRequestConfig(householdId: kotlin.String, householdInput: HouseholdInput) : RequestConfig<HouseholdInput> {
         val localVariableBody = householdInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6307,7 +6307,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceItem(itemId: kotlin.Long, itemInput: ItemInput) : Item {
+    fun replaceItem(itemId: kotlin.String, itemInput: ItemInput) : Item {
         val localVarResponse = replaceItemWithHttpInfo(itemId = itemId, itemInput = itemInput)
 
         return when (localVarResponse.responseType) {
@@ -6337,7 +6337,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceItemWithHttpInfo(itemId: kotlin.Long, itemInput: ItemInput) : ApiResponse<Item?> {
+    fun replaceItemWithHttpInfo(itemId: kotlin.String, itemInput: ItemInput) : ApiResponse<Item?> {
         val localVariableConfig = replaceItemRequestConfig(itemId = itemId, itemInput = itemInput)
 
         return request<ItemInput, Item>(
@@ -6352,7 +6352,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemInput 
      * @return RequestConfig
      */
-    fun replaceItemRequestConfig(itemId: kotlin.Long, itemInput: ItemInput) : RequestConfig<ItemInput> {
+    fun replaceItemRequestConfig(itemId: kotlin.String, itemInput: ItemInput) : RequestConfig<ItemInput> {
         val localVariableBody = itemInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6384,7 +6384,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceItemCredits(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : ItemCredits {
+    fun replaceItemCredits(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : ItemCredits {
         val localVarResponse = replaceItemCreditsWithHttpInfo(itemId = itemId, itemCreditsInput = itemCreditsInput)
 
         return when (localVarResponse.responseType) {
@@ -6414,7 +6414,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceItemCreditsWithHttpInfo(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : ApiResponse<ItemCredits?> {
+    fun replaceItemCreditsWithHttpInfo(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : ApiResponse<ItemCredits?> {
         val localVariableConfig = replaceItemCreditsRequestConfig(itemId = itemId, itemCreditsInput = itemCreditsInput)
 
         return request<ItemCreditsInput, ItemCredits>(
@@ -6429,7 +6429,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param itemCreditsInput 
      * @return RequestConfig
      */
-    fun replaceItemCreditsRequestConfig(itemId: kotlin.Long, itemCreditsInput: ItemCreditsInput) : RequestConfig<ItemCreditsInput> {
+    fun replaceItemCreditsRequestConfig(itemId: kotlin.String, itemCreditsInput: ItemCreditsInput) : RequestConfig<ItemCreditsInput> {
         val localVariableBody = itemCreditsInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6461,7 +6461,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceLibrary(libraryId: kotlin.Long, libraryInput: LibraryInput) : Library {
+    fun replaceLibrary(libraryId: kotlin.String, libraryInput: LibraryInput) : Library {
         val localVarResponse = replaceLibraryWithHttpInfo(libraryId = libraryId, libraryInput = libraryInput)
 
         return when (localVarResponse.responseType) {
@@ -6491,7 +6491,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceLibraryWithHttpInfo(libraryId: kotlin.Long, libraryInput: LibraryInput) : ApiResponse<Library?> {
+    fun replaceLibraryWithHttpInfo(libraryId: kotlin.String, libraryInput: LibraryInput) : ApiResponse<Library?> {
         val localVariableConfig = replaceLibraryRequestConfig(libraryId = libraryId, libraryInput = libraryInput)
 
         return request<LibraryInput, Library>(
@@ -6506,7 +6506,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param libraryInput 
      * @return RequestConfig
      */
-    fun replaceLibraryRequestConfig(libraryId: kotlin.Long, libraryInput: LibraryInput) : RequestConfig<LibraryInput> {
+    fun replaceLibraryRequestConfig(libraryId: kotlin.String, libraryInput: LibraryInput) : RequestConfig<LibraryInput> {
         val localVariableBody = libraryInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6539,7 +6539,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceLibraryFolder(libraryId: kotlin.Long, folderId: kotlin.Long, folderInput: FolderInput) : Folder {
+    fun replaceLibraryFolder(libraryId: kotlin.String, folderId: kotlin.String, folderInput: FolderInput) : Folder {
         val localVarResponse = replaceLibraryFolderWithHttpInfo(libraryId = libraryId, folderId = folderId, folderInput = folderInput)
 
         return when (localVarResponse.responseType) {
@@ -6570,7 +6570,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderId: kotlin.Long, folderInput: FolderInput) : ApiResponse<Folder?> {
+    fun replaceLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderId: kotlin.String, folderInput: FolderInput) : ApiResponse<Folder?> {
         val localVariableConfig = replaceLibraryFolderRequestConfig(libraryId = libraryId, folderId = folderId, folderInput = folderInput)
 
         return request<FolderInput, Folder>(
@@ -6586,7 +6586,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param folderInput 
      * @return RequestConfig
      */
-    fun replaceLibraryFolderRequestConfig(libraryId: kotlin.Long, folderId: kotlin.Long, folderInput: FolderInput) : RequestConfig<FolderInput> {
+    fun replaceLibraryFolderRequestConfig(libraryId: kotlin.String, folderId: kotlin.String, folderInput: FolderInput) : RequestConfig<FolderInput> {
         val localVariableBody = folderInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6618,7 +6618,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceMediaFile(mediaFileId: kotlin.Long, mediaFileInput: MediaFileInput) : MediaFile {
+    fun replaceMediaFile(mediaFileId: kotlin.String, mediaFileInput: MediaFileInput) : MediaFile {
         val localVarResponse = replaceMediaFileWithHttpInfo(mediaFileId = mediaFileId, mediaFileInput = mediaFileInput)
 
         return when (localVarResponse.responseType) {
@@ -6648,7 +6648,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceMediaFileWithHttpInfo(mediaFileId: kotlin.Long, mediaFileInput: MediaFileInput) : ApiResponse<MediaFile?> {
+    fun replaceMediaFileWithHttpInfo(mediaFileId: kotlin.String, mediaFileInput: MediaFileInput) : ApiResponse<MediaFile?> {
         val localVariableConfig = replaceMediaFileRequestConfig(mediaFileId = mediaFileId, mediaFileInput = mediaFileInput)
 
         return request<MediaFileInput, MediaFile>(
@@ -6663,7 +6663,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param mediaFileInput 
      * @return RequestConfig
      */
-    fun replaceMediaFileRequestConfig(mediaFileId: kotlin.Long, mediaFileInput: MediaFileInput) : RequestConfig<MediaFileInput> {
+    fun replaceMediaFileRequestConfig(mediaFileId: kotlin.String, mediaFileInput: MediaFileInput) : RequestConfig<MediaFileInput> {
         val localVariableBody = mediaFileInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6695,7 +6695,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceOccasion(occasionId: kotlin.Long, occasionInput: OccasionInput) : Occasion {
+    fun replaceOccasion(occasionId: kotlin.String, occasionInput: OccasionInput) : Occasion {
         val localVarResponse = replaceOccasionWithHttpInfo(occasionId = occasionId, occasionInput = occasionInput)
 
         return when (localVarResponse.responseType) {
@@ -6725,7 +6725,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceOccasionWithHttpInfo(occasionId: kotlin.Long, occasionInput: OccasionInput) : ApiResponse<Occasion?> {
+    fun replaceOccasionWithHttpInfo(occasionId: kotlin.String, occasionInput: OccasionInput) : ApiResponse<Occasion?> {
         val localVariableConfig = replaceOccasionRequestConfig(occasionId = occasionId, occasionInput = occasionInput)
 
         return request<OccasionInput, Occasion>(
@@ -6740,7 +6740,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param occasionInput 
      * @return RequestConfig
      */
-    fun replaceOccasionRequestConfig(occasionId: kotlin.Long, occasionInput: OccasionInput) : RequestConfig<OccasionInput> {
+    fun replaceOccasionRequestConfig(occasionId: kotlin.String, occasionInput: OccasionInput) : RequestConfig<OccasionInput> {
         val localVariableBody = occasionInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6772,7 +6772,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replacePerson(personId: kotlin.Long, personInput: PersonInput) : Person {
+    fun replacePerson(personId: kotlin.String, personInput: PersonInput) : Person {
         val localVarResponse = replacePersonWithHttpInfo(personId = personId, personInput = personInput)
 
         return when (localVarResponse.responseType) {
@@ -6802,7 +6802,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replacePersonWithHttpInfo(personId: kotlin.Long, personInput: PersonInput) : ApiResponse<Person?> {
+    fun replacePersonWithHttpInfo(personId: kotlin.String, personInput: PersonInput) : ApiResponse<Person?> {
         val localVariableConfig = replacePersonRequestConfig(personId = personId, personInput = personInput)
 
         return request<PersonInput, Person>(
@@ -6817,7 +6817,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param personInput 
      * @return RequestConfig
      */
-    fun replacePersonRequestConfig(personId: kotlin.Long, personInput: PersonInput) : RequestConfig<PersonInput> {
+    fun replacePersonRequestConfig(personId: kotlin.String, personInput: PersonInput) : RequestConfig<PersonInput> {
         val localVariableBody = personInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -6923,7 +6923,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceSsoProvider(providerId: kotlin.Long, ssoProviderInput: SsoProviderInput) : SsoProvider {
+    fun replaceSsoProvider(providerId: kotlin.String, ssoProviderInput: SsoProviderInput) : SsoProvider {
         val localVarResponse = replaceSsoProviderWithHttpInfo(providerId = providerId, ssoProviderInput = ssoProviderInput)
 
         return when (localVarResponse.responseType) {
@@ -6953,7 +6953,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceSsoProviderWithHttpInfo(providerId: kotlin.Long, ssoProviderInput: SsoProviderInput) : ApiResponse<SsoProvider?> {
+    fun replaceSsoProviderWithHttpInfo(providerId: kotlin.String, ssoProviderInput: SsoProviderInput) : ApiResponse<SsoProvider?> {
         val localVariableConfig = replaceSsoProviderRequestConfig(providerId = providerId, ssoProviderInput = ssoProviderInput)
 
         return request<SsoProviderInput, SsoProvider>(
@@ -6968,7 +6968,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param ssoProviderInput 
      * @return RequestConfig
      */
-    fun replaceSsoProviderRequestConfig(providerId: kotlin.Long, ssoProviderInput: SsoProviderInput) : RequestConfig<SsoProviderInput> {
+    fun replaceSsoProviderRequestConfig(providerId: kotlin.String, ssoProviderInput: SsoProviderInput) : RequestConfig<SsoProviderInput> {
         val localVariableBody = ssoProviderInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -7000,7 +7000,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceTask(taskId: kotlin.Long, taskInput: TaskInput) : Task {
+    fun replaceTask(taskId: kotlin.String, taskInput: TaskInput) : Task {
         val localVarResponse = replaceTaskWithHttpInfo(taskId = taskId, taskInput = taskInput)
 
         return when (localVarResponse.responseType) {
@@ -7030,7 +7030,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceTaskWithHttpInfo(taskId: kotlin.Long, taskInput: TaskInput) : ApiResponse<Task?> {
+    fun replaceTaskWithHttpInfo(taskId: kotlin.String, taskInput: TaskInput) : ApiResponse<Task?> {
         val localVariableConfig = replaceTaskRequestConfig(taskId = taskId, taskInput = taskInput)
 
         return request<TaskInput, Task>(
@@ -7045,7 +7045,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param taskInput 
      * @return RequestConfig
      */
-    fun replaceTaskRequestConfig(taskId: kotlin.Long, taskInput: TaskInput) : RequestConfig<TaskInput> {
+    fun replaceTaskRequestConfig(taskId: kotlin.String, taskInput: TaskInput) : RequestConfig<TaskInput> {
         val localVariableBody = taskInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -7076,7 +7076,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun requestTaskRun(taskId: kotlin.Long) : Task {
+    fun requestTaskRun(taskId: kotlin.String) : Task {
         val localVarResponse = requestTaskRunWithHttpInfo(taskId = taskId)
 
         return when (localVarResponse.responseType) {
@@ -7105,7 +7105,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun requestTaskRunWithHttpInfo(taskId: kotlin.Long) : ApiResponse<Task?> {
+    fun requestTaskRunWithHttpInfo(taskId: kotlin.String) : ApiResponse<Task?> {
         val localVariableConfig = requestTaskRunRequestConfig(taskId = taskId)
 
         return request<Unit, Task>(
@@ -7119,7 +7119,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param taskId 
      * @return RequestConfig
      */
-    fun requestTaskRunRequestConfig(taskId: kotlin.Long) : RequestConfig<Unit> {
+    fun requestTaskRunRequestConfig(taskId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -7148,7 +7148,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun revokeJoinCode(joinCodeId: kotlin.Long) : Unit {
+    fun revokeJoinCode(joinCodeId: kotlin.String) : Unit {
         val localVarResponse = revokeJoinCodeWithHttpInfo(joinCodeId = joinCodeId)
 
         return when (localVarResponse.responseType) {
@@ -7176,7 +7176,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun revokeJoinCodeWithHttpInfo(joinCodeId: kotlin.Long) : ApiResponse<Unit?> {
+    fun revokeJoinCodeWithHttpInfo(joinCodeId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = revokeJoinCodeRequestConfig(joinCodeId = joinCodeId)
 
         return request<Unit, Unit>(
@@ -7190,7 +7190,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param joinCodeId 
      * @return RequestConfig
      */
-    fun revokeJoinCodeRequestConfig(joinCodeId: kotlin.Long) : RequestConfig<Unit> {
+    fun revokeJoinCodeRequestConfig(joinCodeId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -7220,7 +7220,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun setAccountPassword(accountId: kotlin.Long, passwordInput: PasswordInput) : Unit {
+    fun setAccountPassword(accountId: kotlin.String, passwordInput: PasswordInput) : Unit {
         val localVarResponse = setAccountPasswordWithHttpInfo(accountId = accountId, passwordInput = passwordInput)
 
         return when (localVarResponse.responseType) {
@@ -7249,7 +7249,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun setAccountPasswordWithHttpInfo(accountId: kotlin.Long, passwordInput: PasswordInput) : ApiResponse<Unit?> {
+    fun setAccountPasswordWithHttpInfo(accountId: kotlin.String, passwordInput: PasswordInput) : ApiResponse<Unit?> {
         val localVariableConfig = setAccountPasswordRequestConfig(accountId = accountId, passwordInput = passwordInput)
 
         return request<PasswordInput, Unit>(
@@ -7264,7 +7264,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param passwordInput 
      * @return RequestConfig
      */
-    fun setAccountPasswordRequestConfig(accountId: kotlin.Long, passwordInput: PasswordInput) : RequestConfig<PasswordInput> {
+    fun setAccountPasswordRequestConfig(accountId: kotlin.String, passwordInput: PasswordInput) : RequestConfig<PasswordInput> {
         val localVariableBody = passwordInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -7296,7 +7296,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun setStationServerWide(stationId: kotlin.Long, stationServerWideInput: StationServerWideInput) : Station {
+    fun setStationServerWide(stationId: kotlin.String, stationServerWideInput: StationServerWideInput) : Station {
         val localVarResponse = setStationServerWideWithHttpInfo(stationId = stationId, stationServerWideInput = stationServerWideInput)
 
         return when (localVarResponse.responseType) {
@@ -7326,7 +7326,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun setStationServerWideWithHttpInfo(stationId: kotlin.Long, stationServerWideInput: StationServerWideInput) : ApiResponse<Station?> {
+    fun setStationServerWideWithHttpInfo(stationId: kotlin.String, stationServerWideInput: StationServerWideInput) : ApiResponse<Station?> {
         val localVariableConfig = setStationServerWideRequestConfig(stationId = stationId, stationServerWideInput = stationServerWideInput)
 
         return request<StationServerWideInput, Station>(
@@ -7341,7 +7341,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param stationServerWideInput 
      * @return RequestConfig
      */
-    fun setStationServerWideRequestConfig(stationId: kotlin.Long, stationServerWideInput: StationServerWideInput) : RequestConfig<StationServerWideInput> {
+    fun setStationServerWideRequestConfig(stationId: kotlin.String, stationServerWideInput: StationServerWideInput) : RequestConfig<StationServerWideInput> {
         val localVariableBody = stationServerWideInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -7373,7 +7373,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun updateIdentityReview(identityReviewId: kotlin.Long, identityReviewInput: IdentityReviewInput) : IdentityReview {
+    fun updateIdentityReview(identityReviewId: kotlin.String, identityReviewInput: IdentityReviewInput) : IdentityReview {
         val localVarResponse = updateIdentityReviewWithHttpInfo(identityReviewId = identityReviewId, identityReviewInput = identityReviewInput)
 
         return when (localVarResponse.responseType) {
@@ -7403,7 +7403,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun updateIdentityReviewWithHttpInfo(identityReviewId: kotlin.Long, identityReviewInput: IdentityReviewInput) : ApiResponse<IdentityReview?> {
+    fun updateIdentityReviewWithHttpInfo(identityReviewId: kotlin.String, identityReviewInput: IdentityReviewInput) : ApiResponse<IdentityReview?> {
         val localVariableConfig = updateIdentityReviewRequestConfig(identityReviewId = identityReviewId, identityReviewInput = identityReviewInput)
 
         return request<IdentityReviewInput, IdentityReview>(
@@ -7418,7 +7418,7 @@ open class AdminApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param identityReviewInput 
      * @return RequestConfig
      */
-    fun updateIdentityReviewRequestConfig(identityReviewId: kotlin.Long, identityReviewInput: IdentityReviewInput) : RequestConfig<IdentityReviewInput> {
+    fun updateIdentityReviewRequestConfig(identityReviewId: kotlin.String, identityReviewInput: IdentityReviewInput) : RequestConfig<IdentityReviewInput> {
         val localVariableBody = identityReviewInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

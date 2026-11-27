@@ -48,6 +48,9 @@ import kotlinx.serialization.encoding.Encoder
  * @param itemCount Rows of the play order it stands for now: 1 for a movie, episode or song, 0 when its edition has no files left; a container's current episodes or songs.
  * @param durationMs Those rows' edition runtimes added up.
  * @param addedAt
+ * @param createdAt
+ * @param modifiedAt
+ * @param rank What orders the playlist's entries, compared bytewise, ties by id: a key of rocicorp/fractional-indexing with its default alphabet. Always sent; optional so a copy a client stored before the field existed still reads.
  * @param itemId Absent for a collection.
  * @param collectionId Present for a collection only.
  * @param editionId The edition a movie, episode or song entry plays; absent for a container.
@@ -58,16 +61,18 @@ import kotlinx.serialization.encoding.Encoder
  * @param album
  * @param song
  * @param collection
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class PlaylistEntry (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long,
+    val playlistId: kotlin.String,
 
     /* Order from 0 at the top. */
     @SerialName(value = "position")
@@ -87,17 +92,27 @@ data class PlaylistEntry (
     @Contextual @SerialName(value = "addedAt")
     val addedAt: java.time.OffsetDateTime,
 
+    @Contextual @SerialName(value = "createdAt")
+    val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
+
+    /* What orders the playlist's entries, compared bytewise, ties by id: a key of rocicorp/fractional-indexing with its default alphabet. Always sent; optional so a copy a client stored before the field existed still reads. */
+    @SerialName(value = "rank")
+    val rank: kotlin.String? = null,
+
     /* Absent for a collection. */
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long? = null,
+    val itemId: kotlin.String? = null,
 
     /* Present for a collection only. */
     @SerialName(value = "collectionId")
-    val collectionId: kotlin.Long? = null,
+    val collectionId: kotlin.String? = null,
 
     /* The edition a movie, episode or song entry plays; absent for a container. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     /* The name of that edition; present only while its title has more than one edition with files. */
     @SerialName(value = "editionName")
@@ -119,7 +134,15 @@ data class PlaylistEntry (
     val song: MusicSong? = null,
 
     @SerialName(value = "collection")
-    val collection: Collection? = null
+    val collection: Collection? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

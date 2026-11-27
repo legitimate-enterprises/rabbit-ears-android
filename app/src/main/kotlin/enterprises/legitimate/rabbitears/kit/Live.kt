@@ -115,7 +115,7 @@ object Handoff {
      * and when the server has not answered within [limitMs]: the check is called off, so the title
      * plays unasked.
      */
-    suspend fun elsewhere(api: Api, itemId: Long, limitMs: Long = 3_000): PlaybackSession? {
+    suspend fun elsewhere(api: Api, itemId: String, limitMs: Long = 3_000): PlaybackSession? {
         val quick = api.http.newBuilder().callTimeout(limitMs, TimeUnit.MILLISECONDS).build()
         return runCatching {
             api.call { PlaybackApi(endpoint.api, quick).listPlaybackSessions(itemId) }
@@ -136,12 +136,12 @@ object Handoff {
         ?.positionMs
 
     /** Whether another device took the player's session with Move here. */
-    fun moved(batch: List<Event>, sessionId: Long) = batch.any {
+    fun moved(batch: List<Event>, sessionId: String) = batch.any {
         it.kind == EventKind.playback && it.change == "moved" && it.sessionId == sessionId
     }
 
     /** The Watch together another device opened from the player's session, for it to join. */
-    fun asked(batch: List<Event>, sessionId: Long): Long? =
+    fun asked(batch: List<Event>, sessionId: String): String? =
         batch
             .firstOrNull {
                 it.kind == EventKind.watch_together &&
@@ -151,7 +151,7 @@ object Handoff {
             ?.watchTogetherId
 
     /** The device that took the session, as in "Moved to Living Room". */
-    suspend fun movedTo(api: Api, sessionId: Long): String =
+    suspend fun movedTo(api: Api, sessionId: String): String =
         runCatching { api.call { playback.getPlaybackSession(sessionId) } }
             .getOrNull()
             ?.movedToDeviceName ?: "another device"

@@ -47,9 +47,9 @@ class WatchTogetherTest {
     private val server = FakeServer()
     private var clock = 1_000_000L
     // Profile 2 is Mary; Helga (1) hosts.
-    private val model = WatchTogetherModel(server.api(), 2, 101) { clock }
+    private val model = WatchTogetherModel(server.api(), "2", "101") { clock }
 
-    private fun member(id: Long, name: String, role: String) =
+    private fun member(id: String, name: String, role: String) =
         """{"accountId":$id,"name":"$name","role":"$role","deviceName":"Apple TV",""" +
             """"platform":"tvos","present":true,"joinedAt":"${Json.T}"}"""
 
@@ -64,8 +64,11 @@ class WatchTogetherTest {
         serverTime: Long = 1_000_000,
     ): String {
         val members =
-            listOfNotNull(member(1, "Helga", "host"), member(2, "Mary", "guest").takeIf { guest })
-        return """{"id":5,"itemId":101,"status":"$status","members":[${members.joinToString(",")}],""" +
+            listOfNotNull(
+                member("1", "Helga", "host"),
+                member("2", "Mary", "guest").takeIf { guest },
+            )
+        return """{"id":"5","itemId":"101","status":"$status","members":[${members.joinToString(",")}],""" +
             """"joinBy":"${Json.T}","joinMsLeft":252000,"playing":$playing,"positionMs":$position,""" +
             """"version":$version,"serverTime":"${Json.T}","openedAt":"${Json.T}",""" +
             """"serverTimeMs":$serverTime,"effectiveAtMs":$effectiveAt,"effectivePositionMs":$position""" +
@@ -169,7 +172,7 @@ class WatchTogetherTest {
     fun openingWaitsAndLeavingOrEndingClearsIt() = runBlocking {
         val mine =
             together()
-                .replace(""""accountId":1,"name":"Helga"""", """"accountId":2,"name":"Mary"""")
+                .replace(""""accountId":"1","name":"Helga"""", """"accountId":"2","name":"Mary"""")
         server.on("POST /watch-together", 201, mine)
         model.open()
         assertEquals("Waiting · 4:12", model.waitingLabel())
@@ -255,7 +258,7 @@ class WatchTogetherTest {
     fun aHoldThatRanOutIsAskedAgainAtOnce() = runBlocking {
         var ticks = 0L
         val ticking =
-            WatchTogetherModel(server.api(), 2, 101) {
+            WatchTogetherModel(server.api(), "2", "101") {
                 ticks += 30_000
                 1_000_000 + ticks
             }

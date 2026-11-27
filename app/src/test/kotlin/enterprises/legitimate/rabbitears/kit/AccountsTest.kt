@@ -20,12 +20,12 @@ class AccountsTest {
     fun theOwnerAddsAnAdultAndGetsTheCodeToHandOver() = runBlocking {
         signedIn()
         assertTrue(app.isOwner)
-        val bea = Json.account(3, "Bea", pending = true)
+        val bea = Json.account("3", "Bea", pending = true)
         val code =
-            """{"id":1,"code":"7KQ4-MNP2","link":"/join/7KQ4-MNP2","accountId":3,""" +
-                """"expiresAt":"${Json.T}","createdAt":"${Json.T}"}"""
+            """{"id":"1","code":"7KQ4-MNP2","link":"/join/7KQ4-MNP2","accountId":"3",""" +
+                """"expiresAt":"${Json.T}","createdAt":"${Json.T}","modifiedAt":"${Json.T}"}"""
         server.on("POST /household/adults", 201, """{"account":$bea,"joinCode":$code}""")
-        server.on("GET /me", body = Json.me(1, Json.account(1, "Helga"), bea))
+        server.on("GET /me", body = Json.me(1, Json.account("1", "Helga"), bea))
         val invite = app.addAdult("Bea", "bea@example.com")
         assertEquals(Invite("7KQ4-MNP2", "http://192.168.1.20:8477/join/7KQ4-MNP2"), invite)
         val sent = server.called("POST /household/adults").single().body
@@ -93,7 +93,7 @@ class AccountsTest {
         assertEquals(AppError.InviteInvalid, used.exceptionOrNull())
     }
 
-    private val twoHouseholds = """"households":[{"id":1,"name":"Jo"},{"id":7,"name":"Mark"}]"""
+    private val twoHouseholds = """"households":[{"id":"1","name":"Jo"},{"id":"7","name":"Mark"}]"""
 
     @Test
     fun anAdultInSeveralHouseholdsPicksThisDevicesBeforeWhoIsWatching() = runBlocking {
@@ -121,14 +121,14 @@ class AccountsTest {
         app.acceptJoin("192.168.1.20", "7KQ4-MNP2", "Jo", "a long password")
         assertEquals(AppModel.Phase.ChoosingHousehold, app.phase)
         server.on("PUT /me/household", 204)
-        val there = Json.me(1, Json.account(1, "Helga"), Json.account(8, "Jason", kind = "kid"))
+        val there = Json.me(1, Json.account("1", "Helga"), Json.account("8", "Jason", kind = "kid"))
         server.on(
             "GET /me",
             body = there.replace(""""name":"Helga","adultId"""", """"name":"Mark","adultId""""),
         )
         server.on("POST /me/lock", 204)
         app.chooseHousehold(app.households.last())
-        assertEquals("""{"householdId":7}""", server.called("PUT /me/household").single().body)
+        assertEquals("""{"householdId":"7"}""", server.called("PUT /me/household").single().body)
         assertEquals(AppModel.Phase.ChoosingProfile, app.phase)
         assertEquals("Mark", app.householdName)
         assertEquals(listOf("Helga", "Jason"), app.profiles.map { it.name })
@@ -136,7 +136,7 @@ class AccountsTest {
 
     @Test
     fun oneHouseholdGoesStraightToWhoIsWatching() = runBlocking {
-        val one = """"households":[{"id":1,"name":"Jo"}]"""
+        val one = """"households":[{"id":"1","name":"Jo"}]"""
         server.on("POST /auth/sign-in", 201, """{"token":"t1","me":${Json.me()},$one}""")
         server.on("POST /me/lock", 204)
         app.signIn("192.168.1.20", "jo@example.com", "pw")
@@ -160,8 +160,8 @@ class AccountsTest {
 
     @Test
     fun onlyAnAdminBrowsingIsOfferedTheAdminConsole() = runBlocking {
-        val admin = Json.account(1, "Helga").replace(""""isAdmin":false""", """"isAdmin":true""")
-        val me = Json.me(1, admin, Json.account(2, "Joan", kind = "kid"))
+        val admin = Json.account("1", "Helga").replace(""""isAdmin":false""", """"isAdmin":true""")
+        val me = Json.me(1, admin, Json.account("2", "Joan", kind = "kid"))
         server.on("POST /auth/sign-in", 201, """{"token":"t1","me":$me}""")
         server.on("POST /profiles/1/unlock", 204)
         server.on("POST /profiles/2/unlock", 204)

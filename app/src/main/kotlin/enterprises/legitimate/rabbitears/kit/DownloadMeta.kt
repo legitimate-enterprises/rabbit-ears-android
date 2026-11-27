@@ -38,17 +38,17 @@ class DownloadMeta(private val store: DownloadStore) {
         file.writeText(json.encodeToString(serializer, value))
     }
 
-    fun item(id: Long) = get("item-$id", Item.serializer())
+    fun item(id: String) = get("item-$id", Item.serializer())
 
-    fun song(id: Long) = get("song-$id", MusicSong.serializer())
+    fun song(id: String) = get("song-$id", MusicSong.serializer())
 
-    fun album(id: Long) = get("album-$id", MusicAlbum.serializer())
+    fun album(id: String) = get("album-$id", MusicAlbum.serializer())
 
-    fun artist(id: Long) = get("artist-$id", MusicArtist.serializer())
+    fun artist(id: String) = get("artist-$id", MusicArtist.serializer())
 
-    fun video(id: Long) = get("video-$id", YouTubeVideo.serializer())
+    fun video(id: String) = get("video-$id", YouTubeVideo.serializer())
 
-    fun channel(id: Long) = get("channel-$id", YouTubeChannel.serializer())
+    fun channel(id: String) = get("channel-$id", YouTubeChannel.serializer())
 
     /** Whether [title]'s metadata is kept, with all that its screens need beside it. */
     fun has(title: DownloadTitle) =
@@ -63,19 +63,20 @@ class DownloadMeta(private val store: DownloadStore) {
             )
             .exists()
 
-    fun playlist(profileId: Long, id: Long) = get("playlist-$profileId-$id", Playlist.serializer())
+    fun playlist(profileId: String, id: String) =
+        get("playlist-$profileId-$id", Playlist.serializer())
 
-    fun entries(profileId: Long, id: Long) =
+    fun entries(profileId: String, id: String) =
         get("entries-$profileId-$id", ListSerializer(PlaylistEntry.serializer()))
 
-    fun playOrder(profileId: Long, id: Long) =
+    fun playOrder(profileId: String, id: String) =
         get("order-$profileId-$id", ListSerializer(PlaylistPlayOrderItem.serializer()))
 
-    fun collection(id: Long) = get("collection-$id", Collection.serializer())
+    fun collection(id: String) = get("collection-$id", Collection.serializer())
 
-    fun collectionMovies(id: Long) = get("movies-$id", ListSerializer(Item.serializer()))
+    fun collectionMovies(id: String) = get("movies-$id", ListSerializer(Item.serializer()))
 
-    /** The image at an artwork path, such as `/api/v1/items/7/artwork/poster`. */
+    /** The image at an artwork path, such as `/api/v2/items/7/artwork/poster`. */
     fun art(path: String): ByteArray? = artFile(path).takeIf { it.exists() }?.readBytes()
 
     private fun artFile(path: String) =
@@ -87,7 +88,7 @@ class DownloadMeta(private val store: DownloadStore) {
      */
     suspend fun save(
         api: Api,
-        profileId: Long,
+        profileId: String,
         request: DownloadRequest,
         titles: List<DownloadTitle>,
     ) {
@@ -126,7 +127,7 @@ class DownloadMeta(private val store: DownloadStore) {
                         .let { it.items to it.nextOffset }
                 }
                 put("movies-$id", ListSerializer(Item.serializer()), movies)
-                art(api, "/api/v1/collections/$id/artwork/poster")
+                art(api, "/api/v2/collections/$id/artwork/poster")
             }
         }
         val done = mutableSetOf<String>()
@@ -142,7 +143,7 @@ class DownloadMeta(private val store: DownloadStore) {
             DownloadTitle.Kind.movie,
             DownloadTitle.Kind.episode -> {
                 val chain = mutableListOf<Item>()
-                var id: Long? = title.itemId
+                var id: String? = title.itemId
                 while (id != null && "item-$id" !in done) {
                     val item = api.call { items.getItem(id!!) }
                     chain += item
@@ -204,9 +205,9 @@ class DownloadMeta(private val store: DownloadStore) {
         done += key
     }
 
-    private suspend fun itemArt(api: Api, id: Long) {
-        art(api, "/api/v1/items/$id/artwork/poster")
-        art(api, "/api/v1/items/$id/artwork/backdrop")
+    private suspend fun itemArt(api: Api, id: String) {
+        art(api, "/api/v2/items/$id/artwork/poster")
+        art(api, "/api/v2/items/$id/artwork/backdrop")
     }
 
     private suspend fun art(api: Api, path: String) =

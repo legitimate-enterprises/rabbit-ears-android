@@ -37,11 +37,11 @@ import kotlinx.serialization.Contextual
 data class TrackSelection (
 
     @SerialName(value = "audioTrackId")
-    val audioTrackId: kotlin.Long? = null,
+    val audioTrackId: kotlin.String? = null,
 
     /* Absent turns subtitles off, except a forced track. */
     @SerialName(value = "subtitleTrackId")
-    val subtitleTrackId: kotlin.Long? = null
+    val subtitleTrackId: kotlin.String? = null
 
 ) {
 

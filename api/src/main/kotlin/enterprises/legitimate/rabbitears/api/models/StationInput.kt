@@ -39,6 +39,8 @@ import kotlinx.serialization.encoding.Encoder
 
 /**
  * @param name
+ * @param id On createStation only: the new station's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceStation, an id other than the path's answers 400.
+ * @param ownPlaylistId On createStation without playlistId only: the id of the playlist the station owns, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409; with playlistId, or on replaceStation, it answers 400.
  * @param playlistId One of the active adult's playlists, or one shared with them. Absent on create makes the station its own empty playlist of kind; absent on replace keeps the station's.
  * @param order
  * @param visibility Absent is private on create and keeps the station's on replace. server is set by setStationServerWide only.
@@ -54,9 +56,17 @@ data class StationInput (
     @SerialName(value = "name")
     val name: kotlin.String,
 
+    /* On createStation only: the new station's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceStation, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
+
+    /* On createStation without playlistId only: the id of the playlist the station owns, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409; with playlistId, or on replaceStation, it answers 400. */
+    @SerialName(value = "ownPlaylistId")
+    val ownPlaylistId: kotlin.String? = null,
+
     /* One of the active adult's playlists, or one shared with them. Absent on create makes the station its own empty playlist of kind; absent on replace keeps the station's. */
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long? = null,
+    val playlistId: kotlin.String? = null,
 
     @Contextual @SerialName(value = "order")
     val order: StationOrder? = null,

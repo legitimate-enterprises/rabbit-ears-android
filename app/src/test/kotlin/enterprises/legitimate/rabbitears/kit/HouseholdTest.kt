@@ -23,17 +23,17 @@ class HouseholdTest {
     private val app = AppModel(MemoryCredentialStore(), "Pixel 9", server.http)
     private val model = HouseholdModel(app)
 
-    private val owner = account(Json.account(1, "Helga"))
-    private val bea = account(Json.account(4, "Bea"))
-    private val kid = account(Json.account(2, "Joan", kind = "kid"))
-    private val invited = account(pending(3, "Cy"))
+    private val owner = account(Json.account("1", "Helga"))
+    private val bea = account(Json.account("4", "Bea"))
+    private val kid = account(Json.account("2", "Joan", kind = "kid"))
+    private val invited = account(pending("3", "Cy"))
 
     private val invite =
-        """{"account":${pending(3, "Cy")},"joinCode":{"id":5,"code":"7KQ4-MNP2",""" +
-            """"link":"/join/7KQ4-MNP2","accountId":3,"expiresAt":"${Json.T}",""" +
-            """"createdAt":"${Json.T}"}}"""
+        """{"account":${pending("3", "Cy")},"joinCode":{"id":"5","code":"7KQ4-MNP2",""" +
+            """"link":"/join/7KQ4-MNP2","accountId":"3","expiresAt":"${Json.T}",""" +
+            """"createdAt":"${Json.T}","modifiedAt":"${Json.T}"}}"""
 
-    private fun pending(id: Long, name: String, expires: String? = null) =
+    private fun pending(id: String, name: String, expires: String? = null) =
         Json.account(id, name)
             .replace(
                 """"pending":false""",
@@ -44,63 +44,64 @@ class HouseholdTest {
         Serializer.kotlinxSerializationJson.decodeFromString(Account.serializer(), json)
 
     private suspend fun signedIn(active: Long = 1) {
-        val me = Json.me(active, Json.account(1, "Helga"), Json.account(2, "Joan", kind = "kid"))
+        val me =
+            Json.me(active, Json.account("1", "Helga"), Json.account("2", "Joan", kind = "kid"))
         server.on("POST /auth/sign-in", 201, """{"token":"t1","me":$me}""")
         server.on("GET /me", body = me)
         server.on(
             "GET /profiles",
             body =
                 Json.page(
-                    Json.account(1, "Helga"),
-                    Json.account(2, "Joan", kind = "kid"),
-                    pending(3, "Cy", "2026-01-08T12:00:00Z"),
-                    Json.account(5, "Gone").dropLast(1) + ""","revokedAt":"${Json.T}"}""",
+                    Json.account("1", "Helga"),
+                    Json.account("2", "Joan", kind = "kid"),
+                    pending("3", "Cy", "2026-01-08T12:00:00Z"),
+                    Json.account("5", "Gone").dropLast(1) + ""","revokedAt":"${Json.T}"}""",
                 ),
         )
         server.on("GET /household/offers", body = """{"incoming":[],"outgoing":[]}""")
         app.signIn("192.168.1.20", "helga@example.com", "pw")
     }
 
-    private fun offer(id: Long, profile: String, kind: String, from: String, to: String) =
+    private fun offer(id: String, profile: String, kind: String, from: String, to: String) =
         """{"id":$id,"profileId":${id + 10},"profileName":"$profile","profileKind":"$kind",""" +
-            """"householdId":1,"householdName":"Helga","fromProfileId":1,"fromName":"$from",""" +
-            """"toProfileId":6,"toName":"$to","createdAt":"${Json.T}"}"""
+            """"householdId":"1","householdName":"Helga","fromProfileId":"1","fromName":"$from",""" +
+            """"toProfileId":"6","toName":"$to","createdAt":"${Json.T}","modifiedAt":"${Json.T}"}"""
 
     /** [json] in [households] households, and only visiting this one when [present]. */
     private fun placed(json: String, households: Int, present: Boolean = false) =
         account(json.dropLast(1) + ""","households":$households,"present":$present}""")
 
-    private val visitor = placed(Json.account(6, "Jo"), 2, present = true)
+    private val visitor = placed(Json.account("6", "Jo"), 2, present = true)
 
     @Test
     fun theOwnerManagesEveryoneButThemselves() {
-        assertEquals(setOf(SetPin, Share), MemberAction.allowed(owner, owner, 1))
+        assertEquals(setOf(SetPin, Share), MemberAction.allowed(owner, owner, "1"))
         assertEquals(
             setOf(EditKid, SetPin, Remove, MakeAdult, Share),
-            MemberAction.allowed(kid, owner, 1),
+            MemberAction.allowed(kid, owner, "1"),
         )
-        assertEquals(setOf(Remove, Share), MemberAction.allowed(bea, owner, 1))
-        assertEquals(setOf(ResendCode, Remove), MemberAction.allowed(invited, owner, 1))
-        assertEquals(setOf(Remove), MemberAction.allowed(visitor, owner, 1))
+        assertEquals(setOf(Remove, Share), MemberAction.allowed(bea, owner, "1"))
+        assertEquals(setOf(ResendCode, Remove), MemberAction.allowed(invited, owner, "1"))
+        assertEquals(setOf(Remove), MemberAction.allowed(visitor, owner, "1"))
     }
 
     @Test
     fun anotherAdultLooksAfterKidsAndTheirOwnPinAndSharesAnyoneOfTheHousehold() {
-        assertEquals(setOf(EditKid, SetPin, Remove, Share), MemberAction.allowed(kid, bea, 1))
-        assertEquals(setOf(SetPin, Share), MemberAction.allowed(bea, bea, 1))
-        assertEquals(setOf(Share), MemberAction.allowed(owner, bea, 1))
-        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(invited, bea, 1))
-        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(visitor, bea, 1))
+        assertEquals(setOf(EditKid, SetPin, Remove, Share), MemberAction.allowed(kid, bea, "1"))
+        assertEquals(setOf(SetPin, Share), MemberAction.allowed(bea, bea, "1"))
+        assertEquals(setOf(Share), MemberAction.allowed(owner, bea, "1"))
+        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(invited, bea, "1"))
+        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(visitor, bea, "1"))
     }
 
     @Test
     fun anAdultOnlyVisitingManagesNothingAndMayLeave() = runBlocking {
-        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(kid, visitor, 1))
-        val jo = Json.account(6, "Jo").dropLast(1) + ""","households":2,"present":true}"""
-        val me = Json.me(6, Json.account(1, "Helga"), jo)
+        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(kid, visitor, "1"))
+        val jo = Json.account("6", "Jo").dropLast(1) + ""","households":2,"present":true}"""
+        val me = Json.me(6, Json.account("1", "Helga"), jo)
         server.on("POST /auth/sign-in", 201, """{"token":"t1","me":$me}""")
         server.on("GET /me", body = me)
-        server.on("GET /profiles", body = Json.page(Json.account(1, "Helga"), jo))
+        server.on("GET /profiles", body = Json.page(Json.account("1", "Helga"), jo))
         server.on("POST /me/lock", 204)
         app.signIn("192.168.1.20", "jo@example.com", "pw")
         assertTrue(model.visiting)
@@ -121,12 +122,12 @@ class HouseholdTest {
 
     @Test
     fun aSharedProfileSaysSoAndOnlyLeavesThisHousehold() {
-        val shared = placed(Json.account(2, "Joan", kind = "kid"), 2)
+        val shared = placed(Json.account("2", "Joan", kind = "kid"), 2)
         assertEquals("In 2 households", shared.placeLine())
-        assertEquals("Adult", visitor.memberLine(1))
+        assertEquals("Adult", visitor.memberLine("1"))
         assertEquals("Visiting from another household", visitor.placeLine())
         assertEquals(null, kid.placeLine())
-        assertEquals(null, placed(Json.account(2, "Joan", kind = "kid"), 1).placeLine())
+        assertEquals(null, placed(Json.account("2", "Joan", kind = "kid"), 1).placeLine())
 
         assertTrue(shared.inOthers && visitor.inOthers && !kid.inOthers)
         assertEquals(
@@ -135,7 +136,7 @@ class HouseholdTest {
         )
         assertEquals(
             "Joan stays in their other households, and nothing of theirs is deleted.",
-            placed(Json.account(2, "Joan", kind = "kid"), 3).removal,
+            placed(Json.account("2", "Joan", kind = "kid"), 3).removal,
         )
         assertEquals("Their account and watch history are deleted.", kid.removal)
         assertEquals("Their code stops working.", invited.removal)
@@ -147,13 +148,13 @@ class HouseholdTest {
         signedIn()
         server.on(
             "GET /household/linked-adults",
-            body = Json.page(Json.account(6, "Marcus"), Json.account(7, "Ines")),
+            body = Json.page(Json.account("6", "Marcus"), Json.account("7", "Ines")),
         )
         assertEquals(listOf("Marcus", "Ines"), model.connectedAdults().map { it.name })
-        server.on("POST /household/offers", 201, offer(9, "Joan", "kid", "Helga", "Marcus"))
+        server.on("POST /household/offers", 201, offer("9", "Joan", "kid", "Helga", "Marcus"))
         model.offer(kid, model.connectedAdults().first())
         assertEquals(
-            """{"profileId":2,"toProfileId":6}""",
+            """{"profileId":"2","toProfileId":"6","id":null}""",
             server.called("POST /household/offers").single().body,
         )
         assertEquals(1, server.called("GET /household/offers").size)
@@ -164,25 +165,25 @@ class HouseholdTest {
 
     @Test
     fun aKidMayDoNothing() {
-        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(kid, kid, 1))
-        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(owner, null, 1))
+        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(kid, kid, "1"))
+        assertEquals(emptySet<MemberAction>(), MemberAction.allowed(owner, null, "1"))
     }
 
     @Test
     fun memberLinesSayWhoEachIs() {
-        assertEquals("Owner", owner.memberLine(1))
-        assertEquals("Adult", bea.memberLine(1))
-        assertEquals("Awaiting sign-in · code expired", invited.memberLine(1))
-        val expiring = account(pending(3, "Cy", "2026-01-08T12:00:00Z"))
-        assertTrue(expiring.memberLine(1).startsWith("Awaiting sign-in · code expires Jan "))
+        assertEquals("Owner", owner.memberLine("1"))
+        assertEquals("Adult", bea.memberLine("1"))
+        assertEquals("Awaiting sign-in · code expired", invited.memberLine("1"))
+        val expiring = account(pending("3", "Cy", "2026-01-08T12:00:00Z"))
+        assertTrue(expiring.memberLine("1").startsWith("Awaiting sign-in · code expires Jan "))
         val ceilings =
             account(
-                Json.account(2, "Joan", kind = "kid").dropLast(1) +
+                Json.account("2", "Joan", kind = "kid").dropLast(1) +
                     ""","movieCeiling":"PG","tvCeiling":"TV-Y7"}""",
             )
-        assertEquals("Kid · movies up to PG · TV up to TV-Y7", ceilings.memberLine(1))
-        val listed = account(Json.account(2, "Joan", kind = "kid", filterMode = "allow_list"))
-        assertEquals("Kid · only titles you choose", listed.memberLine(1))
+        assertEquals("Kid · movies up to PG · TV up to TV-Y7", ceilings.memberLine("1"))
+        val listed = account(Json.account("2", "Joan", kind = "kid", filterMode = "allow_list"))
+        assertEquals("Kid · only titles you choose", listed.memberLine("1"))
     }
 
     @Test
@@ -197,8 +198,8 @@ class HouseholdTest {
     @Test
     fun offersSayWhoSharesWhomAndAreAcceptedDeclinedOrWithdrawn() = runBlocking {
         signedIn()
-        val incoming = offer(7, "Jason", "kid", "Marcus", "Helga")
-        val outgoing = offer(8, "Mary", "kid", "Helga", "Marcus")
+        val incoming = offer("7", "Jason", "kid", "Marcus", "Helga")
+        val outgoing = offer("8", "Mary", "kid", "Helga", "Marcus")
         server.on(
             "GET /household/offers",
             body = """{"incoming":[$incoming],"outgoing":[$outgoing]}""",
@@ -292,12 +293,12 @@ class HouseholdTest {
     @Test
     fun editingAKidReplacesItAndChangesThePinOnlyWhenAsked() = runBlocking {
         signedIn()
-        server.on("PUT /profiles/2", body = Json.account(2, "Joan", kind = "kid"))
+        server.on("PUT /profiles/2", body = Json.account("2", "Joan", kind = "kid"))
         server.on("PUT /profiles/2/pin", 204)
         server.on("DELETE /profiles/2/pin", 204)
         val joan =
             account(
-                Json.account(2, "Joan", kind = "kid", hasPin = true).dropLast(1) +
+                Json.account("2", "Joan", kind = "kid", hasPin = true).dropLast(1) +
                     ""","birthday":"2017-08-19","movieCeiling":"G","tvCeiling":"TV-Y"}""",
             )
         val form = AddKidForm(LocalDate.of(2026, 11, 14), joan)
@@ -332,21 +333,24 @@ class HouseholdTest {
     @Test
     fun anAllowListAddsAndRemovesTitles() = runBlocking {
         signedIn()
-        server.on("GET /profiles/2/allowed-items", body = """{"itemIds":[33,30]}""")
-        server.on("GET /items/30", body = Json.item(30, "movie", "Toy Story"))
+        server.on("GET /profiles/2/allowed-items", body = """{"itemIds":["33","30"]}""")
+        server.on("GET /items/30", body = Json.item("30", "movie", "Toy Story"))
         server.error("GET /items/33", 404, "not_found")
         server.on(
             "GET /items",
             body =
-                Json.page(Json.item(31, "movie", "Matrix"), Json.item(32, "episode", parent = 9)),
+                Json.page(
+                    Json.item("31", "movie", "Matrix"),
+                    Json.item("32", "episode", parent = 9),
+                ),
         )
         server.on("PUT /profiles/2/allowed-items/31", 204)
         server.on("DELETE /profiles/2/allowed-items/30", 204)
-        assertEquals(listOf(30L), model.allowed(kid).map { it.id })
-        assertEquals(listOf(31L), model.findTitles("mat").map { it.id })
+        assertEquals(listOf("30"), model.allowed(kid).map { it.id })
+        assertEquals(listOf("31"), model.findTitles("mat").map { it.id })
         assertTrue(server.called("GET /items").last().query.orEmpty().contains("q=mat"))
-        model.allow(kid, 31)
-        model.disallow(kid, 30)
+        model.allow(kid, "31")
+        model.disallow(kid, "30")
         assertEquals(1, server.called("PUT /profiles/2/allowed-items/31").size)
         assertEquals(1, server.called("DELETE /profiles/2/allowed-items/30").size)
     }

@@ -68,7 +68,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -87,7 +87,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun checkPlayability(itemId: kotlin.Long, capabilitySnapshot: CapabilitySnapshot) : Playability {
+    fun checkPlayability(itemId: kotlin.String, capabilitySnapshot: CapabilitySnapshot) : Playability {
         val localVarResponse = checkPlayabilityWithHttpInfo(itemId = itemId, capabilitySnapshot = capabilitySnapshot)
 
         return when (localVarResponse.responseType) {
@@ -117,7 +117,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun checkPlayabilityWithHttpInfo(itemId: kotlin.Long, capabilitySnapshot: CapabilitySnapshot) : ApiResponse<Playability?> {
+    fun checkPlayabilityWithHttpInfo(itemId: kotlin.String, capabilitySnapshot: CapabilitySnapshot) : ApiResponse<Playability?> {
         val localVariableConfig = checkPlayabilityRequestConfig(itemId = itemId, capabilitySnapshot = capabilitySnapshot)
 
         return request<CapabilitySnapshot, Playability>(
@@ -132,7 +132,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param capabilitySnapshot 
      * @return RequestConfig
      */
-    fun checkPlayabilityRequestConfig(itemId: kotlin.Long, capabilitySnapshot: CapabilitySnapshot) : RequestConfig<CapabilitySnapshot> {
+    fun checkPlayabilityRequestConfig(itemId: kotlin.String, capabilitySnapshot: CapabilitySnapshot) : RequestConfig<CapabilitySnapshot> {
         val localVariableBody = capabilitySnapshot
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -240,7 +240,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun endPlayback(sessionId: kotlin.Long, positionMs: kotlin.Long? = null) : Unit {
+    fun endPlayback(sessionId: kotlin.String, positionMs: kotlin.Long? = null) : Unit {
         val localVarResponse = endPlaybackWithHttpInfo(sessionId = sessionId, positionMs = positionMs)
 
         return when (localVarResponse.responseType) {
@@ -269,7 +269,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun endPlaybackWithHttpInfo(sessionId: kotlin.Long, positionMs: kotlin.Long?) : ApiResponse<Unit?> {
+    fun endPlaybackWithHttpInfo(sessionId: kotlin.String, positionMs: kotlin.Long?) : ApiResponse<Unit?> {
         val localVariableConfig = endPlaybackRequestConfig(sessionId = sessionId, positionMs = positionMs)
 
         return request<Unit, Unit>(
@@ -284,7 +284,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param positionMs The final position, recorded as a position report is before the session ends. (optional)
      * @return RequestConfig
      */
-    fun endPlaybackRequestConfig(sessionId: kotlin.Long, positionMs: kotlin.Long?) : RequestConfig<Unit> {
+    fun endPlaybackRequestConfig(sessionId: kotlin.String, positionMs: kotlin.Long?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -319,7 +319,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPlaybackSession(sessionId: kotlin.Long) : PlaybackSession {
+    fun getPlaybackSession(sessionId: kotlin.String) : PlaybackSession {
         val localVarResponse = getPlaybackSessionWithHttpInfo(sessionId = sessionId)
 
         return when (localVarResponse.responseType) {
@@ -348,7 +348,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPlaybackSessionWithHttpInfo(sessionId: kotlin.Long) : ApiResponse<PlaybackSession?> {
+    fun getPlaybackSessionWithHttpInfo(sessionId: kotlin.String) : ApiResponse<PlaybackSession?> {
         val localVariableConfig = getPlaybackSessionRequestConfig(sessionId = sessionId)
 
         return request<Unit, PlaybackSession>(
@@ -362,7 +362,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param sessionId 
      * @return RequestConfig
      */
-    fun getPlaybackSessionRequestConfig(sessionId: kotlin.Long) : RequestConfig<Unit> {
+    fun getPlaybackSessionRequestConfig(sessionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -394,7 +394,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listPlaybackSessions(itemId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaybackSessionPage {
+    fun listPlaybackSessions(itemId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : PlaybackSessionPage {
         val localVarResponse = listPlaybackSessionsWithHttpInfo(itemId = itemId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -425,7 +425,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listPlaybackSessionsWithHttpInfo(itemId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaybackSessionPage?> {
+    fun listPlaybackSessionsWithHttpInfo(itemId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<PlaybackSessionPage?> {
         val localVariableConfig = listPlaybackSessionsRequestConfig(itemId = itemId, limit = limit, offset = offset)
 
         return request<Unit, PlaybackSessionPage>(
@@ -441,7 +441,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listPlaybackSessionsRequestConfig(itemId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listPlaybackSessionsRequestConfig(itemId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -482,7 +482,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun movePlaybackSession(sessionId: kotlin.Long) : PlaybackSession {
+    fun movePlaybackSession(sessionId: kotlin.String) : PlaybackSession {
         val localVarResponse = movePlaybackSessionWithHttpInfo(sessionId = sessionId)
 
         return when (localVarResponse.responseType) {
@@ -511,7 +511,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun movePlaybackSessionWithHttpInfo(sessionId: kotlin.Long) : ApiResponse<PlaybackSession?> {
+    fun movePlaybackSessionWithHttpInfo(sessionId: kotlin.String) : ApiResponse<PlaybackSession?> {
         val localVariableConfig = movePlaybackSessionRequestConfig(sessionId = sessionId)
 
         return request<Unit, PlaybackSession>(
@@ -525,7 +525,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param sessionId 
      * @return RequestConfig
      */
-    fun movePlaybackSessionRequestConfig(sessionId: kotlin.Long) : RequestConfig<Unit> {
+    fun movePlaybackSessionRequestConfig(sessionId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -556,7 +556,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun reportPlaybackEvent(sessionId: kotlin.Long, playbackEvent: PlaybackEvent) : PlaybackUpdate {
+    fun reportPlaybackEvent(sessionId: kotlin.String, playbackEvent: PlaybackEvent) : PlaybackUpdate {
         val localVarResponse = reportPlaybackEventWithHttpInfo(sessionId = sessionId, playbackEvent = playbackEvent)
 
         return when (localVarResponse.responseType) {
@@ -586,7 +586,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun reportPlaybackEventWithHttpInfo(sessionId: kotlin.Long, playbackEvent: PlaybackEvent) : ApiResponse<PlaybackUpdate?> {
+    fun reportPlaybackEventWithHttpInfo(sessionId: kotlin.String, playbackEvent: PlaybackEvent) : ApiResponse<PlaybackUpdate?> {
         val localVariableConfig = reportPlaybackEventRequestConfig(sessionId = sessionId, playbackEvent = playbackEvent)
 
         return request<PlaybackEvent, PlaybackUpdate>(
@@ -601,7 +601,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param playbackEvent 
      * @return RequestConfig
      */
-    fun reportPlaybackEventRequestConfig(sessionId: kotlin.Long, playbackEvent: PlaybackEvent) : RequestConfig<PlaybackEvent> {
+    fun reportPlaybackEventRequestConfig(sessionId: kotlin.String, playbackEvent: PlaybackEvent) : RequestConfig<PlaybackEvent> {
         val localVariableBody = playbackEvent
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -632,7 +632,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun reportPlaybackPosition(sessionId: kotlin.Long, positionReport: PositionReport) : Unit {
+    fun reportPlaybackPosition(sessionId: kotlin.String, positionReport: PositionReport) : Unit {
         val localVarResponse = reportPlaybackPositionWithHttpInfo(sessionId = sessionId, positionReport = positionReport)
 
         return when (localVarResponse.responseType) {
@@ -661,7 +661,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun reportPlaybackPositionWithHttpInfo(sessionId: kotlin.Long, positionReport: PositionReport) : ApiResponse<Unit?> {
+    fun reportPlaybackPositionWithHttpInfo(sessionId: kotlin.String, positionReport: PositionReport) : ApiResponse<Unit?> {
         val localVariableConfig = reportPlaybackPositionRequestConfig(sessionId = sessionId, positionReport = positionReport)
 
         return request<PositionReport, Unit>(
@@ -676,7 +676,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param positionReport 
      * @return RequestConfig
      */
-    fun reportPlaybackPositionRequestConfig(sessionId: kotlin.Long, positionReport: PositionReport) : RequestConfig<PositionReport> {
+    fun reportPlaybackPositionRequestConfig(sessionId: kotlin.String, positionReport: PositionReport) : RequestConfig<PositionReport> {
         val localVariableBody = positionReport
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -708,7 +708,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun reportPlaybackThroughput(sessionId: kotlin.Long, throughputTelemetry: ThroughputTelemetry) : PlaybackUpdate {
+    fun reportPlaybackThroughput(sessionId: kotlin.String, throughputTelemetry: ThroughputTelemetry) : PlaybackUpdate {
         val localVarResponse = reportPlaybackThroughputWithHttpInfo(sessionId = sessionId, throughputTelemetry = throughputTelemetry)
 
         return when (localVarResponse.responseType) {
@@ -738,7 +738,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun reportPlaybackThroughputWithHttpInfo(sessionId: kotlin.Long, throughputTelemetry: ThroughputTelemetry) : ApiResponse<PlaybackUpdate?> {
+    fun reportPlaybackThroughputWithHttpInfo(sessionId: kotlin.String, throughputTelemetry: ThroughputTelemetry) : ApiResponse<PlaybackUpdate?> {
         val localVariableConfig = reportPlaybackThroughputRequestConfig(sessionId = sessionId, throughputTelemetry = throughputTelemetry)
 
         return request<ThroughputTelemetry, PlaybackUpdate>(
@@ -753,7 +753,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param throughputTelemetry 
      * @return RequestConfig
      */
-    fun reportPlaybackThroughputRequestConfig(sessionId: kotlin.Long, throughputTelemetry: ThroughputTelemetry) : RequestConfig<ThroughputTelemetry> {
+    fun reportPlaybackThroughputRequestConfig(sessionId: kotlin.String, throughputTelemetry: ThroughputTelemetry) : RequestConfig<ThroughputTelemetry> {
         val localVariableBody = throughputTelemetry
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -785,7 +785,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun selectPlaybackTracks(sessionId: kotlin.Long, trackSelection: TrackSelection) : PlaybackUpdate {
+    fun selectPlaybackTracks(sessionId: kotlin.String, trackSelection: TrackSelection) : PlaybackUpdate {
         val localVarResponse = selectPlaybackTracksWithHttpInfo(sessionId = sessionId, trackSelection = trackSelection)
 
         return when (localVarResponse.responseType) {
@@ -815,7 +815,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun selectPlaybackTracksWithHttpInfo(sessionId: kotlin.Long, trackSelection: TrackSelection) : ApiResponse<PlaybackUpdate?> {
+    fun selectPlaybackTracksWithHttpInfo(sessionId: kotlin.String, trackSelection: TrackSelection) : ApiResponse<PlaybackUpdate?> {
         val localVariableConfig = selectPlaybackTracksRequestConfig(sessionId = sessionId, trackSelection = trackSelection)
 
         return request<TrackSelection, PlaybackUpdate>(
@@ -830,7 +830,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param trackSelection 
      * @return RequestConfig
      */
-    fun selectPlaybackTracksRequestConfig(sessionId: kotlin.Long, trackSelection: TrackSelection) : RequestConfig<TrackSelection> {
+    fun selectPlaybackTracksRequestConfig(sessionId: kotlin.String, trackSelection: TrackSelection) : RequestConfig<TrackSelection> {
         val localVariableBody = trackSelection
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1006,7 +1006,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun updatePlaybackAudioRoute(sessionId: kotlin.Long, audioRouteCapabilities: AudioRouteCapabilities) : PlaybackUpdate {
+    fun updatePlaybackAudioRoute(sessionId: kotlin.String, audioRouteCapabilities: AudioRouteCapabilities) : PlaybackUpdate {
         val localVarResponse = updatePlaybackAudioRouteWithHttpInfo(sessionId = sessionId, audioRouteCapabilities = audioRouteCapabilities)
 
         return when (localVarResponse.responseType) {
@@ -1036,7 +1036,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun updatePlaybackAudioRouteWithHttpInfo(sessionId: kotlin.Long, audioRouteCapabilities: AudioRouteCapabilities) : ApiResponse<PlaybackUpdate?> {
+    fun updatePlaybackAudioRouteWithHttpInfo(sessionId: kotlin.String, audioRouteCapabilities: AudioRouteCapabilities) : ApiResponse<PlaybackUpdate?> {
         val localVariableConfig = updatePlaybackAudioRouteRequestConfig(sessionId = sessionId, audioRouteCapabilities = audioRouteCapabilities)
 
         return request<AudioRouteCapabilities, PlaybackUpdate>(
@@ -1051,7 +1051,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param audioRouteCapabilities 
      * @return RequestConfig
      */
-    fun updatePlaybackAudioRouteRequestConfig(sessionId: kotlin.Long, audioRouteCapabilities: AudioRouteCapabilities) : RequestConfig<AudioRouteCapabilities> {
+    fun updatePlaybackAudioRouteRequestConfig(sessionId: kotlin.String, audioRouteCapabilities: AudioRouteCapabilities) : RequestConfig<AudioRouteCapabilities> {
         val localVariableBody = audioRouteCapabilities
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1083,7 +1083,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun updatePlaybackDisplay(sessionId: kotlin.Long, displayCapabilities: DisplayCapabilities) : PlaybackUpdate {
+    fun updatePlaybackDisplay(sessionId: kotlin.String, displayCapabilities: DisplayCapabilities) : PlaybackUpdate {
         val localVarResponse = updatePlaybackDisplayWithHttpInfo(sessionId = sessionId, displayCapabilities = displayCapabilities)
 
         return when (localVarResponse.responseType) {
@@ -1113,7 +1113,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun updatePlaybackDisplayWithHttpInfo(sessionId: kotlin.Long, displayCapabilities: DisplayCapabilities) : ApiResponse<PlaybackUpdate?> {
+    fun updatePlaybackDisplayWithHttpInfo(sessionId: kotlin.String, displayCapabilities: DisplayCapabilities) : ApiResponse<PlaybackUpdate?> {
         val localVariableConfig = updatePlaybackDisplayRequestConfig(sessionId = sessionId, displayCapabilities = displayCapabilities)
 
         return request<DisplayCapabilities, PlaybackUpdate>(
@@ -1128,7 +1128,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param displayCapabilities 
      * @return RequestConfig
      */
-    fun updatePlaybackDisplayRequestConfig(sessionId: kotlin.Long, displayCapabilities: DisplayCapabilities) : RequestConfig<DisplayCapabilities> {
+    fun updatePlaybackDisplayRequestConfig(sessionId: kotlin.String, displayCapabilities: DisplayCapabilities) : RequestConfig<DisplayCapabilities> {
         val localVariableBody = displayCapabilities
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -1160,7 +1160,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun updatePlaybackNetwork(sessionId: kotlin.Long, networkPathCapabilities: NetworkPathCapabilities) : PlaybackUpdate {
+    fun updatePlaybackNetwork(sessionId: kotlin.String, networkPathCapabilities: NetworkPathCapabilities) : PlaybackUpdate {
         val localVarResponse = updatePlaybackNetworkWithHttpInfo(sessionId = sessionId, networkPathCapabilities = networkPathCapabilities)
 
         return when (localVarResponse.responseType) {
@@ -1190,7 +1190,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun updatePlaybackNetworkWithHttpInfo(sessionId: kotlin.Long, networkPathCapabilities: NetworkPathCapabilities) : ApiResponse<PlaybackUpdate?> {
+    fun updatePlaybackNetworkWithHttpInfo(sessionId: kotlin.String, networkPathCapabilities: NetworkPathCapabilities) : ApiResponse<PlaybackUpdate?> {
         val localVariableConfig = updatePlaybackNetworkRequestConfig(sessionId = sessionId, networkPathCapabilities = networkPathCapabilities)
 
         return request<NetworkPathCapabilities, PlaybackUpdate>(
@@ -1205,7 +1205,7 @@ open class PlaybackApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param networkPathCapabilities 
      * @return RequestConfig
      */
-    fun updatePlaybackNetworkRequestConfig(sessionId: kotlin.Long, networkPathCapabilities: NetworkPathCapabilities) : RequestConfig<NetworkPathCapabilities> {
+    fun updatePlaybackNetworkRequestConfig(sessionId: kotlin.String, networkPathCapabilities: NetworkPathCapabilities) : RequestConfig<NetworkPathCapabilities> {
         val localVariableBody = networkPathCapabilities
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

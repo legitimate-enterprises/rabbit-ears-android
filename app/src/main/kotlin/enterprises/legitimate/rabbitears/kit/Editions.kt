@@ -36,11 +36,11 @@ object Editions {
             .joinToString(" · ")
 
     /** The editionId a play or an add sends. */
-    fun requested(editions: List<Edition>, chosen: Edition?): Long? =
+    fun requested(editions: List<Edition>, chosen: Edition?): String? =
         chosen?.id?.takeIf { editions.size > 1 }
 
     /** The file details describes: the chosen edition's first copy, else the item's first file. */
-    fun described(editions: List<Edition>, chosen: Edition?): Long? =
+    fun described(editions: List<Edition>, chosen: Edition?): String? =
         chosen?.copies?.firstOrNull()?.mediaFileId?.takeIf { editions.size > 1 }
 
     fun titled(title: String, editionName: String?): String =

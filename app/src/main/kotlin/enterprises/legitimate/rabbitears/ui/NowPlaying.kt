@@ -115,7 +115,7 @@ private fun rememberClock(player: MusicPlayer): Pair<Long, Long> {
 }
 
 @Composable
-fun AlbumArt(albumId: Long, size: Dp, radius: Dp = 8.dp) {
+fun AlbumArt(albumId: String, size: Dp, radius: Dp = 8.dp) {
     Art(
         ArtworkStore.item(albumId),
         artColor(albumId),
@@ -125,7 +125,7 @@ fun AlbumArt(albumId: Long, size: Dp, radius: Dp = 8.dp) {
 }
 
 @Composable
-fun CollectionArt(id: Long, size: Dp, radius: Dp = 8.dp) {
+fun CollectionArt(id: String, size: Dp, radius: Dp = 8.dp) {
     Art(
         ArtworkStore.collection(id),
         artColor(id),
@@ -197,7 +197,7 @@ private val CLOSE_FLING = 1000.dp
  * taking its space.
  */
 @Composable
-private fun FlipArt(albumId: Long, audio: AudioDetails?) {
+private fun FlipArt(albumId: String, audio: AudioDetails?) {
     var flipped by remember(audio == null) { mutableStateOf(false) }
     // The system's animation scale applies, so a phone set to remove animations turns it at once.
     val turn by animateFloatAsState(if (flipped) 180f else 0f, tween(FLIP_MS))

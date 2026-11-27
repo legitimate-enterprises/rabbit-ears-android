@@ -40,10 +40,10 @@ class ArtworkCacheTest {
     fun anImageTheServerAllowsKeepingIsReadFromDiskTheSecondTime() {
         serve("private, max-age=31536000, immutable")
         val before = api()
-        val first = before.bytes("/api/v1/items/1/artwork/poster?v=5")
+        val first = before.bytes("/api/v2/items/1/artwork/poster?v=5")
         // A new Api, as after a restart, shares only the cache directory.
         before.http.cache!!.close()
-        val again = api().bytes("/api/v1/items/1/artwork/poster?v=5")
+        val again = api().bytes("/api/v2/items/1/artwork/poster?v=5")
         assertEquals("jpg", String(first.body!!))
         assertEquals("jpg", String(again.body!!))
         assertEquals(1, hits.get())
@@ -53,8 +53,8 @@ class ArtworkCacheTest {
     fun anImageTheServerWantsRevalidatedIsAskedForAgain() {
         serve("private, max-age=0")
         val api = api()
-        api.bytes("/api/v1/items/1/artwork/poster")
-        api.bytes("/api/v1/items/1/artwork/poster")
+        api.bytes("/api/v2/items/1/artwork/poster")
+        api.bytes("/api/v2/items/1/artwork/poster")
         assertEquals(2, hits.get())
     }
 
@@ -63,7 +63,7 @@ class ArtworkCacheTest {
         serve("private, max-age=0")
         val api = api()
         assertNull(api.artworkGeneration)
-        api.bytes("/api/v1/health")
+        api.bytes("/api/v2/health")
         assertEquals(5L, api.artworkGeneration)
         assertNotNull(api.http.cache)
     }

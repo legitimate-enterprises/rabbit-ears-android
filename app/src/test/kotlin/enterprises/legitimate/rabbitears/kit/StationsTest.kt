@@ -24,7 +24,7 @@ import org.junit.Test
 /** JSON for stations, with every required field. */
 object StationJson {
     fun program(
-        id: Long,
+        id: String,
         title: String,
         starts: String,
         ends: String,
@@ -35,8 +35,8 @@ object StationJson {
             if (kind == "song") """"song":${MusicJson.song(id, title = title)}"""
             else
                 """"item":${Json.item(id, kind, title)}""" +
-                    (show?.let { ""","show":${Json.item(90, "show", it)}""" } ?: "")
-        return """{"itemId":$id,"editionId":${id * 10},"kind":"$kind","startsAt":"$starts",""" +
+                    (show?.let { ""","show":${Json.item("90", "show", it)}""" } ?: "")
+        return """{"itemId":$id,"editionId":"${id}0","kind":"$kind","startsAt":"$starts",""" +
             """"endsAt":"$ends","durationMs":6000000,$described}"""
     }
 
@@ -55,7 +55,7 @@ object StationJson {
             "}"
 
     fun station(
-        id: Long,
+        id: String,
         onAir: String,
         name: String = "The Big Screen",
         kind: String = "movies",
@@ -66,17 +66,17 @@ object StationJson {
         rating: String? = null,
         timing: String = "hour",
     ) =
-        """{"id":$id,"name":"$name","kind":"$kind","ownerId":1,"householdId":1,"playlistId":12,""" +
+        """{"id":$id,"name":"$name","kind":"$kind","ownerId":"1","householdId":"1","playlistId":"12",""" +
             """"order":"$order","visibility":"$visibility","timing":"$timing","days":$days,""" +
             """"times":$times,""" +
-            """"onAir":$onAir,"createdAt":"${Json.T}","updatedAt":"${Json.T}"""" +
+            """"onAir":$onAir,"createdAt":"${Json.T}","modifiedAt":"${Json.T}"""" +
             (rating?.let { ""","rating":"$it"""" } ?: "") +
             "}"
 
     fun stream(session: Long, position: Long) =
         """{"sessionId":$session,"entry":{"position":0,"verdict":"direct_play","videoAction":"copy",""" +
             """"audioAction":"copy","subtitleAction":"none","bad":false},""" +
-            """"streamUrl":"/api/v1/streams/s$session/file","mediaFileId":1,"streamKind":"file","positionMs":$position,""" +
+            """"streamUrl":"/api/v2/streams/s$session/file","mediaFileId":"1","streamKind":"file","positionMs":$position,""" +
             """"negotiated":{"verdict":"direct_play","width":1920,"height":1080,"bitrate":8000000},""" +
             """"rungs":[],"sidecars":[]}"""
 
@@ -93,8 +93,8 @@ object StationJson {
 
     /** A Friday: 20:00 to 21:00 UTC is 15:00 to 16:00 in New York. */
     const val NOW_ENDS = "2025-01-03T21:00:00Z"
-    val lantern = program(7, "The Lantern Keeper", "2025-01-03T19:00:00Z", NOW_ENDS)
-    val salt = program(8, "Salt and Ember", NOW_ENDS, "2025-01-03T23:18:00Z")
+    val lantern = program("7", "The Lantern Keeper", "2025-01-03T19:00:00Z", NOW_ENDS)
+    val salt = program("8", "Salt and Ember", NOW_ENDS, "2025-01-03T23:18:00Z")
 }
 
 class StationCaptionTest {
@@ -116,14 +116,15 @@ class StationCaptionTest {
 
     @Test
     fun betweenProgramsNamesTheNextAndOffScheduleTheDayItIsBack() {
-        val moon = StationJson.program(9, "Moon Pie", StationJson.NOW_ENDS, "2025-01-03T22:30:00Z")
+        val moon =
+            StationJson.program("9", "Moon Pie", StationJson.NOW_ENDS, "2025-01-03T22:30:00Z")
         assertEquals(
             listOf("Up next at 16:00: Moon Pie"),
             lines(StationJson.onAir("between_programs", next = moon), locale = Locale.UK),
         )
         // 03:00 UTC on Saturday is still Friday evening in New York.
         val late =
-            StationJson.program(9, "Moon Pie", "2025-01-04T03:00:00Z", "2025-01-04T04:30:00Z")
+            StationJson.program("9", "Moon Pie", "2025-01-04T03:00:00Z", "2025-01-04T04:30:00Z")
         assertEquals(
             listOf("Back Friday at 22:00"),
             lines(StationJson.onAir("off_schedule", next = late), locale = Locale.UK),
@@ -136,18 +137,18 @@ class StationCaptionTest {
 
     @Test
     fun aMusicStationsNextHasNoTimeAndAnEpisodeIsNamedWithItsShow() {
-        val song = { id: Long, title: String ->
+        val song = { id: String, title: String ->
             StationJson.program(id, title, StationJson.NOW_ENDS, StationJson.NOW_ENDS, "song")
         }
         val onAir =
-            StationJson.onAir("on_air", song(21, "Paper Lanterns"), song(22, "Slow Tide"), 1000)
+            StationJson.onAir("on_air", song("21", "Paper Lanterns"), song("22", "Slow Tide"), 1000)
         assertEquals(
             listOf("On now: Paper Lanterns", "Next: Slow Tide"),
             lines(onAir, PlaylistKind.music, Locale.UK),
         )
         val episode =
             StationJson.program(
-                31,
+                "31",
                 "Sleepytime",
                 StationJson.NOW_ENDS,
                 "2025-01-03T21:30:00Z",
@@ -161,7 +162,7 @@ class StationCaptionTest {
 class HomeOnNowTileTest {
     private fun station(kind: String, name: String) =
         StationJson.decode<Station>(
-            StationJson.station(1, StationJson.onAir("off_schedule"), name = name, kind = kind),
+            StationJson.station("1", StationJson.onAir("off_schedule"), name = name, kind = kind),
         )
 
     @Test
@@ -201,31 +202,31 @@ class StationsModelTest {
 
     @Test
     fun listsOneKindsStationsAndOnNowMixesEveryKindOnTheAir() = runBlocking {
-        server.on("GET /stations", body = Json.page(StationJson.station(1, onAir)))
+        server.on("GET /stations", body = Json.page(StationJson.station("1", onAir)))
         model.load(PlaylistKind.movies)
         assertTrue(server.calls.single().query!!.contains("kind=movies"))
-        assertEquals(listOf(1L), model.of(PlaylistKind.movies).map { it.id })
+        assertEquals(listOf("1"), model.of(PlaylistKind.movies).map { it.id })
         server.on(
             "GET /stations",
             body =
                 Json.page(
-                    StationJson.station(1, onAir),
-                    StationJson.station(2, onAir, kind = "music"),
-                    StationJson.station(3, between, kind = "tv"),
+                    StationJson.station("1", onAir),
+                    StationJson.station("2", onAir, kind = "music"),
+                    StationJson.station("3", between, kind = "tv"),
                 ),
         )
         model.load()
         assertFalse(server.calls.last().query.orEmpty().contains("kind="))
-        assertEquals(listOf(1L, 2L), model.onNow.map { it.id })
-        assertEquals(listOf(3L), model.of(PlaylistKind.tv).map { it.id })
+        assertEquals(listOf("1", "2"), model.onNow.map { it.id })
+        assertEquals(listOf("3"), model.of(PlaylistKind.tv).map { it.id })
     }
 
     @Test
     fun todaysScheduleAsksForTheDayGiven() = runBlocking {
         server.on("GET /stations/3/schedule", body = Json.page(StationJson.lantern))
-        val programs = model.schedule(3, LocalDate.of(2025, 1, 3))
+        val programs = model.schedule("3", LocalDate.of(2025, 1, 3))
         assertTrue(server.calls.single().query!!.contains("date=2025-01-03"))
-        assertEquals(listOf(7L), programs?.map { it.itemId })
+        assertEquals(listOf("7"), programs?.map { it.itemId })
     }
 
     @Test
@@ -236,40 +237,43 @@ class StationsModelTest {
             """{"code":"bad_request","message":"Check the station.",""" +
                 """"fields":[{"field":"playlistId","message":"Pick one of your playlists."}]}""",
         )
-        val input = StationInput("Creature Double", 12)
+        val input = StationInput("Creature Double", "12")
         assertNull(model.save(null, input))
         assertEquals(mapOf("playlistId" to "Pick one of your playlists."), model.fieldErrors)
         assertEquals("Check the station.", model.error)
 
-        server.on("PUT /stations/3", body = StationJson.station(3, onAir, name = "Creature Double"))
-        assertEquals("Creature Double", model.save(3, input)?.name)
+        server.on(
+            "PUT /stations/3",
+            body = StationJson.station("3", onAir, name = "Creature Double"),
+        )
+        assertEquals("Creature Double", model.save("3", input)?.name)
         assertTrue(model.fieldErrors.isEmpty())
         assertNull(model.error)
     }
 
     @Test
     fun aStationIsMadeForAKindAndAddedToByItsOwnersOnly() = runBlocking {
-        server.on("POST /stations", 201, StationJson.station(4, onAir, kind = "music"))
-        assertEquals(4L, model.create("  Kitchen Radio ", PlaylistKind.music)?.id)
+        server.on("POST /stations", 201, StationJson.station("4", onAir, kind = "music"))
+        assertEquals("4", model.create("  Kitchen Radio ", PlaylistKind.music)?.id)
         val body = server.called("POST /stations").single().body
         assertTrue(
             body,
             body.contains(""""kind":"music"""") && body.contains(""""name":"Kitchen Radio""""),
         )
         assertFalse(body, Regex(""""playlistId":\d""").containsMatchIn(body))
-        assertEquals(listOf(4L), model.mine(PlaylistKind.music, 1).map { it.id })
-        assertTrue(model.mine(PlaylistKind.music, 2).isEmpty())
-        assertTrue(model.mine(PlaylistKind.movies, 1).isEmpty())
+        assertEquals(listOf("4"), model.mine(PlaylistKind.music, "1").map { it.id })
+        assertTrue(model.mine(PlaylistKind.music, "2").isEmpty())
+        assertTrue(model.mine(PlaylistKind.movies, "1").isEmpty())
     }
 
     @Test
     fun deletingAPlaylistAStationPlaysSaysWhatToDoFirst() = runBlocking {
-        val playlists = PlaylistsModel(server.api(), 1)
+        val playlists = PlaylistsModel(server.api(), "1")
         server.error("DELETE /profiles/1/playlists/12", 409, "conflict", "in use")
         val playlist =
             StationJson.decode<enterprises.legitimate.rabbitears.api.models.Playlist>(
-                """{"id":12,"profileId":1,"name":"Movie night picks","kind":"movies","access":"owner",""" +
-                    """"itemCount":11,"durationMs":0,"createdAt":"${Json.T}","updatedAt":"${Json.T}"}""",
+                """{"id":"12","profileId":"1","name":"Movie night picks","kind":"movies","access":"owner",""" +
+                    """"itemCount":11,"durationMs":0,"createdAt":"${Json.T}","modifiedAt":"${Json.T}"}""",
             )
         assertFalse(playlists.delete(playlist))
         assertEquals(
@@ -287,7 +291,7 @@ class StationFormTest {
         val station =
             StationJson.decode<Station>(
                 StationJson.station(
-                    3,
+                    "3",
                     onAir,
                     name = "Creature Double",
                     order = "random",
@@ -319,7 +323,7 @@ class StationFormTest {
         val station =
             StationJson.decode<Station>(
                 StationJson.station(
-                    3,
+                    "3",
                     onAir,
                     visibility = "server",
                     days = """["friday"]""",

@@ -53,10 +53,10 @@ import kotlinx.serialization.encoding.Encoder
 data class IdentityReview (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "libraryId")
-    val libraryId: kotlin.Long,
+    val libraryId: kotlin.String,
 
     @Contextual @SerialName(value = "reason")
     val reason: IdentityReviewReason,
@@ -68,7 +68,7 @@ data class IdentityReview (
     val evidence: kotlin.collections.List<IdentityEvidence>,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long? = null,
+    val itemId: kotlin.String? = null,
 
     /* The item's kind. */
     @SerialName(value = "itemKind")

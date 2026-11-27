@@ -271,7 +271,7 @@ private fun VideoTile(
 }
 
 @Composable
-fun ChannelScreen(id: Long) {
+fun ChannelScreen(id: String) {
     val nav = LocalNav.current
     val model = nav.youtube
     val scope = rememberCoroutineScope()
@@ -363,7 +363,7 @@ fun ChannelScreen(id: Long) {
 }
 
 @Composable
-fun VideoScreen(id: Long) {
+fun VideoScreen(id: String) {
     val nav = LocalNav.current
     val model = nav.youtube
     val scope = rememberCoroutineScope()

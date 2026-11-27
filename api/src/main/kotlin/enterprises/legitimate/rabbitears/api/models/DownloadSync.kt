@@ -37,10 +37,10 @@ import kotlinx.serialization.Contextual
 data class DownloadSync (
 
     @SerialName(value = "keep")
-    val keep: kotlin.collections.List<kotlin.Long>,
+    val keep: kotlin.collections.List<kotlin.String>,
 
     @SerialName(value = "remove")
-    val remove: kotlin.collections.List<kotlin.Long>
+    val remove: kotlin.collections.List<kotlin.String>
 
 ) {
 

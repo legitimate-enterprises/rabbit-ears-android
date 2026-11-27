@@ -33,7 +33,7 @@ import kotlinx.serialization.Contextual
  * @param positionMs
  * @param watched Per title, whichever edition was played.
  * @param playCount
- * @param updatedAt
+ * @param changedAt The instant of the write that set it, as the client gave it; the latest wins.
  * @param editionId The edition positionMs belongs to; startPlayback resumes only when it plays this edition. A position put by putWatchState belongs to the default edition.
  * @param lastPlayedAt
  */
@@ -42,7 +42,7 @@ import kotlinx.serialization.Contextual
 data class WatchState (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "positionMs")
     val positionMs: kotlin.Long,
@@ -54,12 +54,13 @@ data class WatchState (
     @SerialName(value = "playCount")
     val playCount: kotlin.Int,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    /* The instant of the write that set it, as the client gave it; the latest wins. */
+    @Contextual @SerialName(value = "changedAt")
+    val changedAt: java.time.OffsetDateTime,
 
     /* The edition positionMs belongs to; startPlayback resumes only when it plays this edition. A position put by putWatchState belongs to the default edition. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     @Contextual @SerialName(value = "lastPlayedAt")
     val lastPlayedAt: java.time.OffsetDateTime? = null

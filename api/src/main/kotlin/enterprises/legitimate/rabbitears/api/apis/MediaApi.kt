@@ -57,7 +57,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -148,7 +148,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteMediaFile(mediaFileId: kotlin.Long) : Unit {
+    fun deleteMediaFile(mediaFileId: kotlin.String) : Unit {
         val localVarResponse = deleteMediaFileWithHttpInfo(mediaFileId = mediaFileId)
 
         return when (localVarResponse.responseType) {
@@ -176,7 +176,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteMediaFileWithHttpInfo(mediaFileId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteMediaFileWithHttpInfo(mediaFileId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteMediaFileRequestConfig(mediaFileId = mediaFileId)
 
         return request<Unit, Unit>(
@@ -190,7 +190,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param mediaFileId 
      * @return RequestConfig
      */
-    fun deleteMediaFileRequestConfig(mediaFileId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteMediaFileRequestConfig(mediaFileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -220,7 +220,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getMediaFile(mediaFileId: kotlin.Long) : MediaFile {
+    fun getMediaFile(mediaFileId: kotlin.String) : MediaFile {
         val localVarResponse = getMediaFileWithHttpInfo(mediaFileId = mediaFileId)
 
         return when (localVarResponse.responseType) {
@@ -249,7 +249,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getMediaFileWithHttpInfo(mediaFileId: kotlin.Long) : ApiResponse<MediaFile?> {
+    fun getMediaFileWithHttpInfo(mediaFileId: kotlin.String) : ApiResponse<MediaFile?> {
         val localVariableConfig = getMediaFileRequestConfig(mediaFileId = mediaFileId)
 
         return request<Unit, MediaFile>(
@@ -263,7 +263,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param mediaFileId 
      * @return RequestConfig
      */
-    fun getMediaFileRequestConfig(mediaFileId: kotlin.Long) : RequestConfig<Unit> {
+    fun getMediaFileRequestConfig(mediaFileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -293,7 +293,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getSeekPreview(seekPreviewId: kotlin.Long) : SeekPreview {
+    fun getSeekPreview(seekPreviewId: kotlin.String) : SeekPreview {
         val localVarResponse = getSeekPreviewWithHttpInfo(seekPreviewId = seekPreviewId)
 
         return when (localVarResponse.responseType) {
@@ -322,7 +322,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getSeekPreviewWithHttpInfo(seekPreviewId: kotlin.Long) : ApiResponse<SeekPreview?> {
+    fun getSeekPreviewWithHttpInfo(seekPreviewId: kotlin.String) : ApiResponse<SeekPreview?> {
         val localVariableConfig = getSeekPreviewRequestConfig(seekPreviewId = seekPreviewId)
 
         return request<Unit, SeekPreview>(
@@ -336,7 +336,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param seekPreviewId 
      * @return RequestConfig
      */
-    fun getSeekPreviewRequestConfig(seekPreviewId: kotlin.Long) : RequestConfig<Unit> {
+    fun getSeekPreviewRequestConfig(seekPreviewId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -370,7 +370,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listMediaFiles(itemId: kotlin.Long? = null, problem: MediaFileProblem? = null, libraryId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MediaFilePage {
+    fun listMediaFiles(itemId: kotlin.String? = null, problem: MediaFileProblem? = null, libraryId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : MediaFilePage {
         val localVarResponse = listMediaFilesWithHttpInfo(itemId = itemId, problem = problem, libraryId = libraryId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -403,7 +403,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listMediaFilesWithHttpInfo(itemId: kotlin.Long?, problem: MediaFileProblem?, libraryId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MediaFilePage?> {
+    fun listMediaFilesWithHttpInfo(itemId: kotlin.String?, problem: MediaFileProblem?, libraryId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<MediaFilePage?> {
         val localVariableConfig = listMediaFilesRequestConfig(itemId = itemId, problem = problem, libraryId = libraryId, limit = limit, offset = offset)
 
         return request<Unit, MediaFilePage>(
@@ -421,7 +421,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listMediaFilesRequestConfig(itemId: kotlin.Long?, problem: MediaFileProblem?, libraryId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listMediaFilesRequestConfig(itemId: kotlin.String?, problem: MediaFileProblem?, libraryId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -470,7 +470,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listSeekPreviews(mediaFileId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : SeekPreviewPage {
+    fun listSeekPreviews(mediaFileId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : SeekPreviewPage {
         val localVarResponse = listSeekPreviewsWithHttpInfo(mediaFileId = mediaFileId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -501,7 +501,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listSeekPreviewsWithHttpInfo(mediaFileId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<SeekPreviewPage?> {
+    fun listSeekPreviewsWithHttpInfo(mediaFileId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<SeekPreviewPage?> {
         val localVariableConfig = listSeekPreviewsRequestConfig(mediaFileId = mediaFileId, limit = limit, offset = offset)
 
         return request<Unit, SeekPreviewPage>(
@@ -517,7 +517,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listSeekPreviewsRequestConfig(mediaFileId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listSeekPreviewsRequestConfig(mediaFileId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -557,7 +557,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun probeMediaFile(mediaFileId: kotlin.Long) : Unit {
+    fun probeMediaFile(mediaFileId: kotlin.String) : Unit {
         val localVarResponse = probeMediaFileWithHttpInfo(mediaFileId = mediaFileId)
 
         return when (localVarResponse.responseType) {
@@ -585,7 +585,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun probeMediaFileWithHttpInfo(mediaFileId: kotlin.Long) : ApiResponse<Unit?> {
+    fun probeMediaFileWithHttpInfo(mediaFileId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = probeMediaFileRequestConfig(mediaFileId = mediaFileId)
 
         return request<Unit, Unit>(
@@ -599,7 +599,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param mediaFileId 
      * @return RequestConfig
      */
-    fun probeMediaFileRequestConfig(mediaFileId: kotlin.Long) : RequestConfig<Unit> {
+    fun probeMediaFileRequestConfig(mediaFileId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -630,7 +630,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceMediaFile(mediaFileId: kotlin.Long, mediaFileInput: MediaFileInput) : MediaFile {
+    fun replaceMediaFile(mediaFileId: kotlin.String, mediaFileInput: MediaFileInput) : MediaFile {
         val localVarResponse = replaceMediaFileWithHttpInfo(mediaFileId = mediaFileId, mediaFileInput = mediaFileInput)
 
         return when (localVarResponse.responseType) {
@@ -660,7 +660,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceMediaFileWithHttpInfo(mediaFileId: kotlin.Long, mediaFileInput: MediaFileInput) : ApiResponse<MediaFile?> {
+    fun replaceMediaFileWithHttpInfo(mediaFileId: kotlin.String, mediaFileInput: MediaFileInput) : ApiResponse<MediaFile?> {
         val localVariableConfig = replaceMediaFileRequestConfig(mediaFileId = mediaFileId, mediaFileInput = mediaFileInput)
 
         return request<MediaFileInput, MediaFile>(
@@ -675,7 +675,7 @@ open class MediaApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      * @param mediaFileInput 
      * @return RequestConfig
      */
-    fun replaceMediaFileRequestConfig(mediaFileId: kotlin.Long, mediaFileInput: MediaFileInput) : RequestConfig<MediaFileInput> {
+    fun replaceMediaFileRequestConfig(mediaFileId: kotlin.String, mediaFileInput: MediaFileInput) : RequestConfig<MediaFileInput> {
         val localVariableBody = mediaFileInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

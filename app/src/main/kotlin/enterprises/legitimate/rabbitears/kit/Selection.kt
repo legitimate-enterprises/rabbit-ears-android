@@ -10,23 +10,23 @@ class Selection {
     var active by mutableStateOf(false)
         private set
 
-    var picked by mutableStateOf(emptyList<Long>())
+    var picked by mutableStateOf(emptyList<String>())
         private set
 
     /** Starts selecting, with [first] picked when a long-press started it. */
-    fun begin(first: Long? = null) {
+    fun begin(first: String? = null) {
         active = true
         if (first != null && first !in picked) picked = picked + first
     }
 
-    fun toggle(id: Long) {
+    fun toggle(id: String) {
         picked = if (id in picked) picked - id else picked + id
     }
 
     /**
      * Picks exactly [shown]: what was picked of it stays first, in its order, and the rest follow.
      */
-    fun selectAll(shown: List<Long>) {
+    fun selectAll(shown: List<String>) {
         picked = picked.filter { it in shown } + shown.filter { it !in picked }
     }
 
@@ -35,7 +35,7 @@ class Selection {
         picked = emptyList()
     }
 
-    fun allPicked(shown: List<Long>) = shown.isNotEmpty() && shown.all { it in picked }
+    fun allPicked(shown: List<String>) = shown.isNotEmpty() && shown.all { it in picked }
 
     fun end() {
         active = false

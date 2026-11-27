@@ -37,7 +37,7 @@ suspend fun <T> OfflineLibrary?.answer(local: OfflineLibrary.() -> T, remote: su
  */
 class OfflineLibrary(
     private val store: DownloadStore,
-    val profileId: Long,
+    val profileId: String,
     private val unreachable: () -> Boolean = { false },
 ) {
     private val meta = DownloadMeta(store)
@@ -48,7 +48,7 @@ class OfflineLibrary(
     private fun onDevice(kind: Kind) =
         store.titles(profileId).filter { it.kind == kind && it.state == TitleState.OnDevice }
 
-    fun has(itemId: Long) = store.onDevice(profileId, itemId) != null
+    fun has(itemId: String) = store.onDevice(profileId, itemId) != null
 
     /**
      * The server's answer from [remote], or the device's from [local] when the server is out of
@@ -76,14 +76,14 @@ class OfflineLibrary(
 
     fun watchStates(): List<WatchState> = store.watches(profileId).map { it.asWatchState() }
 
-    fun watchState(itemId: Long): WatchState? = store.watch(profileId, itemId)?.asWatchState()
+    fun watchState(itemId: String): WatchState? = store.watch(profileId, itemId)?.asWatchState()
 
     /** Keeps a change made with no server, as of now, for the next sync. */
     fun record(
-        itemId: Long,
+        itemId: String,
         positionMs: Long,
         watched: Boolean,
-        editionId: Long? = null,
+        editionId: String? = null,
         ended: Boolean = true,
     ) =
         store.record(
@@ -110,7 +110,7 @@ class OfflineLibrary(
             .mapNotNull(meta::artist)
             .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
 
-    fun album(id: Long): AlbumDetail? {
+    fun album(id: String): AlbumDetail? {
         val album = meta.album(id) ?: return null
         val songs =
             songs()
@@ -119,14 +119,14 @@ class OfflineLibrary(
         return AlbumDetail(album, songs)
     }
 
-    fun songsBy(artistId: Long): List<MusicSong> =
+    fun songsBy(artistId: String): List<MusicSong> =
         songs()
             .filter { it.artistId == artistId || it.albumArtistId == artistId }
             .sortedWith(
                 compareBy({ it.albumTitle }, { it.discNumber ?: 0 }, { it.trackNumber ?: 0 }),
             )
 
-    fun artist(id: Long): ArtistDetail? {
+    fun artist(id: String): ArtistDetail? {
         val artist = meta.artist(id) ?: return null
         val albums =
             songsBy(id)
@@ -157,31 +157,31 @@ class OfflineLibrary(
             .mapNotNull(meta::channel)
             .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.title })
 
-    fun channel(id: Long): ChannelDetail? =
+    fun channel(id: String): ChannelDetail? =
         meta.channel(id)?.let { ChannelDetail(it, videos().filter { v -> v.channelId == id }) }
 
-    fun video(id: Long): YouTubeVideo? = videos().firstOrNull { it.id == id }
+    fun video(id: String): YouTubeVideo? = videos().firstOrNull { it.id == id }
 
     fun playlists(): List<Playlist> =
         store.requests(profileId).mapNotNull { r ->
             r.target.playlistId?.let { meta.playlist(profileId, it) }
         }
 
-    fun entries(playlistId: Long): List<PlaylistEntry>? = meta.entries(profileId, playlistId)
+    fun entries(playlistId: String): List<PlaylistEntry>? = meta.entries(profileId, playlistId)
 
     /** The playlist's rows that are on the device, in play order. */
-    fun playOrder(playlistId: Long): List<PlaylistPlayOrderItem>? =
+    fun playOrder(playlistId: String): List<PlaylistPlayOrderItem>? =
         meta.playOrder(profileId, playlistId)?.filter { has(it.itemId) }
 
     fun collections(): List<Collection> =
         store.requests(profileId).mapNotNull { r -> r.target.collectionId?.let(meta::collection) }
 
-    fun collection(id: Long): Collection? = meta.collection(id)
+    fun collection(id: String): Collection? = meta.collection(id)
 
-    fun collectionMovies(id: Long): List<Item>? = meta.collectionMovies(id)?.filter { has(it.id) }
+    fun collectionMovies(id: String): List<Item>? = meta.collectionMovies(id)?.filter { has(it.id) }
 
     /** What follows [itemId] on the device: the next downloaded episode or channel video. */
-    fun upNext(itemId: Long, run: PlaylistRun?): UpNextPlay? {
+    fun upNext(itemId: String, run: PlaylistRun?): UpNextPlay? {
         if (run != null) {
             val rest = run.rows.drop(run.index + 1)
             val i = rest.indexOfFirst { has(it.itemId) }

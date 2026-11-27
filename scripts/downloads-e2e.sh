@@ -22,10 +22,10 @@ RABBIT_EARS_PORT="$port" RABBIT_EARS_DB="$data/re.db" RABBIT_EARS_DATA="$data" \
 	"$data/rabbit-ears" >"$data/server.log" 2>&1 &
 pid=$!
 for _ in $(seq 1 60); do
-	curl -fsS "http://localhost:$port/api/v1/health" >/dev/null 2>&1 && break
+	curl -fsS "http://localhost:$port/api/v2/health" >/dev/null 2>&1 && break
 	sleep 1
 done
-curl -fsS "http://localhost:$port/api/v1/health" >/dev/null || {
+curl -fsS "http://localhost:$port/api/v2/health" >/dev/null || {
 	cat "$data/server.log" >&2
 	exit 1
 }

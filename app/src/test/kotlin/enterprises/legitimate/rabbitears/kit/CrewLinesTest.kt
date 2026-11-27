@@ -11,10 +11,10 @@ class CrewLinesTest {
             cast = emptyList(),
             crew =
                 listOf(
-                    Credit(1, "Denis Villeneuve", job = "Director"),
-                    Credit(1, "Denis Villeneuve", job = "Screenplay"),
-                    Credit(2, "Jon Spaihts", job = "Screenplay"),
-                    Credit(3, "Hans Zimmer", job = "Original Music Composer"),
+                    Credit("1", "Denis Villeneuve", job = "Director"),
+                    Credit("1", "Denis Villeneuve", job = "Screenplay"),
+                    Credit("2", "Jon Spaihts", job = "Screenplay"),
+                    Credit("3", "Hans Zimmer", job = "Original Music Composer"),
                 ),
         )
 

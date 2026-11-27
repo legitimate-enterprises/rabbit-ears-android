@@ -23,8 +23,8 @@ import kotlinx.coroutines.launch
  */
 class WatchTogetherModel(
     private val api: Api,
-    private val profileId: Long,
-    val itemId: Long,
+    private val profileId: String,
+    val itemId: String,
     private val now: () -> Long = System::currentTimeMillis,
 ) {
     /** The one this profile is in, waiting or joined. */
@@ -166,7 +166,7 @@ class WatchTogetherModel(
      * position; false when the server would not. This device's player is open, so the start opens
      * none.
      */
-    suspend fun open(fromSessionId: Long): Boolean {
+    suspend fun open(fromSessionId: String): Boolean {
         onStart = null
         act { together.openWatchTogether(WatchTogetherInput(itemId, fromSessionId)) }
         return current != null
@@ -176,7 +176,7 @@ class WatchTogetherModel(
      * Joins the one another device of the profile opened from this device's session, and plays for
      * both from where this device is, in the player it has open.
      */
-    suspend fun join(id: Long, positionMs: Long): Boolean {
+    suspend fun join(id: String, positionMs: Long): Boolean {
         onStart = null
         act { together.joinWatchTogether(id) }
         if (!inSync) return false

@@ -8,21 +8,21 @@ import org.junit.Test
 
 class KidAllowListTest {
     private val server = FakeServer()
-    private val allow = KidAllowList(server.api(), 7)
+    private val allow = KidAllowList(server.api(), "7")
 
     @Test
     fun readsWhichKidsAllowTheTitleAndTogglesEach() = runBlocking {
         server.on("GET /items/7/allowed-for", body = """{"profileIds":[3]}""")
         allow.load()
-        assertEquals(setOf(3L), allow.allowed)
+        assertEquals(setOf("3"), allow.allowed)
 
         server.on("PUT /profiles/4/allowed-items/7", 204)
-        allow.toggle(4)
-        assertEquals(setOf(3L, 4L), allow.allowed)
+        allow.toggle("4")
+        assertEquals(setOf("3", "4"), allow.allowed)
 
         server.on("DELETE /profiles/3/allowed-items/7", 204)
-        allow.toggle(3)
-        assertEquals(setOf(4L), allow.allowed)
+        allow.toggle("3")
+        assertEquals(setOf("4"), allow.allowed)
         assertNull(allow.error)
     }
 
@@ -31,7 +31,7 @@ class KidAllowListTest {
         server.on("GET /items/7/allowed-for", body = """{"profileIds":[]}""")
         allow.load()
         server.error("PUT /profiles/4/allowed-items/7", 403, "forbidden")
-        allow.toggle(4)
+        allow.toggle("4")
         assertTrue(allow.allowed.isEmpty())
         assertEquals("forbidden", allow.error)
     }

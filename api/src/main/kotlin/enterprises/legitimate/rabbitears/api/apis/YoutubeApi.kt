@@ -59,7 +59,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -77,7 +77,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getYouTubeChannel(channelId: kotlin.Long) : YouTubeChannel {
+    fun getYouTubeChannel(channelId: kotlin.String) : YouTubeChannel {
         val localVarResponse = getYouTubeChannelWithHttpInfo(channelId = channelId)
 
         return when (localVarResponse.responseType) {
@@ -106,7 +106,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getYouTubeChannelWithHttpInfo(channelId: kotlin.Long) : ApiResponse<YouTubeChannel?> {
+    fun getYouTubeChannelWithHttpInfo(channelId: kotlin.String) : ApiResponse<YouTubeChannel?> {
         val localVariableConfig = getYouTubeChannelRequestConfig(channelId = channelId)
 
         return request<Unit, YouTubeChannel>(
@@ -120,7 +120,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @param channelId 
      * @return RequestConfig
      */
-    fun getYouTubeChannelRequestConfig(channelId: kotlin.Long) : RequestConfig<Unit> {
+    fun getYouTubeChannelRequestConfig(channelId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -150,7 +150,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getYouTubeVideo(videoId: kotlin.Long) : YouTubeVideo {
+    fun getYouTubeVideo(videoId: kotlin.String) : YouTubeVideo {
         val localVarResponse = getYouTubeVideoWithHttpInfo(videoId = videoId)
 
         return when (localVarResponse.responseType) {
@@ -179,7 +179,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getYouTubeVideoWithHttpInfo(videoId: kotlin.Long) : ApiResponse<YouTubeVideo?> {
+    fun getYouTubeVideoWithHttpInfo(videoId: kotlin.String) : ApiResponse<YouTubeVideo?> {
         val localVariableConfig = getYouTubeVideoRequestConfig(videoId = videoId)
 
         return request<Unit, YouTubeVideo>(
@@ -193,7 +193,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @param videoId 
      * @return RequestConfig
      */
-    fun getYouTubeVideoRequestConfig(videoId: kotlin.Long) : RequestConfig<Unit> {
+    fun getYouTubeVideoRequestConfig(videoId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -227,7 +227,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listYouTubeChannels(libraryId: kotlin.Long? = null, q: kotlin.String? = null, sort: YouTubeChannelSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : YouTubeChannelPage {
+    fun listYouTubeChannels(libraryId: kotlin.String? = null, q: kotlin.String? = null, sort: YouTubeChannelSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : YouTubeChannelPage {
         val localVarResponse = listYouTubeChannelsWithHttpInfo(libraryId = libraryId, q = q, sort = sort, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -260,7 +260,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listYouTubeChannelsWithHttpInfo(libraryId: kotlin.Long?, q: kotlin.String?, sort: YouTubeChannelSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<YouTubeChannelPage?> {
+    fun listYouTubeChannelsWithHttpInfo(libraryId: kotlin.String?, q: kotlin.String?, sort: YouTubeChannelSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<YouTubeChannelPage?> {
         val localVariableConfig = listYouTubeChannelsRequestConfig(libraryId = libraryId, q = q, sort = sort, limit = limit, offset = offset)
 
         return request<Unit, YouTubeChannelPage>(
@@ -278,7 +278,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listYouTubeChannelsRequestConfig(libraryId: kotlin.Long?, q: kotlin.String?, sort: YouTubeChannelSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listYouTubeChannelsRequestConfig(libraryId: kotlin.String?, q: kotlin.String?, sort: YouTubeChannelSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -332,7 +332,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listYouTubeVideos(libraryId: kotlin.Long? = null, channelId: kotlin.Long? = null, unwatched: kotlin.Boolean? = false, inProgress: kotlin.Boolean? = false, q: kotlin.String? = null, sort: YouTubeVideoSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : YouTubeVideoPage {
+    fun listYouTubeVideos(libraryId: kotlin.String? = null, channelId: kotlin.String? = null, unwatched: kotlin.Boolean? = false, inProgress: kotlin.Boolean? = false, q: kotlin.String? = null, sort: YouTubeVideoSort? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : YouTubeVideoPage {
         val localVarResponse = listYouTubeVideosWithHttpInfo(libraryId = libraryId, channelId = channelId, unwatched = unwatched, inProgress = inProgress, q = q, sort = sort, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -368,7 +368,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listYouTubeVideosWithHttpInfo(libraryId: kotlin.Long?, channelId: kotlin.Long?, unwatched: kotlin.Boolean?, inProgress: kotlin.Boolean?, q: kotlin.String?, sort: YouTubeVideoSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<YouTubeVideoPage?> {
+    fun listYouTubeVideosWithHttpInfo(libraryId: kotlin.String?, channelId: kotlin.String?, unwatched: kotlin.Boolean?, inProgress: kotlin.Boolean?, q: kotlin.String?, sort: YouTubeVideoSort?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<YouTubeVideoPage?> {
         val localVariableConfig = listYouTubeVideosRequestConfig(libraryId = libraryId, channelId = channelId, unwatched = unwatched, inProgress = inProgress, q = q, sort = sort, limit = limit, offset = offset)
 
         return request<Unit, YouTubeVideoPage>(
@@ -389,7 +389,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listYouTubeVideosRequestConfig(libraryId: kotlin.Long?, channelId: kotlin.Long?, unwatched: kotlin.Boolean?, inProgress: kotlin.Boolean?, q: kotlin.String?, sort: YouTubeVideoSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listYouTubeVideosRequestConfig(libraryId: kotlin.String?, channelId: kotlin.String?, unwatched: kotlin.Boolean?, inProgress: kotlin.Boolean?, q: kotlin.String?, sort: YouTubeVideoSort?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -446,7 +446,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun putYouTubeChannelWatchState(profileId: kotlin.Long, channelId: kotlin.Long, youTubeChannelWatchInput: YouTubeChannelWatchInput) : Unit {
+    fun putYouTubeChannelWatchState(profileId: kotlin.String, channelId: kotlin.String, youTubeChannelWatchInput: YouTubeChannelWatchInput) : Unit {
         val localVarResponse = putYouTubeChannelWatchStateWithHttpInfo(profileId = profileId, channelId = channelId, youTubeChannelWatchInput = youTubeChannelWatchInput)
 
         return when (localVarResponse.responseType) {
@@ -476,7 +476,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun putYouTubeChannelWatchStateWithHttpInfo(profileId: kotlin.Long, channelId: kotlin.Long, youTubeChannelWatchInput: YouTubeChannelWatchInput) : ApiResponse<Unit?> {
+    fun putYouTubeChannelWatchStateWithHttpInfo(profileId: kotlin.String, channelId: kotlin.String, youTubeChannelWatchInput: YouTubeChannelWatchInput) : ApiResponse<Unit?> {
         val localVariableConfig = putYouTubeChannelWatchStateRequestConfig(profileId = profileId, channelId = channelId, youTubeChannelWatchInput = youTubeChannelWatchInput)
 
         return request<YouTubeChannelWatchInput, Unit>(
@@ -492,7 +492,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @param youTubeChannelWatchInput 
      * @return RequestConfig
      */
-    fun putYouTubeChannelWatchStateRequestConfig(profileId: kotlin.Long, channelId: kotlin.Long, youTubeChannelWatchInput: YouTubeChannelWatchInput) : RequestConfig<YouTubeChannelWatchInput> {
+    fun putYouTubeChannelWatchStateRequestConfig(profileId: kotlin.String, channelId: kotlin.String, youTubeChannelWatchInput: YouTubeChannelWatchInput) : RequestConfig<YouTubeChannelWatchInput> {
         val localVariableBody = youTubeChannelWatchInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -524,7 +524,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun setYouTubeChannelForKids(channelId: kotlin.Long, youTubeChannelForKidsInput: YouTubeChannelForKidsInput) : YouTubeChannel {
+    fun setYouTubeChannelForKids(channelId: kotlin.String, youTubeChannelForKidsInput: YouTubeChannelForKidsInput) : YouTubeChannel {
         val localVarResponse = setYouTubeChannelForKidsWithHttpInfo(channelId = channelId, youTubeChannelForKidsInput = youTubeChannelForKidsInput)
 
         return when (localVarResponse.responseType) {
@@ -554,7 +554,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun setYouTubeChannelForKidsWithHttpInfo(channelId: kotlin.Long, youTubeChannelForKidsInput: YouTubeChannelForKidsInput) : ApiResponse<YouTubeChannel?> {
+    fun setYouTubeChannelForKidsWithHttpInfo(channelId: kotlin.String, youTubeChannelForKidsInput: YouTubeChannelForKidsInput) : ApiResponse<YouTubeChannel?> {
         val localVariableConfig = setYouTubeChannelForKidsRequestConfig(channelId = channelId, youTubeChannelForKidsInput = youTubeChannelForKidsInput)
 
         return request<YouTubeChannelForKidsInput, YouTubeChannel>(
@@ -569,7 +569,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
      * @param youTubeChannelForKidsInput 
      * @return RequestConfig
      */
-    fun setYouTubeChannelForKidsRequestConfig(channelId: kotlin.Long, youTubeChannelForKidsInput: YouTubeChannelForKidsInput) : RequestConfig<YouTubeChannelForKidsInput> {
+    fun setYouTubeChannelForKidsRequestConfig(channelId: kotlin.String, youTubeChannelForKidsInput: YouTubeChannelForKidsInput) : RequestConfig<YouTubeChannelForKidsInput> {
         val localVariableBody = youTubeChannelForKidsInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

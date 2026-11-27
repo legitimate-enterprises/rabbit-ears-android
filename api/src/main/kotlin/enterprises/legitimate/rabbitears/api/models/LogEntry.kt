@@ -49,7 +49,7 @@ import kotlinx.serialization.encoding.Encoder
 data class LogEntry (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @Contextual @SerialName(value = "at")
     val at: java.time.OffsetDateTime,
@@ -65,10 +65,10 @@ data class LogEntry (
     val message: kotlin.String,
 
     @SerialName(value = "sessionId")
-    val sessionId: kotlin.Long? = null,
+    val sessionId: kotlin.String? = null,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long? = null,
+    val itemId: kotlin.String? = null,
 
     /* The exact command line an encoder was started with. */
     @SerialName(value = "ffmpegCommand")

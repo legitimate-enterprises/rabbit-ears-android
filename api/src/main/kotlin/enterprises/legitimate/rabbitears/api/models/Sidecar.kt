@@ -47,7 +47,7 @@ import kotlinx.serialization.encoding.Encoder
 data class Sidecar (
 
     @SerialName(value = "trackId")
-    val trackId: kotlin.Long,
+    val trackId: kotlin.String,
 
     @SerialName(value = "format")
     val format: Sidecar.Format,

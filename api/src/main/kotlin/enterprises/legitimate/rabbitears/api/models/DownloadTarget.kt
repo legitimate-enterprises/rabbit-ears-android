@@ -41,16 +41,16 @@ import kotlinx.serialization.Contextual
 data class DownloadTarget (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long? = null,
+    val itemId: kotlin.String? = null,
 
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     @SerialName(value = "collectionId")
-    val collectionId: kotlin.Long? = null,
+    val collectionId: kotlin.String? = null,
 
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long? = null
+    val playlistId: kotlin.String? = null
 
 ) {
 

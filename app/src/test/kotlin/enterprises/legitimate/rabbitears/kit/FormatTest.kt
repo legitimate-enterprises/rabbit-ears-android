@@ -30,21 +30,21 @@ class FormatTest {
     @Test
     fun summarizesAFilesTracks() {
         val json =
-            """{"id":1,"itemId":7,"path":"/media/Dune.Part.Two.2024.2160p.mkv","sizeBytes":24100000000,
-            "modifiedAt":"${Json.T}","bitrate":38000000,"chapters":[],"tracks":[
-            {"id":1,"streamIndex":0,"kind":"video","codec":"hevc","isDefault":true,"isForced":false,"width":3840,"height":2160,"hdrFormat":"hdr10"},
-            {"id":2,"streamIndex":1,"kind":"audio","codec":"truehd","isDefault":false,"isForced":false,"language":"en","channels":8},
-            {"id":3,"streamIndex":2,"kind":"audio","codec":"ac3","isDefault":true,"isForced":false,"language":"en","channels":6},
-            {"id":4,"streamIndex":3,"kind":"subtitle","codec":"subrip","isDefault":false,"isForced":false,"language":"en"},
-            {"id":5,"streamIndex":4,"kind":"subtitle","codec":"subrip","isDefault":false,"isForced":false,"language":"en","title":"SDH"},
-            {"id":6,"streamIndex":5,"kind":"subtitle","codec":"subrip","isDefault":false,"isForced":true,"language":"es"}]}"""
+            """{"id":"1","itemId":"7","path":"/media/Dune.Part.Two.2024.2160p.mkv","sizeBytes":24100000000,
+            "fileModifiedAt":"${Json.T}","createdAt":"${Json.T}","modifiedAt":"${Json.T}","bitrate":38000000,"chapters":[],"tracks":[
+            {"id":"1","streamIndex":0,"kind":"video","codec":"hevc","isDefault":true,"isForced":false,"width":3840,"height":2160,"hdrFormat":"hdr10"},
+            {"id":"2","streamIndex":1,"kind":"audio","codec":"truehd","isDefault":false,"isForced":false,"language":"en","channels":8},
+            {"id":"3","streamIndex":2,"kind":"audio","codec":"ac3","isDefault":true,"isForced":false,"language":"en","channels":6},
+            {"id":"4","streamIndex":3,"kind":"subtitle","codec":"subrip","isDefault":false,"isForced":false,"language":"en"},
+            {"id":"5","streamIndex":4,"kind":"subtitle","codec":"subrip","isDefault":false,"isForced":false,"language":"en","title":"SDH"},
+            {"id":"6","streamIndex":5,"kind":"subtitle","codec":"subrip","isDefault":false,"isForced":true,"language":"es"}]}"""
         val media =
             MediaSummary(
                 Serializer.kotlinxSerializationJson.decodeFromString(MediaFile.serializer(), json),
             )
         assertEquals(listOf("4K", "HDR"), media.tags)
         assertEquals("4K HDR10 · HEVC · 38 Mb/s", media.videoLine)
-        assertEquals(3L, media.defaultAudio?.id)
+        assertEquals("3", media.defaultAudio?.id)
         assertEquals("English · 7.1", media.label(media.audio.first()))
         assertEquals("English, English SDH, Spanish (forced)", media.subtitleLine)
         assertEquals("Dune.Part.Two.2024.2160p.mkv · 24.1 GB", media.fileLine)
@@ -61,7 +61,7 @@ class FormatTest {
                 "}"
         }
         val file =
-            """{"id":1,"itemId":7,"path":"/m.mkv","sizeBytes":1,"modifiedAt":"${Json.T}",""" +
+            """{"id":"1","itemId":"7","path":"/m.mkv","sizeBytes":1,"fileModifiedAt":"${Json.T}","createdAt":"${Json.T}","modifiedAt":"${Json.T}",""" +
                 """"chapters":[],"tracks":[${json.joinToString(",")}]}"""
         return MediaSummary(
                 Serializer.kotlinxSerializationJson.decodeFromString(MediaFile.serializer(), file),

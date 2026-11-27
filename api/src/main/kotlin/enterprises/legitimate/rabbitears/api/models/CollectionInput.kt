@@ -30,13 +30,18 @@ import kotlinx.serialization.Contextual
 
 /**
  * @param name
+ * @param id On createCollection: the new collection's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceCollection, an id other than the path's answers 400.
  */
 @Serializable
 
 data class CollectionInput (
 
     @SerialName(value = "name")
-    val name: kotlin.String
+    val name: kotlin.String,
+
+    /* On createCollection: the new collection's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceCollection, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null
 
 ) {
 

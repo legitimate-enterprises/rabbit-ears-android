@@ -57,7 +57,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -76,7 +76,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun addLibraryFolder(libraryId: kotlin.Long, folderInput: FolderInput) : Folder {
+    fun addLibraryFolder(libraryId: kotlin.String, folderInput: FolderInput) : Folder {
         val localVarResponse = addLibraryFolderWithHttpInfo(libraryId = libraryId, folderInput = folderInput)
 
         return when (localVarResponse.responseType) {
@@ -106,7 +106,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun addLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderInput: FolderInput) : ApiResponse<Folder?> {
+    fun addLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderInput: FolderInput) : ApiResponse<Folder?> {
         val localVariableConfig = addLibraryFolderRequestConfig(libraryId = libraryId, folderInput = folderInput)
 
         return request<FolderInput, Folder>(
@@ -121,7 +121,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param folderInput 
      * @return RequestConfig
      */
-    fun addLibraryFolderRequestConfig(libraryId: kotlin.Long, folderInput: FolderInput) : RequestConfig<FolderInput> {
+    fun addLibraryFolderRequestConfig(libraryId: kotlin.String, folderInput: FolderInput) : RequestConfig<FolderInput> {
         val localVariableBody = folderInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -225,7 +225,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteLibrary(libraryId: kotlin.Long) : Unit {
+    fun deleteLibrary(libraryId: kotlin.String) : Unit {
         val localVarResponse = deleteLibraryWithHttpInfo(libraryId = libraryId)
 
         return when (localVarResponse.responseType) {
@@ -253,7 +253,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteLibraryWithHttpInfo(libraryId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteLibraryWithHttpInfo(libraryId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteLibraryRequestConfig(libraryId = libraryId)
 
         return request<Unit, Unit>(
@@ -267,7 +267,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param libraryId 
      * @return RequestConfig
      */
-    fun deleteLibraryRequestConfig(libraryId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteLibraryRequestConfig(libraryId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -297,7 +297,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getLibrary(libraryId: kotlin.Long) : Library {
+    fun getLibrary(libraryId: kotlin.String) : Library {
         val localVarResponse = getLibraryWithHttpInfo(libraryId = libraryId)
 
         return when (localVarResponse.responseType) {
@@ -326,7 +326,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getLibraryWithHttpInfo(libraryId: kotlin.Long) : ApiResponse<Library?> {
+    fun getLibraryWithHttpInfo(libraryId: kotlin.String) : ApiResponse<Library?> {
         val localVariableConfig = getLibraryRequestConfig(libraryId = libraryId)
 
         return request<Unit, Library>(
@@ -340,7 +340,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param libraryId 
      * @return RequestConfig
      */
-    fun getLibraryRequestConfig(libraryId: kotlin.Long) : RequestConfig<Unit> {
+    fun getLibraryRequestConfig(libraryId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -371,7 +371,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getLibraryFolder(libraryId: kotlin.Long, folderId: kotlin.Long) : Folder {
+    fun getLibraryFolder(libraryId: kotlin.String, folderId: kotlin.String) : Folder {
         val localVarResponse = getLibraryFolderWithHttpInfo(libraryId = libraryId, folderId = folderId)
 
         return when (localVarResponse.responseType) {
@@ -401,7 +401,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderId: kotlin.Long) : ApiResponse<Folder?> {
+    fun getLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderId: kotlin.String) : ApiResponse<Folder?> {
         val localVariableConfig = getLibraryFolderRequestConfig(libraryId = libraryId, folderId = folderId)
 
         return request<Unit, Folder>(
@@ -416,7 +416,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param folderId 
      * @return RequestConfig
      */
-    fun getLibraryFolderRequestConfig(libraryId: kotlin.Long, folderId: kotlin.Long) : RequestConfig<Unit> {
+    fun getLibraryFolderRequestConfig(libraryId: kotlin.String, folderId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -530,7 +530,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listLibraryFolders(libraryId: kotlin.Long) : FolderPage {
+    fun listLibraryFolders(libraryId: kotlin.String) : FolderPage {
         val localVarResponse = listLibraryFoldersWithHttpInfo(libraryId = libraryId)
 
         return when (localVarResponse.responseType) {
@@ -559,7 +559,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listLibraryFoldersWithHttpInfo(libraryId: kotlin.Long) : ApiResponse<FolderPage?> {
+    fun listLibraryFoldersWithHttpInfo(libraryId: kotlin.String) : ApiResponse<FolderPage?> {
         val localVariableConfig = listLibraryFoldersRequestConfig(libraryId = libraryId)
 
         return request<Unit, FolderPage>(
@@ -573,7 +573,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param libraryId 
      * @return RequestConfig
      */
-    fun listLibraryFoldersRequestConfig(libraryId: kotlin.Long) : RequestConfig<Unit> {
+    fun listLibraryFoldersRequestConfig(libraryId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -603,7 +603,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun removeLibraryFolder(libraryId: kotlin.Long, folderId: kotlin.Long) : Unit {
+    fun removeLibraryFolder(libraryId: kotlin.String, folderId: kotlin.String) : Unit {
         val localVarResponse = removeLibraryFolderWithHttpInfo(libraryId = libraryId, folderId = folderId)
 
         return when (localVarResponse.responseType) {
@@ -632,7 +632,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun removeLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderId: kotlin.Long) : ApiResponse<Unit?> {
+    fun removeLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = removeLibraryFolderRequestConfig(libraryId = libraryId, folderId = folderId)
 
         return request<Unit, Unit>(
@@ -647,7 +647,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param folderId 
      * @return RequestConfig
      */
-    fun removeLibraryFolderRequestConfig(libraryId: kotlin.Long, folderId: kotlin.Long) : RequestConfig<Unit> {
+    fun removeLibraryFolderRequestConfig(libraryId: kotlin.String, folderId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -678,7 +678,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceLibrary(libraryId: kotlin.Long, libraryInput: LibraryInput) : Library {
+    fun replaceLibrary(libraryId: kotlin.String, libraryInput: LibraryInput) : Library {
         val localVarResponse = replaceLibraryWithHttpInfo(libraryId = libraryId, libraryInput = libraryInput)
 
         return when (localVarResponse.responseType) {
@@ -708,7 +708,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceLibraryWithHttpInfo(libraryId: kotlin.Long, libraryInput: LibraryInput) : ApiResponse<Library?> {
+    fun replaceLibraryWithHttpInfo(libraryId: kotlin.String, libraryInput: LibraryInput) : ApiResponse<Library?> {
         val localVariableConfig = replaceLibraryRequestConfig(libraryId = libraryId, libraryInput = libraryInput)
 
         return request<LibraryInput, Library>(
@@ -723,7 +723,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param libraryInput 
      * @return RequestConfig
      */
-    fun replaceLibraryRequestConfig(libraryId: kotlin.Long, libraryInput: LibraryInput) : RequestConfig<LibraryInput> {
+    fun replaceLibraryRequestConfig(libraryId: kotlin.String, libraryInput: LibraryInput) : RequestConfig<LibraryInput> {
         val localVariableBody = libraryInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -756,7 +756,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceLibraryFolder(libraryId: kotlin.Long, folderId: kotlin.Long, folderInput: FolderInput) : Folder {
+    fun replaceLibraryFolder(libraryId: kotlin.String, folderId: kotlin.String, folderInput: FolderInput) : Folder {
         val localVarResponse = replaceLibraryFolderWithHttpInfo(libraryId = libraryId, folderId = folderId, folderInput = folderInput)
 
         return when (localVarResponse.responseType) {
@@ -787,7 +787,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceLibraryFolderWithHttpInfo(libraryId: kotlin.Long, folderId: kotlin.Long, folderInput: FolderInput) : ApiResponse<Folder?> {
+    fun replaceLibraryFolderWithHttpInfo(libraryId: kotlin.String, folderId: kotlin.String, folderInput: FolderInput) : ApiResponse<Folder?> {
         val localVariableConfig = replaceLibraryFolderRequestConfig(libraryId = libraryId, folderId = folderId, folderInput = folderInput)
 
         return request<FolderInput, Folder>(
@@ -803,7 +803,7 @@ open class LibrariesApi(basePath: kotlin.String = defaultBasePath, client: Call.
      * @param folderInput 
      * @return RequestConfig
      */
-    fun replaceLibraryFolderRequestConfig(libraryId: kotlin.Long, folderId: kotlin.Long, folderInput: FolderInput) : RequestConfig<FolderInput> {
+    fun replaceLibraryFolderRequestConfig(libraryId: kotlin.String, folderId: kotlin.String, folderInput: FolderInput) : RequestConfig<FolderInput> {
         val localVariableBody = folderInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

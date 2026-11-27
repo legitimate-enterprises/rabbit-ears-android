@@ -32,6 +32,7 @@ import kotlinx.serialization.Contextual
  * @param name
  * @param issuer
  * @param clientId
+ * @param id On createSsoProvider: the new provider's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceSsoProvider, an id other than the path's answers 400.
  * @param clientSecret Write-only. On replace, absent keeps the saved secret, an empty string removes it (a public client) and anything else replaces it. 
  * @param requiredGroup Empty or absent requires none.
  * @param linksByEmail
@@ -49,6 +50,10 @@ data class SsoProviderInput (
 
     @SerialName(value = "clientId")
     val clientId: kotlin.String,
+
+    /* On createSsoProvider: the new provider's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceSsoProvider, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
 
     /* Write-only. On replace, absent keeps the saved secret, an empty string removes it (a public client) and anything else replaces it.  */
     @SerialName(value = "clientSecret")

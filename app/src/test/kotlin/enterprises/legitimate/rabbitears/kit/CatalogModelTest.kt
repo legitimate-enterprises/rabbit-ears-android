@@ -16,18 +16,18 @@ import org.junit.Test
 
 class CatalogModelTest {
     private val server = FakeServer()
-    private val model = CatalogModel(server.api(), profileId = 1)
+    private val model = CatalogModel(server.api(), profileId = "1")
 
     private fun library() {
         server.on(
             "GET /items",
             body =
                 Json.page(
-                    Json.item(1, "movie", "Dune"),
-                    Json.item(10, "show", "Severance"),
-                    Json.item(11, "season", "Season 1", parent = 10, season = 1),
-                    Json.item(101, "episode", "Good News", parent = 11, season = 1, episode = 1),
-                    Json.item(102, "episode", "Half Loop", parent = 11, season = 1, episode = 2),
+                    Json.item("1", "movie", "Dune"),
+                    Json.item("10", "show", "Severance"),
+                    Json.item("11", "season", "Season 1", parent = 10, season = 1),
+                    Json.item("101", "episode", "Good News", parent = 11, season = 1, episode = 1),
+                    Json.item("102", "episode", "Half Loop", parent = 11, season = 1, episode = 2),
                 ),
         )
         server.on("GET /profiles/1/watch-state", body = Json.page(Json.watch(101, watched = true)))
@@ -44,8 +44,8 @@ class CatalogModelTest {
                 Regex("kind=(\\w+)").find(it.query!!)!!.groupValues[1]
             }
         assertEquals(listOf("episode", "movie", "season", "show"), kinds.sorted())
-        assertTrue(model.catalog.isWatched(101))
-        assertEquals(102L, model.catalog.resumeTarget(10)?.id)
+        assertTrue(model.catalog.isWatched("101"))
+        assertEquals("102", model.catalog.resumeTarget("10")?.id)
     }
 
     @Test
@@ -57,17 +57,17 @@ class CatalogModelTest {
         val first = launch { model.load() }
         try {
             eventually { server.called("GET /items").size == 4 }
-            server.on("GET /items", body = Json.page(Json.item(2, "movie", "Flow")))
+            server.on("GET /items", body = Json.page(Json.item("2", "movie", "Flow")))
             model.load()
             assertEquals(8, server.called("GET /items").size)
-            assertEquals(2L, model.catalog.item(2)?.id)
+            assertEquals("2", model.catalog.item("2")?.id)
             library()
         } finally {
             answer.countDown()
         }
         first.join()
-        assertEquals(2L, model.catalog.item(2)?.id)
-        assertNull(model.catalog.item(1))
+        assertEquals("2", model.catalog.item("2")?.id)
+        assertNull(model.catalog.item("1"))
     }
 
     @Test
@@ -77,7 +77,7 @@ class CatalogModelTest {
         server.before = { if (it == "GET /items") answer.await() }
         val first = launch { model.load() }
         eventually { server.called("GET /items").size == 4 }
-        server.on("GET /items", body = Json.page(Json.item(2, "movie", "Flow")))
+        server.on("GET /items", body = Json.page(Json.item("2", "movie", "Flow")))
         val refresh = launch { model.reload() }
         delay(50)
         assertEquals(4, server.called("GET /items").size)
@@ -85,7 +85,7 @@ class CatalogModelTest {
         first.join()
         refresh.join()
         assertEquals(8, server.called("GET /items").size)
-        assertEquals(2L, model.catalog.item(2)?.id)
+        assertEquals("2", model.catalog.item("2")?.id)
     }
 
     /** Answers kidsContent=true as the server does: only kids' titles, whatever Hide says. */
@@ -96,14 +96,16 @@ class CatalogModelTest {
             else
                 200 to
                     when (request.url.queryParameter("kind")) {
-                        "movie" -> Json.page(Json.item(5, "movie", "Cars", kids = true))
-                        "show" -> Json.page(Json.item(30, "show", "Bing", kids = true))
+                        "movie" -> Json.page(Json.item("5", "movie", "Cars", kids = true))
+                        "show" -> Json.page(Json.item("30", "show", "Bing", kids = true))
                         "season" ->
-                            Json.page(Json.item(31, "season", "Season 1", parent = 30, season = 1))
+                            Json.page(
+                                Json.item("31", "season", "Season 1", parent = 30, season = 1),
+                            )
                         else ->
                             Json.page(
                                 Json.item(
-                                    501,
+                                    "501",
                                     "episode",
                                     "Shoes",
                                     parent = 31,
@@ -118,7 +120,7 @@ class CatalogModelTest {
     private fun kidsCalls() =
         server.called("GET /items").filter { "kidsContent=true" in it.query!! }
 
-    private fun hiding() = CatalogModel(server.api(), profileId = 1, hideKidsContent = true)
+    private fun hiding() = CatalogModel(server.api(), profileId = "1", hideKidsContent = true)
 
     @Test
     fun withHideOffThePillFiltersWhatIsLoadedAndAsksForNothingMore() = runBlocking {
@@ -126,14 +128,14 @@ class CatalogModelTest {
             "GET /items",
             body =
                 Json.page(
-                    Json.item(1, "movie", "Dune"),
-                    Json.item(2, "movie", "Flow", kids = true),
+                    Json.item("1", "movie", "Dune"),
+                    Json.item("2", "movie", "Flow", kids = true),
                 ),
         )
         server.on("GET /profiles/1/watch-state", body = Json.page())
         model.load()
         model.loadKids(ItemKind.movie)
-        assertEquals(listOf(2L), model.catalog.grid(ItemKind.movie, GridFilter.Kids).map { it.id })
+        assertEquals(listOf("2"), model.catalog.grid(ItemKind.movie, GridFilter.Kids).map { it.id })
         assertTrue(kidsCalls().isEmpty())
     }
 
@@ -151,10 +153,10 @@ class CatalogModelTest {
             kidsCalls().map { Regex("kind=(\\w+)").find(it.query!!)!!.groupValues[1] }.sorted(),
         )
         val c = model.catalog
-        assertEquals(listOf(30L), c.grid(ItemKind.show, GridFilter.Kids).map { it.id })
-        assertEquals(listOf(501L), c.episodes(30).map { it.id })
-        assertEquals(listOf(10L), c.grid(ItemKind.show).map { it.id })
-        assertTrue(c.recentlyAdded.none { it.id == 30L })
+        assertEquals(listOf("30"), c.grid(ItemKind.show, GridFilter.Kids).map { it.id })
+        assertEquals(listOf("501"), c.episodes("30").map { it.id })
+        assertEquals(listOf("10"), c.grid(ItemKind.show).map { it.id })
+        assertTrue(c.recentlyAdded.none { it.id == "30" })
         assertTrue(c.grid(ItemKind.movie, GridFilter.Kids).isEmpty())
     }
 
@@ -165,11 +167,11 @@ class CatalogModelTest {
         model.load()
         model.loadKids(ItemKind.movie)
         model.reload()
-        assertEquals(listOf(5L), model.catalog.grid(ItemKind.movie, GridFilter.Kids).map { it.id })
+        assertEquals(listOf("5"), model.catalog.grid(ItemKind.movie, GridFilter.Kids).map { it.id })
 
         model.hideKids(false)
         assertFalse(model.hideKidsContent)
-        assertNull(model.catalog.item(5))
+        assertNull(model.catalog.item("5"))
         assertTrue(model.catalog.grid(ItemKind.movie, GridFilter.Kids).isEmpty())
     }
 
@@ -226,7 +228,7 @@ class CatalogModelTest {
         model.load()
         server.on("PUT /profiles/1/watch-state/101", body = Json.watch(101, watched = true))
         server.on("PUT /profiles/1/watch-state/102", body = Json.watch(102, watched = true))
-        model.setWatched(true, model.catalog.item(11)!!)
+        model.setWatched(true, model.catalog.item("11")!!)
         assertEquals(1, server.called("PUT /profiles/1/watch-state/102").size)
         assertTrue(
             server
@@ -235,8 +237,8 @@ class CatalogModelTest {
                 .body
                 .contains(""""watched":true"""),
         )
-        assertTrue(model.catalog.isWatched(102))
-        assertEquals(0, model.catalog.unwatchedCount(10))
+        assertTrue(model.catalog.isWatched("102"))
+        assertEquals(0, model.catalog.unwatchedCount("10"))
     }
 
     @Test
@@ -244,13 +246,13 @@ class CatalogModelTest {
         server.on(
             "GET /search",
             body =
-                """{"movies":[${Json.item(1, "movie", "Dune")}],"shows":[${Json.item(2, "show", "Dune Show")}],""" +
-                    """"episodes":[${Json.item(3, "episode", "Dune Day")}],""" +
+                """{"movies":[${Json.item("1", "movie", "Dune")}],"shows":[${Json.item("2", "show", "Dune Show")}],""" +
+                    """"episodes":[${Json.item("3", "episode", "Dune Day")}],""" +
                     """"people":[],"artists":[],"albums":[],"songs":[],"channels":[],"videos":[]}""",
         )
         val found = model.search(" dune ")!!
-        assertEquals(listOf(1L), found.movies.map { it.id })
-        assertEquals(listOf(3L, 2L), found.tv.map { it.id })
+        assertEquals(listOf("1"), found.movies.map { it.id })
+        assertEquals(listOf("3", "2"), found.tv.map { it.id })
         assertTrue(server.calls.single().query!!.contains("q=dune"))
         assertFalse(found.isEmpty)
         assertNull(model.search("  "))
@@ -262,7 +264,7 @@ class CatalogModelTest {
         server.on(
             "GET /search",
             body =
-                """{"movies":[${Json.item(1, "movie", "Dune")}],"shows":[],"episodes":[],""" +
+                """{"movies":[${Json.item("1", "movie", "Dune")}],"shows":[],"episodes":[],""" +
                     """"people":[],"artists":[],"albums":[],"songs":[],"channels":[],"videos":[]}""",
         )
         val answer = CountDownLatch(1)
@@ -279,7 +281,7 @@ class CatalogModelTest {
         assertEquals(emptyList<Any?>(), shown)
     }
 
-    private fun flagged(id: Long, on: Boolean, override: Boolean?) =
+    private fun flagged(id: String, on: Boolean, override: Boolean?) =
         Json.item(id, "movie", "Dune").dropLast(1) +
             ""","kidsContent":$on""" +
             (override?.let { ""","kidsContentOverride":$it""" } ?: "") +
@@ -289,17 +291,17 @@ class CatalogModelTest {
     fun kidsContentIsOverriddenAndGivenBackToTheRating() = runBlocking {
         library()
         model.load()
-        server.on("PUT /items/1/kids-content", body = flagged(1, true, true))
-        model.setKidsContent(model.catalog.item(1)!!, true)
+        server.on("PUT /items/1/kids-content", body = flagged("1", true, true))
+        model.setKidsContent(model.catalog.item("1")!!, true)
         assertTrue(server.called("PUT /items/1/kids-content").single().body.contains("true"))
-        assertEquals(true, model.catalog.item(1)?.kidsContent)
-        assertEquals(true, model.catalog.item(1)?.kidsContentOverride)
+        assertEquals(true, model.catalog.item("1")?.kidsContent)
+        assertEquals(true, model.catalog.item("1")?.kidsContentOverride)
 
         server.on("DELETE /items/1/kids-content", 204)
-        server.on("GET /items/1", body = flagged(1, false, null))
-        model.useRating(1)
-        assertEquals(false, model.catalog.item(1)?.kidsContent)
-        assertNull(model.catalog.item(1)?.kidsContentOverride)
+        server.on("GET /items/1", body = flagged("1", false, null))
+        model.useRating("1")
+        assertEquals(false, model.catalog.item("1")?.kidsContent)
+        assertNull(model.catalog.item("1")?.kidsContentOverride)
         assertNull(model.error)
     }
 
@@ -309,20 +311,20 @@ class CatalogModelTest {
             "GET /items/2/related",
             body =
                 """{"collections":[""" +
-                    """{"collection":${Json.collection(7, "The Lord of the Rings", "tmdb")},""" +
-                    """"items":[${Json.item(1, "movie", "Fellowship")},${Json.item(3, "movie", "Return")}]},""" +
-                    """{"collection":${Json.collection(9, "Empty")},"items":[]},""" +
-                    """{"collection":${Json.collection(8, "Epics")},"items":[${Json.item(4, "movie", "Ben-Hur")}]}],""" +
-                    """"similar":[${Json.item(5, "movie", "Willow")}],""" +
-                    """"previous":${Json.item(1, "movie", "Fellowship")},"next":${Json.item(3, "movie", "Return")}}""",
+                    """{"collection":${Json.collection("7", "The Lord of the Rings", "tmdb")},""" +
+                    """"items":[${Json.item("1", "movie", "Fellowship")},${Json.item("3", "movie", "Return")}]},""" +
+                    """{"collection":${Json.collection("9", "Empty")},"items":[]},""" +
+                    """{"collection":${Json.collection("8", "Epics")},"items":[${Json.item("4", "movie", "Ben-Hur")}]}],""" +
+                    """"similar":[${Json.item("5", "movie", "Willow")}],""" +
+                    """"previous":${Json.item("1", "movie", "Fellowship")},"next":${Json.item("3", "movie", "Return")}}""",
         )
-        val related = model.related(2)!!
-        assertEquals(1L, related.previous?.id)
-        assertEquals(3L, related.next?.id)
+        val related = model.related("2")!!
+        assertEquals("1", related.previous?.id)
+        assertEquals("3", related.next?.id)
         val rows = Catalog.related(related)
         assertEquals(listOf("The Lord of the Rings", "Epics"), rows.map { it.collection.name })
         assertEquals(
-            listOf(listOf(1L, 3L), listOf(4L)),
+            listOf(listOf("1", "3"), listOf("4")),
             rows.map { row -> row.items.map { it.id } },
         )
     }
@@ -330,7 +332,7 @@ class CatalogModelTest {
     @Test
     fun anEmptyRelatedAnswerHasNoRowAndNoNeighbors() = runBlocking {
         server.on("GET /items/2/related", body = """{"collections":[],"similar":[]}""")
-        val related = model.related(2)!!
+        val related = model.related("2")!!
         assertNull(related.previous)
         assertNull(related.next)
         assertTrue(Catalog.related(related).isEmpty())
@@ -340,26 +342,26 @@ class CatalogModelTest {
     @Test
     fun aFailedRelatedReadHasNoRow() = runBlocking {
         server.on("GET /items/2/related", 500, "")
-        assertNull(model.related(2))
+        assertNull(model.related("2"))
         server.error("GET /items/2/related", 404, "not_found")
-        assertNull(model.related(2))
+        assertNull(model.related("2"))
         assertTrue(Catalog.related(null).isEmpty())
     }
 
     @Test
     fun aPersonComesWithEveryTitleCreditingThem() = runBlocking {
-        server.on("GET /people/7", body = """{"id":7,"name":"Rebecca Ferguson"}""")
+        server.on("GET /people/7", body = """{"id":"7","name":"Rebecca Ferguson"}""")
         server.on(
             "GET /items",
-            body = Json.page(Json.item(1, "movie", "Dune"), Json.item(10, "show", "Silo")),
+            body = Json.page(Json.item("1", "movie", "Dune"), Json.item("10", "show", "Silo")),
         )
-        val (person, titles) = model.person(7)!!
+        val (person, titles) = model.person("7")!!
         assertEquals("Rebecca Ferguson", person.name)
-        assertEquals(listOf(1L, 10L), titles.map { it.id })
+        assertEquals(listOf("1", "10"), titles.map { it.id })
         assertTrue(server.called("GET /items").single().query!!.contains("personId=7"))
 
         server.on("GET /people/7", 404, "")
-        assertNull(model.person(7))
+        assertNull(model.person("7"))
     }
 
     @Test
@@ -371,22 +373,22 @@ class CatalogModelTest {
                     """"width":1920,"height":1080,"bitrate":8000000}}""",
         )
         val facts = DeviceFacts(emptyList(), null, emptyList(), PathFacts())
-        assertEquals(Verdict.video_transcode, model.verdict(1, facts))
+        assertEquals(Verdict.video_transcode, model.verdict("1", facts))
         assertTrue(server.calls.single().body.contains(""""auto":true"""))
 
         server.on("POST /items/1/playability", 500, "")
-        assertNull(model.verdict(1, facts))
+        assertNull(model.verdict("1", facts))
     }
 
-    private fun file(id: Long, name: String) =
-        """{"id":$id,"itemId":1,"path":"/media/$name.mkv","sizeBytes":1000,""" +
-            """"modifiedAt":"${Json.T}","chapters":[],"tracks":[]}"""
+    private fun file(id: String, name: String) =
+        """{"id":$id,"itemId":"1","path":"/media/$name.mkv","sizeBytes":1000,""" +
+            """"fileModifiedAt":"${Json.T}","createdAt":"${Json.T}","modifiedAt":"${Json.T}","chapters":[],"tracks":[]}"""
 
     @Test
     fun aNamedFileIsReadItselfAndNoneReadsTheItemsFirst() = runBlocking {
-        server.on("GET /media-files/2", body = file(2, "Extended"))
-        server.on("GET /media-files", body = Json.page(file(1, "Standard")))
-        assertEquals(2L, model.media(1, 2)?.file?.id)
-        assertEquals(1L, model.media(1)?.file?.id)
+        server.on("GET /media-files/2", body = file("2", "Extended"))
+        server.on("GET /media-files", body = Json.page(file("1", "Standard")))
+        assertEquals("2", model.media("1", "2")?.file?.id)
+        assertEquals("1", model.media("1")?.file?.id)
     }
 }

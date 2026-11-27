@@ -38,6 +38,7 @@ import kotlinx.serialization.encoding.Encoder
 /**
  * @param name
  * @param birthday
+ * @param id On createProfile: the new kid's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceProfile, an id other than the path's answers 400.
  * @param filterMode Absent keeps the stored mode; ratings for a new kid.
  * @param movieCeiling
  * @param tvCeiling
@@ -52,6 +53,10 @@ data class ProfileInput (
 
     @Contextual @SerialName(value = "birthday")
     val birthday: java.time.LocalDate,
+
+    /* On createProfile: the new kid's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replaceProfile, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
 
     /* Absent keeps the stored mode; ratings for a new kid. */
     @Contextual @SerialName(value = "filterMode")

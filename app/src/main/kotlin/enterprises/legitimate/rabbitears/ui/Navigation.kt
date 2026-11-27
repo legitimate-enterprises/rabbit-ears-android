@@ -17,7 +17,7 @@ import enterprises.legitimate.rabbitears.kit.YouTubeModel
 
 /** A screen pushed over the current tab. */
 sealed interface Route {
-    data class Details(val id: Long) : Route
+    data class Details(val id: String) : Route
 
     data object Search : Route
 
@@ -27,23 +27,23 @@ sealed interface Route {
      * row's edition. [editionId] is the edition picked in details; none plays the default.
      */
     data class Player(
-        val itemId: Long,
+        val itemId: String,
         val startMs: Long = 0,
-        val audioTrackId: Long? = null,
+        val audioTrackId: String? = null,
         val title: String? = null,
         val run: PlaylistRun? = null,
-        val editionId: Long? = null,
+        val editionId: String? = null,
     ) : Route
 
-    data class Person(val id: Long) : Route
+    data class Person(val id: String) : Route
 
-    data class Artist(val id: Long) : Route
+    data class Artist(val id: String) : Route
 
-    data class Album(val id: Long) : Route
+    data class Album(val id: String) : Route
 
-    data class Playlist(val id: Long) : Route
+    data class Playlist(val id: String) : Route
 
-    data class Collection(val id: Long) : Route
+    data class Collection(val id: String) : Route
 
     /** An occasion in season; carries it whole, as its screen shows its name and colours. */
     data class Occasion(val occasion: enterprises.legitimate.rabbitears.api.models.ActiveOccasion) :
@@ -52,11 +52,11 @@ sealed interface Route {
     /** Now playing over everything, with Up next open when [queue]. */
     data class NowPlaying(val queue: Boolean = false) : Route
 
-    data class Channel(val id: Long) : Route
+    data class Channel(val id: String) : Route
 
-    data class Station(val id: Long) : Route
+    data class Station(val id: String) : Route
 
-    data class StationEditor(val stationId: Long? = null) : Route
+    data class StationEditor(val stationId: String? = null) : Route
 
     data object Preferences : Route
 
@@ -65,7 +65,7 @@ sealed interface Route {
     /** Tuned in to a movies or TV station; a music station plays in the music player. */
     data class Tune(val station: enterprises.legitimate.rabbitears.api.models.Station) : Route
 
-    data class Video(val id: Long) : Route
+    data class Video(val id: String) : Route
 }
 
 /**
@@ -88,10 +88,10 @@ class Navigator(
     val collections by lazy { CollectionsModel(catalog.api, offline) }
     val stations by lazy { StationsModel(catalog.api) }
     val occasions by lazy { OccasionsModel(catalog.api, catalog.profileId) }
-    private val togethers = mutableMapOf<Long, WatchTogetherModel>()
+    private val togethers = mutableMapOf<String, WatchTogetherModel>()
 
     /** Watch together on a title, kept from details into the player. */
-    fun together(itemId: Long): WatchTogetherModel? =
+    fun together(itemId: String): WatchTogetherModel? =
         togethers.getOrPut(itemId) { WatchTogetherModel(catalog.api, catalog.profileId, itemId) }
 
     fun open(route: Route) {
@@ -111,12 +111,12 @@ class Navigator(
     fun home() = stack.clear()
 
     fun play(
-        itemId: Long,
+        itemId: String,
         startMs: Long = 0,
-        audioTrackId: Long? = null,
+        audioTrackId: String? = null,
         title: String? = null,
         run: PlaylistRun? = null,
-        editionId: Long? = null,
+        editionId: String? = null,
     ) = open(Route.Player(itemId, startMs, audioTrackId, title, run, editionId))
 
     suspend fun switchProfile() = app.switchProfile()

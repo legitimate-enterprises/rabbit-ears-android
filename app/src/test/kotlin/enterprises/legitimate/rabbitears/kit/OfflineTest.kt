@@ -23,7 +23,7 @@ class OfflineTest {
     private val store = DownloadStore(Files.createTempDirectory("offline").toFile())
     private val server = FakeServer()
     private var unreachable = true
-    private val offline = OfflineLibrary(store, 1) { unreachable }
+    private val offline = OfflineLibrary(store, "1") { unreachable }
     private val scope = CoroutineScope(Job())
 
     @After fun cancel() = scope.cancel()
@@ -31,9 +31,9 @@ class OfflineTest {
     private fun meta(key: String, json: String) =
         store.meta(key).apply { parentFile!!.mkdirs() }.writeText(json)
 
-    private fun onDevice(target: DownloadTarget, vararg titles: Pair<Long, Kind>) {
+    private fun onDevice(target: DownloadTarget, vararg titles: Pair<String, Kind>) {
         store.put(
-            1,
+            "1",
             target,
             "x",
             DownloadQuality.original,
@@ -41,7 +41,7 @@ class OfflineTest {
                 DownloadTitle(
                     id,
                     kind,
-                    1,
+                    "1",
                     available = true,
                     watched = false,
                     positionMs = 0,
@@ -57,31 +57,31 @@ class OfflineTest {
 
     /** Severance with two downloaded episodes of three, and Dune. */
     private fun library() {
-        meta("item-1", Json.item(1, "movie", "Dune"))
-        meta("item-10", Json.item(10, "show", "Severance"))
-        meta("item-11", Json.item(11, "season", "Season 1", parent = 10, season = 1))
+        meta("item-1", Json.item("1", "movie", "Dune"))
+        meta("item-10", Json.item("10", "show", "Severance"))
+        meta("item-11", Json.item("11", "season", "Season 1", parent = 10, season = 1))
         meta(
             "item-101",
-            Json.item(101, "episode", "Good News", parent = 11, season = 1, episode = 1),
+            Json.item("101", "episode", "Good News", parent = 11, season = 1, episode = 1),
         )
         meta(
             "item-103",
-            Json.item(103, "episode", "In Perpetuity", parent = 11, season = 1, episode = 3),
+            Json.item("103", "episode", "In Perpetuity", parent = 11, season = 1, episode = 3),
         )
-        onDevice(DownloadTarget(itemId = 10), 101L to Kind.episode, 103L to Kind.episode)
-        onDevice(DownloadTarget(itemId = 1), 1L to Kind.movie)
+        onDevice(DownloadTarget(itemId = "10"), "101" to Kind.episode, "103" to Kind.episode)
+        onDevice(DownloadTarget(itemId = "1"), "1" to Kind.movie)
     }
 
     @Test
     fun theCatalogIsWhatIsDownloadedWithItsShowAbove() = runBlocking {
         library()
-        val model = CatalogModel(server.api(), 1, offline)
+        val model = CatalogModel(server.api(), "1", offline)
         model.load()
         assertNull(model.error)
         assertTrue(server.calls.isEmpty())
-        assertEquals(listOf(1L), model.catalog.grid(ItemKind.movie).map { it.id })
-        assertEquals(listOf(10L), model.catalog.grid(ItemKind.show).map { it.id })
-        assertEquals(listOf(101L, 103L), model.catalog.episodes(10).map { it.id })
+        assertEquals(listOf("1"), model.catalog.grid(ItemKind.movie).map { it.id })
+        assertEquals(listOf("10"), model.catalog.grid(ItemKind.show).map { it.id })
+        assertEquals(listOf("101", "103"), model.catalog.episodes("10").map { it.id })
     }
 
     @Test
@@ -89,9 +89,9 @@ class OfflineTest {
         library()
         unreachable = false
         val down = FakeServer().apply { before = { throw java.io.IOException("down") } }
-        val model = CatalogModel(down.api(), 1, offline)
+        val model = CatalogModel(down.api(), "1", offline)
         model.load()
-        assertEquals(listOf(1L), model.catalog.grid(ItemKind.movie).map { it.id })
+        assertEquals(listOf("1"), model.catalog.grid(ItemKind.movie).map { it.id })
     }
 
     @Test
@@ -100,7 +100,7 @@ class OfflineTest {
         unreachable = false
         server.error("GET /items", 500, "internal")
         server.error("GET /profiles/1/watch-state", 500, "internal")
-        val model = CatalogModel(server.api(), 1, offline)
+        val model = CatalogModel(server.api(), "1", offline)
         model.load()
         assertTrue(model.error != null)
         assertTrue(model.catalog.grid(ItemKind.movie).isEmpty())
@@ -109,55 +109,55 @@ class OfflineTest {
     @Test
     fun markingWatchedOfflineIsKeptForTheNextSync() = runBlocking {
         library()
-        val model = CatalogModel(server.api(), 1, offline)
+        val model = CatalogModel(server.api(), "1", offline)
         model.load()
-        model.setWatched(true, model.catalog.item(1)!!)
-        assertTrue(model.catalog.isWatched(1))
-        assertEquals(listOf(1L), store.unsynced(1).map { it.itemId })
+        model.setWatched(true, model.catalog.item("1")!!)
+        assertTrue(model.catalog.isWatched("1"))
+        assertEquals(listOf("1"), store.unsynced("1").map { it.itemId })
     }
 
     @Test
     fun upNextIsTheNextDownloadedEpisode() {
         library()
-        assertEquals(103L, offline.upNext(101, null)?.itemId)
-        assertNull(offline.upNext(103, null))
+        assertEquals("103", offline.upNext("101", null)?.itemId)
+        assertNull(offline.upNext("103", null))
     }
 
     @Test
     fun musicAndYouTubeShowWhatIsDownloaded() = runBlocking {
         meta(
             "song-7",
-            """{"id":7,"libraryId":2,"albumId":30,"albumTitle":"Blue","albumArtistId":40,""" +
-                """"artistId":40,"artistName":"Joni","title":"River","lossless":true,"trackNumber":2}""",
+            """{"id":"7","libraryId":"2","albumId":"30","albumTitle":"Blue","albumArtistId":"40",""" +
+                """"artistId":"40","artistName":"Joni","title":"River","lossless":true,"trackNumber":2}""",
         )
         meta(
             "album-30",
-            """{"id":30,"libraryId":2,"artistId":40,"artistName":"Joni","title":"Blue",""" +
+            """{"id":"30","libraryId":"2","artistId":"40","artistName":"Joni","title":"Blue",""" +
                 """"songCount":10,"durationMs":1,"lossless":true,"genres":[],"addedAt":"${Json.T}"}""",
         )
         meta(
             "artist-40",
-            """{"id":40,"libraryId":2,"name":"Joni","sortName":"Joni","albumCount":1,"songCount":10,"genres":[],"addedAt":"${Json.T}"}""",
+            """{"id":"40","libraryId":"2","name":"Joni","sortName":"Joni","albumCount":1,"songCount":10,"genres":[],"addedAt":"${Json.T}"}""",
         )
         meta(
             "video-9",
-            """{"id":9,"libraryId":3,"channelId":90,"channelTitle":"Tom","title":"Vlog",""" +
+            """{"id":"9","libraryId":"3","channelId":"90","channelTitle":"Tom","title":"Vlog",""" +
                 """"watched":false,"positionMs":0,"addedAt":"${Json.T}"}""",
         )
         meta(
             "channel-90",
-            """{"id":90,"libraryId":3,"title":"Tom","videoCount":5,"unwatchedCount":5,"addedAt":"${Json.T}"}""",
+            """{"id":"90","libraryId":"3","title":"Tom","videoCount":5,"unwatchedCount":5,"addedAt":"${Json.T}"}""",
         )
-        onDevice(DownloadTarget(itemId = 30), 7L to Kind.song)
-        onDevice(DownloadTarget(itemId = 9), 9L to Kind.video)
+        onDevice(DownloadTarget(itemId = "30"), "7" to Kind.song)
+        onDevice(DownloadTarget(itemId = "9"), "9" to Kind.video)
         val music = MusicModel(server.api(), offline)
-        assertEquals(listOf(7L), music.album(30)?.songs?.map { it.id })
+        assertEquals(listOf("7"), music.album("30")?.songs?.map { it.id })
         music.loadAlbums()
-        assertEquals(listOf(30L), music.albums?.map { it.id })
-        val youtube = YouTubeModel(server.api(), 1, offline)
+        assertEquals(listOf("30"), music.albums?.map { it.id })
+        val youtube = YouTubeModel(server.api(), "1", offline)
         youtube.loadChannels()
-        assertEquals(listOf(90L), youtube.channels?.map { it.id })
-        assertEquals(listOf(9L), youtube.channel(90)?.videos?.map { it.id })
+        assertEquals(listOf("90"), youtube.channels?.map { it.id })
+        assertEquals(listOf("9"), youtube.channel("90")?.videos?.map { it.id })
         assertTrue(server.calls.isEmpty())
     }
 
@@ -166,11 +166,11 @@ class OfflineTest {
         library()
         meta(
             "order-1-5",
-            """[{"entryId":1,"itemId":101,"kind":"episode"},{"entryId":1,"itemId":102,"kind":"episode"},""" +
-                """{"entryId":1,"itemId":103,"kind":"episode"}]""",
+            """[{"entryId":"1","itemId":"101","kind":"episode"},{"entryId":"1","itemId":"102","kind":"episode"},""" +
+                """{"entryId":"1","itemId":"103","kind":"episode"}]""",
         )
-        val playlists = PlaylistsModel(server.api(), 1, offline = offline)
-        assertEquals(listOf(101L, 103L), playlists.playOrder(5)?.map { it.itemId })
+        val playlists = PlaylistsModel(server.api(), "1", offline = offline)
+        assertEquals(listOf("101", "103"), playlists.playOrder("5")?.map { it.itemId })
     }
 
     @Test
@@ -178,13 +178,13 @@ class OfflineTest {
         library()
         meta(
             "playlist-1-5",
-            """{"id":5,"profileId":1,"name":"Road trip","kind":"tv","access":"owner",""" +
-                """"itemCount":2,"durationMs":0,"createdAt":"${Json.T}","updatedAt":"${Json.T}"}""",
+            """{"id":"5","profileId":"1","name":"Road trip","kind":"tv","access":"owner",""" +
+                """"itemCount":2,"durationMs":0,"createdAt":"${Json.T}","modifiedAt":"${Json.T}"}""",
         )
-        onDevice(DownloadTarget(playlistId = 5), 101L to Kind.episode)
-        val playlists = PlaylistsModel(server.api(), 1, offline = offline)
+        onDevice(DownloadTarget(playlistId = "5"), "101" to Kind.episode)
+        val playlists = PlaylistsModel(server.api(), "1", offline = offline)
         playlists.load()
-        assertEquals(listOf(5L), playlists.playlists.map { it.id })
+        assertEquals(listOf("5"), playlists.playlists.map { it.id })
         assertFalse(playlists.playlists.single().isShared)
     }
 
@@ -193,12 +193,12 @@ class OfflineTest {
         library()
         val output = PlayerModelTest.Output()
         val facts = DeviceFacts(emptyList(), null, emptyList(), PathFacts())
-        val copy = store.local(1, 1)!!
+        val copy = store.local("1", "1")!!
         val model =
             PlayerModel(
                 server.api(),
-                1,
-                1,
+                "1",
+                "1",
                 output,
                 PlayerModelTest.Capabilities(facts),
                 scope,
@@ -218,7 +218,7 @@ class OfflineTest {
             model.stop(),
         )
         assertTrue(server.calls.isEmpty())
-        val mark = store.watch(1, 1)!!
+        val mark = store.watch("1", "1")!!
         assertTrue("past 90% it is watched", mark.watched)
         assertFalse(mark.synced)
         assertTrue(mark.atMs >= before)
@@ -232,12 +232,12 @@ class OfflineTest {
         val model =
             PlayerModel(
                 server.api(),
-                1,
-                101,
+                "1",
+                "101",
                 output,
                 PlayerModelTest.Capabilities(facts),
                 scope,
-                local = store.local(1, 101),
+                local = store.local("1", "101"),
                 preferLocal = true,
                 offline = offline,
             )
@@ -246,12 +246,16 @@ class OfflineTest {
         model.tick()
         assertTrue(
             "it is remembered as watched, should the process die",
-            store.watch(1, 101)!!.watched,
+            store.watch("1", "101")!!.watched,
         )
-        assertNotNull("the file under the player stays", store.local(1, 101))
-        assertEquals("Up next at the end is still offered", 103L, offline.upNext(101, null)?.itemId)
+        assertNotNull("the file under the player stays", store.local("1", "101"))
+        assertEquals(
+            "Up next at the end is still offered",
+            "103",
+            offline.upNext("101", null)?.itemId,
+        )
         model.stop()
-        assertNull("once stopped, the keep policy removes it", store.local(1, 101))
+        assertNull("once stopped, the keep policy removes it", store.local("1", "101"))
     }
 
     @Test
@@ -264,12 +268,12 @@ class OfflineTest {
         val model =
             PlayerModel(
                 server.api(),
-                1,
-                1,
+                "1",
+                "1",
                 output,
                 PlayerModelTest.Capabilities(facts),
                 scope,
-                local = store.local(1, 1),
+                local = store.local("1", "1"),
                 preferLocal = false,
                 offline = offline,
             )

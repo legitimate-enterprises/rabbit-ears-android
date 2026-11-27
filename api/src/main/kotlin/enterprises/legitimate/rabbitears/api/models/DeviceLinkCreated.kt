@@ -40,7 +40,7 @@ import kotlinx.serialization.Contextual
 data class DeviceLinkCreated (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     /* Join-code format; the device shows it. */
     @SerialName(value = "code")

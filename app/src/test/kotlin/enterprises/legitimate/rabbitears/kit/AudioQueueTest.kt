@@ -8,14 +8,19 @@ import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-fun song(id: Long, title: String = "Song $id", album: Long = 50, durationMs: Long? = 200_000) =
+fun song(
+    id: String,
+    title: String = "Song $id",
+    album: String = "50",
+    durationMs: Long? = 200_000,
+) =
     MusicSong(
         id,
-        1,
+        "1",
         album,
         "In Rainbows",
-        40,
-        40,
+        "40",
+        "40",
         "Radiohead",
         title,
         true,
@@ -25,15 +30,15 @@ fun song(id: Long, title: String = "Song $id", album: Long = 50, durationMs: Lon
     )
 
 class AudioQueueTest {
-    private val songs = (1L..5).map { song(it) }
+    private val songs = (1..5).map { song("$it") }
 
     private fun ids(q: AudioQueue) = q.entries.map { it.song.id }
 
     @Test
     fun startsAtTheChosenSongWithTheRestUpNext() {
         val q = AudioQueue.of(songs, start = 2, source = "In Rainbows")
-        assertEquals(3L, q.current?.song?.id)
-        assertEquals(listOf(4L, 5L), q.upNext.map { it.song.id })
+        assertEquals("3", q.current?.song?.id)
+        assertEquals(listOf("4", "5"), q.upNext.map { it.song.id })
     }
 
     @Test
@@ -48,18 +53,18 @@ class AudioQueueTest {
     @Test
     fun shuffleKeepsTheCurrentSongFirstAndOffRestoresTheOrder() {
         val q = AudioQueue.of(songs, start = 2, source = "x").shuffle(true, Random(1))
-        assertEquals(3L, q.current?.song?.id)
+        assertEquals("3", q.current?.song?.id)
         assertEquals(0, q.index)
         assertEquals(songs.map { it.id }.toSet(), ids(q).toSet())
         val off = q.shuffle(false)
-        assertEquals(listOf(1L, 2L, 3L, 4L, 5L), ids(off))
-        assertEquals(3L, off.current?.song?.id)
+        assertEquals(listOf("1", "2", "3", "4", "5"), ids(off))
+        assertEquals("3", off.current?.song?.id)
     }
 
     @Test
     fun movingUpNextRenumbersSoUnshuffleKeepsTheNewOrder() {
         val q = AudioQueue.of(songs, start = 1, source = "x").move(0, 2)
-        assertEquals(listOf(1L, 2L, 4L, 5L, 3L), ids(q))
+        assertEquals(listOf("1", "2", "4", "5", "3"), ids(q))
         assertEquals(ids(q), ids(q.shuffle(false)))
         assertSame(q, q.move(0, 9))
     }
@@ -69,8 +74,8 @@ class AudioQueueTest {
         val q = AudioQueue.of(songs, start = 1, source = "x")
         assertSame(q, q.remove(q.entries[0].id))
         assertSame(q, q.remove(q.entries[1].id))
-        assertEquals(listOf(1L, 2L, 3L, 5L), ids(q.remove(q.entries[3].id)))
-        assertEquals(listOf(1L, 2L), ids(q.clearUpNext()))
+        assertEquals(listOf("1", "2", "3", "5"), ids(q.remove(q.entries[3].id)))
+        assertEquals(listOf("1", "2"), ids(q.clearUpNext()))
     }
 
     @Test

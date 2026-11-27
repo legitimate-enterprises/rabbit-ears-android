@@ -154,7 +154,7 @@ class StationsModel(val api: Api) {
     fun of(kind: PlaylistKind) = stations.filter { it.kind == kind }
 
     /** The stations of [kind] that [profileId] owns, which are the ones it may add to. */
-    fun mine(kind: PlaylistKind, profileId: Long) = of(kind).filter { it.ownerId == profileId }
+    fun mine(kind: PlaylistKind, profileId: String) = of(kind).filter { it.ownerId == profileId }
 
     /** A new private station of [kind], continuous and in order, with its own empty contents. */
     suspend fun create(name: String, kind: PlaylistKind): Station? =
@@ -177,14 +177,14 @@ class StationsModel(val api: Api) {
     }
 
     /** One station, fresh from the server, replacing its copy; null when unseen. */
-    suspend fun get(id: Long): Station? {
+    suspend fun get(id: String): Station? {
         var fresh: Station? = null
         write { fresh = api.call { stations.getStation(id) }.also(::replace) }
         return fresh
     }
 
     /** The programs of [date], by start; null when they could not be read. */
-    suspend fun schedule(id: Long, date: LocalDate): List<StationProgram>? {
+    suspend fun schedule(id: String, date: LocalDate): List<StationProgram>? {
         var programs: List<StationProgram>? = null
         write {
             programs = pages { o ->
@@ -196,7 +196,7 @@ class StationsModel(val api: Api) {
     }
 
     /** Creates a station, or replaces station [id]; null when refused, with [fieldErrors] set. */
-    suspend fun save(id: Long?, input: StationInput): Station? {
+    suspend fun save(id: String?, input: StationInput): Station? {
         var saved: Station? = null
         write {
             saved =
@@ -275,18 +275,18 @@ class StationForm(private val station: Station? = null, kind: PlaylistKind = Pla
         get() =
             StationInput(
                 name.trim(),
-                null,
-                order,
-                when (visibility) {
-                    StationVisibility.private -> StationInput.Visibility.`private`
-                    StationVisibility.household -> StationInput.Visibility.household
-                    // The server answers 403 to a visibility on a server station.
-                    StationVisibility.server -> null
-                },
-                timing,
-                if (continuous) emptySet() else days,
-                if (continuous) emptyList() else times,
-                kind.takeIf { station == null },
+                order = order,
+                visibility =
+                    when (visibility) {
+                        StationVisibility.private -> StationInput.Visibility.`private`
+                        StationVisibility.household -> StationInput.Visibility.household
+                        // The server answers 403 to a visibility on a server station.
+                        StationVisibility.server -> null
+                    },
+                timing = timing,
+                days = if (continuous) emptySet() else days,
+                times = if (continuous) emptyList() else times,
+                kind = kind.takeIf { station == null },
             )
 
     fun addRange() {
@@ -327,8 +327,8 @@ class StationTuner(
      */
     suspend fun tune(
         snapshot: CapabilitySnapshot,
-        audioTrackId: Long? = null,
-        subtitleTrackId: Long? = null,
+        audioTrackId: String? = null,
+        subtitleTrackId: String? = null,
         live: Boolean = false,
         again: suspend () -> Unit,
         cue: suspend () -> Unit,

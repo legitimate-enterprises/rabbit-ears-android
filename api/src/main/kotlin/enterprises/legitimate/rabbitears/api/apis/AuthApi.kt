@@ -68,7 +68,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -837,7 +837,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getDeviceLinkQr(linkId: kotlin.Long, token: kotlin.String) : java.io.File {
+    fun getDeviceLinkQr(linkId: kotlin.String, token: kotlin.String) : java.io.File {
         val localVarResponse = getDeviceLinkQrWithHttpInfo(linkId = linkId, token = token)
 
         return when (localVarResponse.responseType) {
@@ -867,7 +867,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getDeviceLinkQrWithHttpInfo(linkId: kotlin.Long, token: kotlin.String) : ApiResponse<java.io.File?> {
+    fun getDeviceLinkQrWithHttpInfo(linkId: kotlin.String, token: kotlin.String) : ApiResponse<java.io.File?> {
         val localVariableConfig = getDeviceLinkQrRequestConfig(linkId = linkId, token = token)
 
         return request<Unit, java.io.File>(
@@ -882,7 +882,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      * @param token The link&#39;s poll token. In the query so a TV can load the QR image by URL alone.
      * @return RequestConfig
      */
-    fun getDeviceLinkQrRequestConfig(linkId: kotlin.Long, token: kotlin.String) : RequestConfig<Unit> {
+    fun getDeviceLinkQrRequestConfig(linkId: kotlin.String, token: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1129,7 +1129,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun pollDeviceLink(linkId: kotlin.Long, token: kotlin.String) : DeviceLinkPoll {
+    fun pollDeviceLink(linkId: kotlin.String, token: kotlin.String) : DeviceLinkPoll {
         val localVarResponse = pollDeviceLinkWithHttpInfo(linkId = linkId, token = token)
 
         return when (localVarResponse.responseType) {
@@ -1159,7 +1159,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun pollDeviceLinkWithHttpInfo(linkId: kotlin.Long, token: kotlin.String) : ApiResponse<DeviceLinkPoll?> {
+    fun pollDeviceLinkWithHttpInfo(linkId: kotlin.String, token: kotlin.String) : ApiResponse<DeviceLinkPoll?> {
         val localVariableConfig = pollDeviceLinkRequestConfig(linkId = linkId, token = token)
 
         return request<Unit, DeviceLinkPoll>(
@@ -1174,7 +1174,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      * @param token The link&#39;s poll token. In the query so a TV can load the QR image by URL alone.
      * @return RequestConfig
      */
-    fun pollDeviceLinkRequestConfig(linkId: kotlin.Long, token: kotlin.String) : RequestConfig<Unit> {
+    fun pollDeviceLinkRequestConfig(linkId: kotlin.String, token: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -1412,7 +1412,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
     /**
      * GET /auth/sso/{providerId}/start
      * Sends the browser to the provider to sign in with the authorization code flow and PKCE.
-     * The redirect URI sent to the provider is this server&#39;s &#x60;/api/v1/auth/sso/callback&#x60; at the host the request names, over https when the connection is TLS or a reverse proxy on this host sent &#x60;X-Forwarded-Proto: https&#x60;. The cookie binds the sign-in to this browser for 10 minutes. A provider that is unknown, disabled or does not answer sends the browser back to the sign-in page with &#x60;#sso_error&#x3D;provider_error&#x60;. When too many sign-ins are in flight, the one closest to expiring is dropped.
+     * The redirect URI sent to the provider is this server&#39;s &#x60;/api/v2/auth/sso/callback&#x60; at the host the request names, over https when the connection is TLS or a reverse proxy on this host sent &#x60;X-Forwarded-Proto: https&#x60;. The cookie binds the sign-in to this browser for 10 minutes. A provider that is unknown, disabled or does not answer sends the browser back to the sign-in page with &#x60;#sso_error&#x3D;provider_error&#x60;. When too many sign-ins are in flight, the one closest to expiring is dropped.
      * @param providerId 
      * @param returnTo  (optional, default to SsoReturnTo.viewer)
      * @return void
@@ -1423,7 +1423,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun startSso(providerId: kotlin.Long, returnTo: SsoReturnTo? = SsoReturnTo.viewer) : Unit {
+    fun startSso(providerId: kotlin.String, returnTo: SsoReturnTo? = SsoReturnTo.viewer) : Unit {
         val localVarResponse = startSsoWithHttpInfo(providerId = providerId, returnTo = returnTo)
 
         return when (localVarResponse.responseType) {
@@ -1444,7 +1444,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
     /**
      * GET /auth/sso/{providerId}/start
      * Sends the browser to the provider to sign in with the authorization code flow and PKCE.
-     * The redirect URI sent to the provider is this server&#39;s &#x60;/api/v1/auth/sso/callback&#x60; at the host the request names, over https when the connection is TLS or a reverse proxy on this host sent &#x60;X-Forwarded-Proto: https&#x60;. The cookie binds the sign-in to this browser for 10 minutes. A provider that is unknown, disabled or does not answer sends the browser back to the sign-in page with &#x60;#sso_error&#x3D;provider_error&#x60;. When too many sign-ins are in flight, the one closest to expiring is dropped.
+     * The redirect URI sent to the provider is this server&#39;s &#x60;/api/v2/auth/sso/callback&#x60; at the host the request names, over https when the connection is TLS or a reverse proxy on this host sent &#x60;X-Forwarded-Proto: https&#x60;. The cookie binds the sign-in to this browser for 10 minutes. A provider that is unknown, disabled or does not answer sends the browser back to the sign-in page with &#x60;#sso_error&#x3D;provider_error&#x60;. When too many sign-ins are in flight, the one closest to expiring is dropped.
      * @param providerId 
      * @param returnTo  (optional, default to SsoReturnTo.viewer)
      * @return ApiResponse<Unit?>
@@ -1452,7 +1452,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun startSsoWithHttpInfo(providerId: kotlin.Long, returnTo: SsoReturnTo?) : ApiResponse<Unit?> {
+    fun startSsoWithHttpInfo(providerId: kotlin.String, returnTo: SsoReturnTo?) : ApiResponse<Unit?> {
         val localVariableConfig = startSsoRequestConfig(providerId = providerId, returnTo = returnTo)
 
         return request<Unit, Unit>(
@@ -1467,7 +1467,7 @@ open class AuthApi(basePath: kotlin.String = defaultBasePath, client: Call.Facto
      * @param returnTo  (optional, default to SsoReturnTo.viewer)
      * @return RequestConfig
      */
-    fun startSsoRequestConfig(providerId: kotlin.Long, returnTo: SsoReturnTo?) : RequestConfig<Unit> {
+    fun startSsoRequestConfig(providerId: kotlin.String, returnTo: SsoReturnTo?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {

@@ -42,10 +42,10 @@ data class AdultLink (
 
     /* The lower id of the two. */
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long,
+    val accountId: kotlin.String,
 
     @SerialName(value = "otherAccountId")
-    val otherAccountId: kotlin.Long,
+    val otherAccountId: kotlin.String,
 
     /* Whether they see each other on TVs too; off TVs they always do. */
     @SerialName(value = "tv")

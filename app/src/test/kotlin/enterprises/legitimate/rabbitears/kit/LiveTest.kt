@@ -57,13 +57,13 @@ class LiveTest {
                     ),
                     batches.map { batch -> batch.map { it.kind } },
                 )
-                assertEquals(20L, batches[0][0].itemId)
+                assertEquals("20", batches[0][0].itemId)
             }
         follow(
             page("c0"),
-            page("c1", """{"kind":"watch_state","itemId":20}"""),
+            page("c1", """{"kind":"watch_state","itemId":"20"}"""),
             page("c2"),
-            page("c3", """{"kind":"station","stationId":4}""", """{"kind":"playlist"}"""),
+            page("c3", """{"kind":"station","stationId":"4"}""", """{"kind":"playlist"}"""),
         )
         heard.join()
         assertEquals(listOf(null, "after=c0", "after=c1", "after=c2", "after=c3"), asked())
@@ -141,11 +141,11 @@ class LiveTest {
     fun aLibraryChangeIsAskedForAndHeard() = runBlocking {
         follow(page("c0"))
         assertTrue(server.called("GET /events").all { it.query!!.contains("kinds=library") })
-        val model = CatalogModel(server.api(), 2)
-        server.on("GET /items", body = Json.page(Json.item(20, "movie", "Dune")))
+        val model = CatalogModel(server.api(), "2")
+        server.on("GET /items", body = Json.page(Json.item("20", "movie", "Dune")))
         server.on("GET /profiles/2/watch-state", body = Json.page())
-        model.heard(listOf(event("""{"kind":"library","libraryId":1}""")))
-        assertEquals(20L, model.catalog.item(20)?.id)
+        model.heard(listOf(event("""{"kind":"library","libraryId":"1"}""")))
+        assertEquals("20", model.catalog.item("20")?.id)
     }
 
     @Test
@@ -157,13 +157,13 @@ class LiveTest {
     }
 
     private fun playing(
-        id: Long = 9,
+        id: String = "9",
         thisDevice: Boolean = false,
         position: Long = 2_472_000,
         movedTo: String? = null,
     ) =
-        """{"id":$id,"itemId":20,"deviceId":4,"deviceName":"Living Room","platform":"roku",""" +
-            """"thisDevice":$thisDevice,"positionMs":$position,"updatedAt":"${Json.T}"""" +
+        """{"id":$id,"itemId":"20","deviceId":"4","deviceName":"Living Room","platform":"roku",""" +
+            """"thisDevice":$thisDevice,"positionMs":$position,"createdAt":"${Json.T}","modifiedAt":"${Json.T}"""" +
             (movedTo?.let { ""","endedAt":"${Json.T}","movedToDeviceName":"$it"""" } ?: "") +
             "}"
 
@@ -171,16 +171,16 @@ class LiveTest {
     fun aTitlePlayingOnAnotherDeviceIsAskedAbout() = runBlocking {
         server.on(
             "GET /playback/sessions",
-            body = Json.page(playing(3, thisDevice = true), playing()),
+            body = Json.page(playing("3", thisDevice = true), playing()),
         )
-        val there = Handoff.elsewhere(server.api(), 20)!!
+        val there = Handoff.elsewhere(server.api(), "20")!!
         assertTrue(server.calls.single().query!!.contains("itemId=20"))
-        assertEquals(9L, there.id)
+        assertEquals("9", there.id)
         assertEquals("Playing on Living Room at 41:12", Handoff.title(there))
-        server.on("GET /playback/sessions", body = Json.page(playing(3, thisDevice = true)))
-        assertNull(Handoff.elsewhere(server.api(), 20))
+        server.on("GET /playback/sessions", body = Json.page(playing("3", thisDevice = true)))
+        assertNull(Handoff.elsewhere(server.api(), "20"))
         server.error("GET /playback/sessions", 404, "not_found")
-        assertNull(Handoff.elsewhere(server.api(), 20))
+        assertNull(Handoff.elsewhere(server.api(), "20"))
     }
 
     @Test
@@ -188,7 +188,7 @@ class LiveTest {
         ServerSocket(0, 1, InetAddress.getLoopbackAddress()).use { silent ->
             val api = Api(ServerEndpoint("http://127.0.0.1:${silent.localPort}"), "tok")
             val started = System.nanoTime()
-            assertNull(Handoff.elsewhere(api, 20, limitMs = 50))
+            assertNull(Handoff.elsewhere(api, "20", limitMs = 50))
             assertTrue("well before the read timeout", System.nanoTime() - started < 2_000_000_000)
         }
     }
@@ -197,15 +197,15 @@ class LiveTest {
     fun anAnswerInsideTheLimitIsStillAskedAboutAndOneAfterItIgnored() = runBlocking {
         server.on("GET /playback/sessions", body = Json.page(playing()))
         server.before = { Thread.sleep(10) }
-        assertEquals(9L, Handoff.elsewhere(server.api(), 20, limitMs = 30_000)?.id)
+        assertEquals("9", Handoff.elsewhere(server.api(), "20", limitMs = 30_000)?.id)
         server.before = { Thread.sleep(300) }
-        assertNull(Handoff.elsewhere(server.api(), 20, limitMs = 50))
+        assertNull(Handoff.elsewhere(server.api(), "20", limitMs = 50))
     }
 
     @Test
     fun moveHereEndsItThereAndSaysWhereItWas() = runBlocking {
         server.on("GET /playback/sessions", body = Json.page(playing()))
-        val there = Handoff.elsewhere(server.api(), 20)!!
+        val there = Handoff.elsewhere(server.api(), "20")!!
         server.on("POST /playback/sessions/9/move", body = playing(position = 2_480_000))
         assertEquals(2_480_000L, Handoff.move(server.api(), there))
     }
@@ -215,27 +215,27 @@ class LiveTest {
 
     @Test
     fun aPlayerHearsOnlyOfItsOwnSession() = runBlocking {
-        val moved = event("""{"kind":"playback","change":"moved","sessionId":7,"itemId":20}""")
-        val ended = event("""{"kind":"playback","change":"ended","sessionId":7,"itemId":20}""")
+        val moved = event("""{"kind":"playback","change":"moved","sessionId":"7","itemId":"20"}""")
+        val ended = event("""{"kind":"playback","change":"ended","sessionId":"7","itemId":"20"}""")
         val opened =
             event(
-                """{"kind":"watch_together","change":"opened","watchTogetherId":5,"sessionId":7}""",
+                """{"kind":"watch_together","change":"opened","watchTogetherId":"5","sessionId":"7"}""",
             )
-        assertTrue(Handoff.moved(listOf(ended, moved), 7))
-        assertFalse(Handoff.moved(listOf(moved), 8))
-        assertFalse(Handoff.moved(listOf(ended, opened), 7))
-        assertEquals(5L, Handoff.asked(listOf(moved, opened), 7))
-        assertNull(Handoff.asked(listOf(opened), 8))
-        server.on("GET /playback/sessions/7", body = playing(7, movedTo = "Kitchen iPad"))
-        assertEquals("Kitchen iPad", Handoff.movedTo(server.api(), 7))
+        assertTrue(Handoff.moved(listOf(ended, moved), "7"))
+        assertFalse(Handoff.moved(listOf(moved), "8"))
+        assertFalse(Handoff.moved(listOf(ended, opened), "7"))
+        assertEquals("5", Handoff.asked(listOf(moved, opened), "7"))
+        assertNull(Handoff.asked(listOf(opened), "8"))
+        server.on("GET /playback/sessions/7", body = playing("7", movedTo = "Kitchen iPad"))
+        assertEquals("Kitchen iPad", Handoff.movedTo(server.api(), "7"))
     }
 
     private fun member(device: String, role: String, thisDevice: Boolean) =
-        """{"accountId":2,"name":"Mary","role":"$role","deviceName":"$device","platform":"roku",""" +
+        """{"accountId":"2","name":"Mary","role":"$role","deviceName":"$device","platform":"roku",""" +
             """"present":true,"joinedAt":"${Json.T}","thisDevice":$thisDevice}"""
 
     private fun together(status: String, vararg members: String, playing: Boolean = false) =
-        """{"id":5,"itemId":20,"status":"$status","members":[${members.joinToString(",")}],""" +
+        """{"id":"5","itemId":"20","status":"$status","members":[${members.joinToString(",")}],""" +
             """"joinBy":"${Json.T}","joinMsLeft":252000,"playing":$playing,"positionMs":0,"version":1,""" +
             """"serverTime":"${Json.T}","openedAt":"${Json.T}","serverTimeMs":1000000,""" +
             """"effectiveAtMs":1000000,"effectivePositionMs":0}"""
@@ -244,7 +244,7 @@ class LiveTest {
     fun oneProfileOnTwoDevicesWatchesTogether() = runBlocking {
         val there = member("Living Room", "host", false)
         val here = member("Pixel", "guest", true)
-        val model = WatchTogetherModel(server.api(), 2, 20) { 1_000_000L }
+        val model = WatchTogetherModel(server.api(), "2", "20") { 1_000_000L }
         // Both players are open already; the start that follows must open no other.
         var opened = 0
         model.onStart = { opened++ }
@@ -258,19 +258,19 @@ class LiveTest {
             "PUT /watch-together/5/state",
             body = together("joined", there, here, playing = true),
         )
-        assertTrue(model.join(5, 61_000))
+        assertTrue(model.join("5", 61_000))
         assertTrue(model.inSync)
         assertEquals("Living Room", model.partnerName)
         assertTrue(server.called("PUT /watch-together/5/state").single().body.contains("61000"))
 
-        val host = WatchTogetherModel(server.api(), 2, 20) { 1_000_000L }
+        val host = WatchTogetherModel(server.api(), "2", "20") { 1_000_000L }
         host.onStart = { opened++ }
         server.on("POST /watch-together", 201, together("waiting", member("Pixel", "host", true)))
-        assertTrue(host.open(9))
+        assertTrue(host.open("9"))
         assertTrue(
-            server.called("POST /watch-together").single().body.contains(""""fromSessionId":9"""),
+            server.called("POST /watch-together").single().body.contains(""""fromSessionId":"9""""),
         )
-        assertEquals(5L, host.current?.id)
+        assertEquals("5", host.current?.id)
         server.on("GET /watch-together/5", body = together("joined", there, here, playing = true))
         host.poll()
         assertTrue(host.inSync)
@@ -279,19 +279,19 @@ class LiveTest {
 
     @Test
     fun theCatalogTakesTheWatchStateAnEventNamesAndForgetsOneTheServerDropped() = runBlocking {
-        val model = CatalogModel(server.api(), 2)
-        server.on("GET /items", body = Json.page(Json.item(20, "movie", "Dune")))
+        val model = CatalogModel(server.api(), "2")
+        server.on("GET /items", body = Json.page(Json.item("20", "movie", "Dune")))
         server.on("GET /profiles/2/watch-state", body = Json.page())
         model.load()
         server.on(
             "GET /profiles/2/watch-state/20",
             body =
-                """{"itemId":20,"positionMs":61000,"watched":false,"playCount":0,"updatedAt":"${Json.T}"}""",
+                """{"itemId":"20","positionMs":61000,"watched":false,"playCount":0,"changedAt":"${Json.T}"}""",
         )
-        model.heard(listOf(event("""{"kind":"watch_state","itemId":20}""")))
-        assertEquals(61_000L, model.catalog.watchState(20)?.positionMs)
+        model.heard(listOf(event("""{"kind":"watch_state","itemId":"20"}""")))
+        assertEquals(61_000L, model.catalog.watchState("20")?.positionMs)
         server.error("GET /profiles/2/watch-state/20", 404, "not_found")
-        model.heard(listOf(event("""{"kind":"playback","change":"ended","itemId":20}""")))
-        assertNull(model.catalog.watchState(20))
+        model.heard(listOf(event("""{"kind":"playback","change":"ended","itemId":"20"}""")))
+        assertNull(model.catalog.watchState("20"))
     }
 }

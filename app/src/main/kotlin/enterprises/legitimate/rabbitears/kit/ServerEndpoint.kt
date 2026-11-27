@@ -6,7 +6,7 @@ import java.net.URI
 data class ServerEndpoint(val base: String) {
     /** The generated client's base path. */
     val api: String
-        get() = "$base/api/v1"
+        get() = "$base/api/v2"
 
     /** A server-relative path from the API, such as a subtitle sidecar, as an absolute URL. */
     fun resolve(path: String): String = URI(base + "/").resolve(path).toString()

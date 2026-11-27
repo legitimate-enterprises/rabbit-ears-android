@@ -36,6 +36,7 @@ import kotlinx.serialization.encoding.Encoder
 /**
  * @param name
  * @param kind
+ * @param id On createPlaylist: the new playlist's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replacePlaylist, an id other than the path's answers 400.
  */
 @Serializable
 
@@ -45,7 +46,11 @@ data class PlaylistInput (
     val name: kotlin.String,
 
     @Contextual @SerialName(value = "kind")
-    val kind: PlaylistKind
+    val kind: PlaylistKind,
+
+    /* On createPlaylist: the new playlist's id, a UUIDv7 the client chose; absent, the server chooses one. An id already in use answers 409. On replacePlaylist, an id other than the path's answers 400. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null
 
 ) {
 

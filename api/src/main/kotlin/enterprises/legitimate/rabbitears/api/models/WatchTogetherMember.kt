@@ -49,7 +49,7 @@ import kotlinx.serialization.encoding.Encoder
 data class WatchTogetherMember (
 
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long,
+    val accountId: kotlin.String,
 
     /* As Helga in In sync with Helga. */
     @SerialName(value = "name")

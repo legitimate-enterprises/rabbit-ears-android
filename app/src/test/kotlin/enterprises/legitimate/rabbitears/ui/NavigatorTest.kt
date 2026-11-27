@@ -17,11 +17,11 @@ class NavigatorTest {
 
     @Test
     fun replacingTakesThePlaceOfTheTopScreenSoBackSkipsIt() {
-        val nav = Navigator(app, CatalogModel(server.api(), 1))
+        val nav = Navigator(app, CatalogModel(server.api(), "1"))
         nav.open(Route.Search)
-        nav.open(Route.Details(2))
-        nav.replace(Route.Details(3))
-        assertEquals(listOf(Route.Search, Route.Details(3)), nav.stack.toList())
+        nav.open(Route.Details("2"))
+        nav.replace(Route.Details("3"))
+        assertEquals(listOf(Route.Search, Route.Details("3")), nav.stack.toList())
         nav.back()
         assertEquals(listOf<Route>(Route.Search), nav.stack.toList())
     }
@@ -29,20 +29,20 @@ class NavigatorTest {
     /** The server offers a kid Watch together only on titles the kid may see. */
     @Test
     fun aKidWatchesTogetherAsAnAdultDoes() = runBlocking {
-        val kid = Json.account(3, "Joan", kind = "kid")
+        val kid = Json.account("3", "Joan", kind = "kid")
         server.on(
             "POST /auth/sign-in",
             201,
-            """{"token":"t1","me":${Json.me(1, Json.account(1, "Helga"), kid)}}""",
+            """{"token":"t1","me":${Json.me(1, Json.account("1", "Helga"), kid)}}""",
         )
         server.on("POST /profiles/3/unlock", 204)
         app.signIn("192.168.1.20", "a@example.com", "pw")
         app.choose(app.profiles.last())
-        val nav = Navigator(app, CatalogModel(server.api(), 3))
+        val nav = Navigator(app, CatalogModel(server.api(), "3"))
 
-        val together = nav.together(101)
+        val together = nav.together("101")
         assertNotNull(together)
-        assertSame(together, nav.together(101))
-        assertEquals(101L, together?.itemId)
+        assertSame(together, nav.together("101"))
+        assertEquals("101", together?.itemId)
     }
 }

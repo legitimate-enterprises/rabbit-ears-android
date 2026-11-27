@@ -58,10 +58,10 @@ import kotlinx.serialization.encoding.Encoder
 data class WatchTogether (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @Contextual @SerialName(value = "status")
     val status: WatchTogetherStatus,
@@ -110,7 +110,7 @@ data class WatchTogether (
 
     /* Who paused last, while paused, as Helga paused. */
     @SerialName(value = "pausedById")
-    val pausedById: kotlin.Long? = null,
+    val pausedById: kotlin.String? = null,
 
     @SerialName(value = "pausedByName")
     val pausedByName: kotlin.String? = null,

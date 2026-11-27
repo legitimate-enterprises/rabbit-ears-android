@@ -37,7 +37,7 @@ import kotlinx.serialization.Contextual
 data class SsoOption (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     /* The button reads \"Sign in with <name>\". */
     @SerialName(value = "name")

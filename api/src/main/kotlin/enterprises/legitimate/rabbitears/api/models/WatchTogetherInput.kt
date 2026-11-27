@@ -37,11 +37,11 @@ import kotlinx.serialization.Contextual
 data class WatchTogetherInput (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     /* Watch together from \"Playing on\": the active profile's session on another device, open on this item. The Watch together opens at that session's position, and its device, told by a watch_together event naming the session, joins from its player and plays for both. Any other session answers 400. */
     @SerialName(value = "fromSessionId")
-    val fromSessionId: kotlin.Long? = null
+    val fromSessionId: kotlin.String? = null
 
 ) {
 

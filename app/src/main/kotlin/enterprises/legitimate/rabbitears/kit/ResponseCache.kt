@@ -29,7 +29,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
  */
 class ResponseCache(private val directory: File, private val downloads: DownloadStore? = null) {
     /** The profile the server answers as; null, as while locked, keeps and answers nothing. */
-    var profile: Long? = null
+    var profile: String? = null
         get() = synchronized(this) { field }
         set(value) = synchronized(this) { field = value }
 
@@ -110,7 +110,7 @@ class ResponseCache(private val directory: File, private val downloads: Download
      * without asking. shortcut: nothing evicts a kept answer short of sign-out or the system
      * clearing the cache directory; prune by age if it grows large.
      */
-    fun keep(kept: Kept, key: String, profile: Long, refreshed: Boolean = false): Boolean =
+    fun keep(kept: Kept, key: String, profile: String, refreshed: Boolean = false): Boolean =
         synchronized(this) {
             if (this.profile != profile) return false
             val written = runCatching {
@@ -130,7 +130,7 @@ class ResponseCache(private val directory: File, private val downloads: Download
         }
 
     /** True when the profile asking is still active, so its views read again. */
-    fun drop(key: String, profile: Long): Boolean =
+    fun drop(key: String, profile: String): Boolean =
         synchronized(this) {
             if (this.profile != profile) return false
             file(key).delete()
@@ -179,7 +179,7 @@ class ResponseCache(private val directory: File, private val downloads: Download
     private fun ask(
         chain: Interceptor.Chain,
         key: String,
-        profile: Long,
+        profile: String,
         kept: Kept?,
         segments: List<String>,
     ): Response {
@@ -215,7 +215,7 @@ class ResponseCache(private val directory: File, private val downloads: Download
         behind: OkHttpClient,
         request: Request,
         key: String,
-        profile: Long,
+        profile: String,
         kept: Kept,
     ) {
         val sent = System.currentTimeMillis()
@@ -273,7 +273,7 @@ class ResponseCache(private val directory: File, private val downloads: Download
         if (unlock || method == "POST" && segments == listOf("me", "lock")) profile = null
         val response = chain.proceed(chain.request())
         if (marks) expire()
-        if (unlock && response.isSuccessful) profile = segments[1].toLongOrNull()
+        if (unlock && response.isSuccessful) profile = segments[1]
         return response
     }
 
@@ -299,7 +299,7 @@ class ResponseCache(private val directory: File, private val downloads: Download
         request: Request,
         segments: List<String>,
     ): ByteArray {
-        val profileId = segments.getOrNull(1)?.toLongOrNull()
+        val profileId = segments.getOrNull(1)
         if (downloads == null || profileId == null || !matches("profiles/*/watch-state", segments))
             return body
         val mine = downloads.unsynced(profileId).map { it.asWatchState() }
@@ -325,7 +325,7 @@ class ResponseCache(private val directory: File, private val downloads: Download
          */
         val keptOnly = ThreadLocal<Boolean>()
 
-        private val API = listOf("api", "v1")
+        private val API = listOf("api", "v2")
         private val JSON = "application/json".toMediaType()
 
         /**

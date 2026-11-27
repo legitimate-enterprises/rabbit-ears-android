@@ -41,7 +41,7 @@ import kotlinx.serialization.Contextual
 data class Credit (
 
     @SerialName(value = "personId")
-    val personId: kotlin.Long,
+    val personId: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,

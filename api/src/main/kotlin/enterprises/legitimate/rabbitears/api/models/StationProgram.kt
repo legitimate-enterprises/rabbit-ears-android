@@ -54,10 +54,10 @@ import kotlinx.serialization.encoding.Encoder
 data class StationProgram (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long,
+    val editionId: kotlin.String,
 
     @Contextual @SerialName(value = "kind")
     val kind: PlaylistEntryKind,

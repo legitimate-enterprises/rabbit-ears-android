@@ -13,25 +13,29 @@ import org.junit.Test
 class CustomImagesTest {
     private val server = FakeServer()
     private val model = CustomImageModel(server.api())
-    private val playlist = ImageTarget.Playlist(profileId = 1, playlistId = 3)
+    private val playlist = ImageTarget.Playlist(profileId = "1", playlistId = "3")
 
-    private fun entry(id: Long, json: String) =
-        """{"id":$id,"playlistId":3,"position":$id,"kind":"movie","itemCount":1,"durationMs":0,""" +
-            """"addedAt":"${Json.T}"$json}"""
+    private fun entry(id: String, json: String) =
+        """{"id":$id,"playlistId":"3","position":$id,"kind":"movie","itemCount":1,"durationMs":0,""" +
+            """"addedAt":"${Json.T}","createdAt":"${Json.T}","modifiedAt":"${Json.T}"$json}"""
 
     @Test
     fun offersEachTitleOnceWithABackdropOnlyForVideo() {
         val entries =
             listOf(
-                    entry(1, ""","itemId":7,"item":${Json.item(7, "movie", "Heat")}"""),
-                    entry(2, ""","itemId":7,"item":${Json.item(7, "movie", "Heat")}"""),
-                    entry(3, ""","itemId":8"""),
-                    entry(4, ""","collectionId":2"""),
+                    entry("1", ""","itemId":"7","item":${Json.item("7", "movie", "Heat")}"""),
+                    entry("2", ""","itemId":"7","item":${Json.item("7", "movie", "Heat")}"""),
+                    entry("3", ""","itemId":"8""""),
+                    entry("4", ""","collectionId":"2""""),
                 )
                 .map { Serializer.kotlinxSerializationJson.decodeFromString<PlaylistEntry>(it) }
         val choices = CustomImage.choices(entries)
         assertEquals(
-            listOf(7L to ArtworkKind.poster, 7L to ArtworkKind.backdrop, 8L to ArtworkKind.poster),
+            listOf(
+                "7" to ArtworkKind.poster,
+                "7" to ArtworkKind.backdrop,
+                "8" to ArtworkKind.poster,
+            ),
             choices.map { it.itemId to it.kind },
         )
         assertEquals("Heat, backdrop", choices[1].label)
@@ -46,21 +50,23 @@ class CustomImagesTest {
         assertTrue(model.set(ImageSource.File(byteArrayOf(1, 2, 3)), playlist))
         assertEquals(3, server.called("PUT /profiles/1/playlists/3/image").single().body.length)
 
-        assertTrue(model.set(ImageSource.Artwork(7, ArtworkKind.backdrop), ImageTarget.Station(5)))
+        assertTrue(
+            model.set(ImageSource.Artwork("7", ArtworkKind.backdrop), ImageTarget.Station("5")),
+        )
         assertEquals(
-            """{"itemId":7,"kind":"backdrop"}""",
+            """{"itemId":"7","kind":"backdrop"}""",
             server.called("PUT /stations/5/image").last().body,
         )
 
         assertTrue(
-            model.set(ImageSource.Link("  https://example.com/a.png "), ImageTarget.Station(5)),
+            model.set(ImageSource.Link("  https://example.com/a.png "), ImageTarget.Station("5")),
         )
         assertEquals(
             """{"url":"https://example.com/a.png"}""",
             server.called("PUT /stations/5/image").last().body,
         )
 
-        assertTrue(model.remove(ImageTarget.Station(5)))
+        assertTrue(model.remove(ImageTarget.Station("5")))
         assertEquals(1, server.called("DELETE /stations/5/image").size)
         assertNull(model.error)
     }
@@ -84,10 +90,10 @@ class CustomImagesTest {
             Serializer.kotlinxSerializationJson.decodeFromString<
                 enterprises.legitimate.rabbitears.api.models.Station,
             >(
-                StationJson.station(5, StationJson.onAir("off_schedule")),
+                StationJson.station("5", StationJson.onAir("off_schedule")),
             )
-        val request = ImageRequest.of(station, profileId = 1)
-        assertEquals(ImageTarget.Station(5), request.target)
+        val request = ImageRequest.of(station, profileId = "1")
+        assertEquals(ImageTarget.Station("5"), request.target)
         assertEquals(station.playlistId, request.playlistId)
     }
 }

@@ -51,7 +51,7 @@ data class Me (
 
     /* The profile this device currently acts as; the adult after sign in. */
     @SerialName(value = "activeProfileId")
-    val activeProfileId: kotlin.Long,
+    val activeProfileId: kotlin.String,
 
     /* The household's adults and kids, owner first. Pending adults are included only while the owner is the active profile.  */
     @SerialName(value = "profiles")

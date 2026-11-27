@@ -48,6 +48,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param progress
  * @param downloads The downloads that need it.
  * @param createdAt
+ * @param modifiedAt
  * @param codec The converted picture's codec.
  * @param error
  * @param startedAt
@@ -58,10 +59,10 @@ import kotlinx.serialization.encoding.Encoder
 data class Conversion (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "mediaFileId")
-    val mediaFileId: kotlin.Long,
+    val mediaFileId: kotlin.String,
 
     @SerialName(value = "status")
     val status: Conversion.Status,
@@ -93,6 +94,9 @@ data class Conversion (
 
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* The converted picture's codec. */
     @SerialName(value = "codec")

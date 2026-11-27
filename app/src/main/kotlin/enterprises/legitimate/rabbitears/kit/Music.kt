@@ -59,9 +59,9 @@ class MusicModel(val api: Api, private val offline: OfflineLibrary? = null) {
         private set
 
     /** What each list was last read for, [LiveFeed.watched] included. */
-    private var albumsFor: Pair<Long?, Int>? = null
-    private var artistsFor: Pair<Long?, Int>? = null
-    private var songsFor: Triple<SongSort, Long?, Int>? = null
+    private var albumsFor: Pair<String?, Int>? = null
+    private var artistsFor: Pair<String?, Int>? = null
+    private var songsFor: Triple<SongSort, String?, Int>? = null
 
     /** The next load of each list reads it again, as a pull to refresh needs. */
     fun forget() {
@@ -75,7 +75,7 @@ class MusicModel(val api: Api, private val offline: OfflineLibrary? = null) {
      * passes tens of thousands of songs. Offline, the device's lists stand whatever the genre. A
      * list is read again once [watched] has moved.
      */
-    suspend fun loadAlbums(genreId: Long? = null, watched: Int = 0) {
+    suspend fun loadAlbums(genreId: String? = null, watched: Int = 0) {
         if (albums != null && albumsFor == genreId to watched) return
         read({ albums() }) {
                 pages { o ->
@@ -91,7 +91,7 @@ class MusicModel(val api: Api, private val offline: OfflineLibrary? = null) {
             }
     }
 
-    suspend fun loadArtists(genreId: Long? = null, watched: Int = 0) {
+    suspend fun loadArtists(genreId: String? = null, watched: Int = 0) {
         if (artists != null && artistsFor == genreId to watched) return
         read({ artists() }) {
                 pages { o ->
@@ -109,7 +109,7 @@ class MusicModel(val api: Api, private val offline: OfflineLibrary? = null) {
 
     suspend fun loadSongs(
         sort: SongSort = SongSort.Title,
-        genreId: Long? = null,
+        genreId: String? = null,
         watched: Int = 0,
     ) {
         if (songs != null && songsFor == Triple(sort, genreId, watched)) return
@@ -151,7 +151,7 @@ class MusicModel(val api: Api, private val offline: OfflineLibrary? = null) {
     }
         .getOrDefault(emptyList())
 
-    suspend fun artist(id: Long): ArtistDetail? =
+    suspend fun artist(id: String): ArtistDetail? =
         read({ artist(id) }) {
             ArtistDetail(
                 api.call { music.getMusicArtist(id) },
@@ -174,7 +174,7 @@ class MusicModel(val api: Api, private val offline: OfflineLibrary? = null) {
             )
         }
 
-    suspend fun album(id: Long): AlbumDetail? =
+    suspend fun album(id: String): AlbumDetail? =
         read({ album(id) }) {
             AlbumDetail(
                 api.call { music.getMusicAlbum(id) },
@@ -186,7 +186,7 @@ class MusicModel(val api: Api, private val offline: OfflineLibrary? = null) {
         }
 
     /** Every song an artist plays, album by album, for Play and Shuffle on Artist. */
-    suspend fun songsBy(artistId: Long): List<MusicSong> =
+    suspend fun songsBy(artistId: String): List<MusicSong> =
         read({ songsBy(artistId) }) {
                 pages { o ->
                     api.call {

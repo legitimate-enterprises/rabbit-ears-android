@@ -38,6 +38,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param itemId
  * @param quality
  * @param snapshot
+ * @param id The new download's id, a UUIDv7 the client chose; absent, the server chooses one. Used only when a new download is made: a file already claimed answers its download, with that download's id. An id already in use by another download answers 409.
  * @param editionId An edition of the item; absent is the default.
  * @param audioTrackId The audio a conversion keeps; absent is the default track. The file itself keeps all of its own.
  */
@@ -46,7 +47,7 @@ import kotlinx.serialization.encoding.Encoder
 data class DownloadInput (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @Contextual @SerialName(value = "quality")
     val quality: DownloadQuality,
@@ -54,13 +55,17 @@ data class DownloadInput (
     @SerialName(value = "snapshot")
     val snapshot: CapabilitySnapshot,
 
+    /* The new download's id, a UUIDv7 the client chose; absent, the server chooses one. Used only when a new download is made: a file already claimed answers its download, with that download's id. An id already in use by another download answers 409. */
+    @SerialName(value = "id")
+    val id: kotlin.String? = null,
+
     /* An edition of the item; absent is the default. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     /* The audio a conversion keeps; absent is the default track. The file itself keeps all of its own. */
     @SerialName(value = "audioTrackId")
-    val audioTrackId: kotlin.Long? = null
+    val audioTrackId: kotlin.String? = null
 
 ) {
 

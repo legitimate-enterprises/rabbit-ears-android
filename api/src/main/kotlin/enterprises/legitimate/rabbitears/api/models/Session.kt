@@ -44,7 +44,8 @@ import kotlinx.serialization.encoding.Encoder
  * @param plan
  * @param encoder Video encoder of the entry in use; none for direct play and copied video.
  * @param startedAt
- * @param updatedAt
+ * @param createdAt
+ * @param modifiedAt
  * @param transcodeReason Why the entry in use is not direct play. Known only for sessions this server process started.
  * @param endedAt
  */
@@ -53,19 +54,19 @@ import kotlinx.serialization.encoding.Encoder
 data class Session (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "deviceId")
-    val deviceId: kotlin.Long,
+    val deviceId: kotlin.String,
 
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long,
+    val accountId: kotlin.String,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "mediaFileId")
-    val mediaFileId: kotlin.Long,
+    val mediaFileId: kotlin.String,
 
     @SerialName(value = "positionMs")
     val positionMs: kotlin.Long,
@@ -84,8 +85,11 @@ data class Session (
     @Contextual @SerialName(value = "startedAt")
     val startedAt: java.time.OffsetDateTime,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "createdAt")
+    val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* Why the entry in use is not direct play. Known only for sessions this server process started. */
     @SerialName(value = "transcodeReason")

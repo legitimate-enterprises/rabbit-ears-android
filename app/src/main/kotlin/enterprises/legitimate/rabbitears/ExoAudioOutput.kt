@@ -75,7 +75,7 @@ class ExoAudioOutput(context: Context, private val onPlay: () -> Unit) : AudioOu
         val item =
             MediaItem.Builder()
                 .setUri(url)
-                .setMediaId(song.id.toString())
+                .setMediaId(song.id)
                 .setMediaMetadata(metadata)
                 .apply { if (hls) setMimeType(MimeTypes.APPLICATION_M3U8) }
                 .build()

@@ -111,7 +111,7 @@ enum class AddTarget(val noun: String) {
     Station("station"),
 }
 
-private class AddOption(val name: String, val caption: String, val playlistId: Long)
+private class AddOption(val name: String, val caption: String, val playlistId: String)
 
 /**
  * A container, such as a show or an album, stays one entry; with [collection] the id is a
@@ -122,10 +122,10 @@ private class AddOption(val name: String, val caption: String, val playlistId: L
 fun AddTo(
     target: AddTarget,
     kind: PlaylistKind,
-    itemId: Long,
+    itemId: String,
     collection: Boolean = false,
-    editionId: Long? = null,
-    itemIds: List<Long>? = null,
+    editionId: String? = null,
+    itemIds: List<String>? = null,
     onDone: () -> Unit,
 ) {
     val nav = LocalNav.current
@@ -134,8 +134,8 @@ fun AddTo(
     val scope = rememberCoroutineScope()
     var name by remember { mutableStateOf("") }
     var busy by remember { mutableStateOf(false) }
-    var chosen by remember { mutableStateOf<Long?>(null) }
-    var made by remember { mutableStateOf<Long?>(null) }
+    var chosen by remember { mutableStateOf<String?>(null) }
+    var made by remember { mutableStateOf<String?>(null) }
     var rescheduling by remember { mutableStateOf<Station?>(null) }
     LaunchedEffect(model) {
         if (target == AddTarget.Playlist) model.load() else stations.load(kind)
@@ -147,7 +147,7 @@ fun AddTo(
             stations.mine(kind, nav.catalog.profileId).map {
                 AddOption(it.name, it.rating ?: "", it.playlistId)
             }
-    val add = { playlistId: Long, edition: Long? ->
+    val add = { playlistId: String, edition: String? ->
         busy = true
         chosen = playlistId
         scope.launch {
@@ -268,7 +268,7 @@ fun LazyGridScope.playlistCells(kind: PlaylistKind, nav: Navigator, onNew: () ->
 }
 
 @Composable
-fun PlaylistScreen(id: Long) {
+fun PlaylistScreen(id: String) {
     val nav = LocalNav.current
     val model = nav.playlists
     val scope = rememberCoroutineScope()
@@ -297,7 +297,7 @@ fun PlaylistScreen(id: Long) {
     var version by remember { mutableStateOf(0) }
     val loaded = rememberLoaded(id, version) { model.entries(id) }
     val entries = loaded.value
-    val play = { entryId: Long?, shuffled: Boolean ->
+    val play = { entryId: String?, shuffled: Boolean ->
         playlist?.let { scope.launch { playFrom(nav, it, entryId, shuffled) } }
         Unit
     }
@@ -448,7 +448,7 @@ fun LazyListScope.entryRows(
 private suspend fun playFrom(
     nav: Navigator,
     playlist: Playlist,
-    entryId: Long?,
+    entryId: String?,
     shuffled: Boolean,
 ) {
     val rows = nav.playlists.playOrder(playlist.id)?.takeIf { it.isNotEmpty() } ?: return

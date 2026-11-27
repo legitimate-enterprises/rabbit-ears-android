@@ -64,7 +64,7 @@ import kotlinx.serialization.encoding.Encoder
 data class Track (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "streamIndex")
     val streamIndex: kotlin.Int,

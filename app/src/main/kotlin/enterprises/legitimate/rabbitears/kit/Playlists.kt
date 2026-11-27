@@ -19,14 +19,14 @@ import enterprises.legitimate.rabbitears.api.models.PlaylistPlayOrderItem
  * playing. The server expanded every container, so nothing here does.
  */
 data class PlaylistRun(
-    val playlistId: Long,
+    val playlistId: String,
     val rows: List<PlaylistPlayOrderItem>,
     val index: Int = 0,
 ) {
-    val itemId: Long
+    val itemId: String
         get() = rows[index].itemId
 
-    val editionId: Long?
+    val editionId: String?
         get() = rows[index].editionId
 
     val editionName: String?
@@ -70,7 +70,7 @@ val PlaylistEntry.caption: String
 /**
  * The item whose artwork stands for the entry, a song's being its album's; none for a collection.
  */
-val PlaylistEntry.artId: Long?
+val PlaylistEntry.artId: String?
     get() = song?.albumId ?: itemId
 
 /** Whether the profile owns the playlist, and so alone renames, deletes and shares it. */
@@ -96,7 +96,7 @@ val Playlist.sharedBy: String?
  */
 class PlaylistsModel(
     val api: Api,
-    val profileId: Long,
+    val profileId: String,
     val adult: Boolean = true,
     private val offline: OfflineLibrary? = null,
 ) {
@@ -173,7 +173,7 @@ class PlaylistsModel(
         }
 
     /** The entries top to bottom; null when they could not be read. */
-    suspend fun entries(playlistId: Long): List<PlaylistEntry>? {
+    suspend fun entries(playlistId: String): List<PlaylistEntry>? {
         var entries: List<PlaylistEntry>? = null
         write {
             entries =
@@ -195,7 +195,7 @@ class PlaylistsModel(
     }
 
     /** What playing the playlist plays, first to last; null when it could not be read. */
-    suspend fun playOrder(playlistId: Long): List<PlaylistPlayOrderItem>? {
+    suspend fun playOrder(playlistId: String): List<PlaylistPlayOrderItem>? {
         var rows: List<PlaylistPlayOrderItem>? = null
         write {
             rows =
@@ -224,7 +224,7 @@ class PlaylistsModel(
      * Adds an item last; false when the server refused, as for a song in a movies playlist, or when
      * the title has several editions and [editionId] named none, which then fills [editions].
      */
-    suspend fun add(itemId: Long, playlistId: Long, editionId: Long? = null): Boolean {
+    suspend fun add(itemId: String, playlistId: String, editionId: String? = null): Boolean {
         editions = emptyList()
         return addEntry(PlaylistEntryInput(itemId = itemId, editionId = editionId), playlistId) &&
             editions.isEmpty()
@@ -234,7 +234,7 @@ class PlaylistsModel(
      * Appends a selection in one request, to a playlist or a station's own; a title of several
      * editions takes its default one.
      */
-    suspend fun add(itemIds: List<Long>, playlistId: Long): Boolean = write {
+    suspend fun add(itemIds: List<String>, playlistId: String): Boolean = write {
         api.call {
             playlists.addPlaylistEntries(
                 profileId,
@@ -246,10 +246,10 @@ class PlaylistsModel(
     }
 
     /** Adds a collection last, as one entry that the play order expands. */
-    suspend fun addCollection(collectionId: Long, playlistId: Long): Boolean =
+    suspend fun addCollection(collectionId: String, playlistId: String): Boolean =
         addEntry(PlaylistEntryInput(collectionId = collectionId), playlistId)
 
-    private suspend fun addEntry(input: PlaylistEntryInput, playlistId: Long): Boolean = write {
+    private suspend fun addEntry(input: PlaylistEntryInput, playlistId: String): Boolean = write {
         try {
             api.call { playlists.addPlaylistEntry(profileId, playlistId, input) }
         } catch (e: Exception) {
@@ -276,14 +276,18 @@ class PlaylistsModel(
                 profileId,
                 entry.playlistId,
                 entry.id,
-                PlaylistEntryInput(entry.itemId, entry.collectionId, maxOf(0, position)),
+                PlaylistEntryInput(
+                    itemId = entry.itemId,
+                    collectionId = entry.collectionId,
+                    position = maxOf(0, position),
+                ),
             )
         }
         refresh(entry.playlistId)
     }
 
     /** Item counts, length and artwork change with every entry write. */
-    private suspend fun refresh(id: Long) {
+    private suspend fun refresh(id: String) {
         val fresh = api.call { playlists.getPlaylist(profileId, id) }
         playlists = playlists.map { if (it.id == id) fresh else it }
     }

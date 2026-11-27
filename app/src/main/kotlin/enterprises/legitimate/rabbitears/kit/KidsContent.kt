@@ -8,8 +8,8 @@ import androidx.compose.runtime.setValue
  * Which list-managed kids allow one movie, show or channel on their manual allow lists, and the
  * toggle for each. The server answers only for the kids of the device's household.
  */
-class KidAllowList(private val api: Api, private val itemId: Long) {
-    var allowed by mutableStateOf<Set<Long>>(emptySet())
+class KidAllowList(private val api: Api, private val itemId: String) {
+    var allowed by mutableStateOf<Set<String>>(emptySet())
         private set
 
     var error by mutableStateOf<String?>(null)
@@ -24,7 +24,7 @@ class KidAllowList(private val api: Api, private val itemId: Long) {
         }
     }
 
-    suspend fun toggle(kidId: Long) {
+    suspend fun toggle(kidId: String) {
         val allow = kidId !in allowed
         try {
             api.call {

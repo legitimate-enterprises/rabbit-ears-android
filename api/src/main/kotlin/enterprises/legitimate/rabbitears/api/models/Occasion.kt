@@ -37,17 +37,21 @@ import kotlinx.serialization.Contextual
  * @param daysAfter
  * @param keywordIds TMDB keyword ids; movies and shows carrying any are members.
  * @param phrases Phrases to title the occasion's Home row in place of its name, in the order given; ActiveOccasion.headline is one of them.
+ * @param createdAt
+ * @param modifiedAt
  * @param holiday A Holiday key; absent when anchored to month and day.
  * @param month
  * @param day
  * @param colors Three colors, as #RRGGBB, for the wash behind the occasion's screen; absent or empty keeps the plain background.
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class Occasion (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,
@@ -66,6 +70,12 @@ data class Occasion (
     @SerialName(value = "phrases")
     val phrases: kotlin.collections.List<kotlin.String>,
 
+    @Contextual @SerialName(value = "createdAt")
+    val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
+
     /* A Holiday key; absent when anchored to month and day. */
     @SerialName(value = "holiday")
     val holiday: kotlin.String? = null,
@@ -78,7 +88,15 @@ data class Occasion (
 
     /* Three colors, as #RRGGBB, for the wash behind the occasion's screen; absent or empty keeps the plain background. */
     @SerialName(value = "colors")
-    val colors: kotlin.collections.List<kotlin.String>? = null
+    val colors: kotlin.collections.List<kotlin.String>? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

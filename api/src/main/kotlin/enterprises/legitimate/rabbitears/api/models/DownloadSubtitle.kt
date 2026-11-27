@@ -42,7 +42,7 @@ import kotlinx.serialization.Contextual
 data class DownloadSubtitle (
 
     @SerialName(value = "trackId")
-    val trackId: kotlin.Long,
+    val trackId: kotlin.String,
 
     /* Shown by default, as when streaming. */
     @SerialName(value = "isForced")

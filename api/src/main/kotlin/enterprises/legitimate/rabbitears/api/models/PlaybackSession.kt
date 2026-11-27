@@ -43,7 +43,8 @@ import kotlinx.serialization.encoding.Encoder
  * @param platform
  * @param thisDevice The calling device plays it.
  * @param positionMs The last position the device reported.
- * @param updatedAt When the device last reported.
+ * @param createdAt
+ * @param modifiedAt When the device last reported.
  * @param endedAt
  * @param movedToDeviceName The device Move here took it to, as Moved to Kitchen iPad; set only on a session ended that way.
  */
@@ -52,13 +53,13 @@ import kotlinx.serialization.encoding.Encoder
 data class PlaybackSession (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "deviceId")
-    val deviceId: kotlin.Long,
+    val deviceId: kotlin.String,
 
     /* As Living Room in Playing on Living Room at 41:12. */
     @SerialName(value = "deviceName")
@@ -75,9 +76,12 @@ data class PlaybackSession (
     @SerialName(value = "positionMs")
     val positionMs: kotlin.Long,
 
+    @Contextual @SerialName(value = "createdAt")
+    val createdAt: java.time.OffsetDateTime,
+
     /* When the device last reported. */
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     @Contextual @SerialName(value = "endedAt")
     val endedAt: java.time.OffsetDateTime? = null,

@@ -45,11 +45,11 @@ import kotlinx.serialization.encoding.Encoder
 data class PlaylistHouseholdShare (
 
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long,
+    val playlistId: kotlin.String,
 
     /* The household it is shared with. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long,
+    val householdId: kotlin.String,
 
     /* That household's name. */
     @SerialName(value = "name")

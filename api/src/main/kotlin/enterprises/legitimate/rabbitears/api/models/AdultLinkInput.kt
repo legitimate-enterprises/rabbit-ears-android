@@ -38,10 +38,10 @@ import kotlinx.serialization.Contextual
 data class AdultLinkInput (
 
     @SerialName(value = "accountId")
-    val accountId: kotlin.Long,
+    val accountId: kotlin.String,
 
     @SerialName(value = "otherAccountId")
-    val otherAccountId: kotlin.Long,
+    val otherAccountId: kotlin.String,
 
     @SerialName(value = "tv")
     val tv: kotlin.Boolean? = false

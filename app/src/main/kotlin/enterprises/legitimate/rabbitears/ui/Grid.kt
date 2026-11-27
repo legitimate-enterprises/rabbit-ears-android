@@ -68,7 +68,7 @@ fun Grid(kind: ItemKind) {
     val tv = kind == ItemKind.show
     var stored by rememberStored("grid.${kind.name}.filter", GridFilter.All)
     var sort by rememberStored("grid.${kind.name}.sort", GridSort.RecentlyAdded)
-    var genre by rememberSaveable(kind) { mutableStateOf<Long?>(null) }
+    var genre by rememberSaveable(kind) { mutableStateOf<String?>(null) }
     var view by rememberSaveable(kind) { mutableStateOf(GridView.Titles) }
     var creating by remember { mutableStateOf(false) }
     var creatingCollection by remember { mutableStateOf(false) }

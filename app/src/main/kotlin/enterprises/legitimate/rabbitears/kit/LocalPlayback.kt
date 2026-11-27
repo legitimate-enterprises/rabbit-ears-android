@@ -13,12 +13,12 @@ data class LocalCopy(
     val file: File,
     val subtitles: List<Pair<StoredSubtitle, File>>,
     val runtimeMs: Long?,
-    val editionId: Long?,
+    val editionId: String?,
 )
 
 object LocalPlayback {
     /** The session id a local copy plays under; the server never hears of it. */
-    const val SESSION = -1L
+    const val SESSION = "local"
 
     /** A title counts as watched once this share of it has played, as the server counts it. */
     const val WATCHED_SHARE = 0.9
@@ -29,7 +29,7 @@ object LocalPlayback {
     fun stream(copy: LocalCopy, positionMs: Long) =
         PlaybackStream(
             sessionId = SESSION,
-            mediaFileId = 0,
+            mediaFileId = "",
             entry =
                 PlanEntry(
                     0,
@@ -66,7 +66,7 @@ object LocalPlayback {
         else api.bytes(url).body?.decodeToString()
 }
 
-fun DownloadStore.local(profileId: Long, itemId: Long): LocalCopy? {
+fun DownloadStore.local(profileId: String, itemId: String): LocalCopy? {
     val title = onDevice(profileId, itemId) ?: return null
     val file = media(title.file ?: return null).takeIf { it.exists() } ?: return null
     return LocalCopy(

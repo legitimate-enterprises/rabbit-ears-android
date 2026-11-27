@@ -32,7 +32,7 @@ enum class MemberAction {
          * owner manages other adults and makes kids adults. Any adult shares anyone joined whose
          * household this is, themself included. An adult only visiting does none of it.
          */
-        fun allowed(member: Account, active: Account?, ownerId: Long?): Set<MemberAction> {
+        fun allowed(member: Account, active: Account?, ownerId: String?): Set<MemberAction> {
             if (active?.kind != AccountKind.adult || active.present == true) return emptySet()
             val owner = active.id == ownerId
             val share = if (member.pending || member.present == true) emptySet() else setOf(Share)
@@ -54,7 +54,7 @@ fun AppModel.invite(invite: HouseholdInvite) =
     Invite(invite.joinCode.code, signedIn().endpoint.resolve(invite.joinCode.link))
 
 /** Who a member is, under their name in Manage household. */
-fun Account.memberLine(ownerId: Long?): String {
+fun Account.memberLine(ownerId: String?): String {
     if (pending) {
         val expires = inviteExpiresAt ?: return "Awaiting sign-in · code expired"
         val day =
@@ -172,9 +172,9 @@ class HouseholdModel(private val app: AppModel) {
         }
     }
 
-    suspend fun allow(kid: Account, itemId: Long) = call { profiles.allowItem(kid.id, itemId) }
+    suspend fun allow(kid: Account, itemId: String) = call { profiles.allowItem(kid.id, itemId) }
 
-    suspend fun disallow(kid: Account, itemId: Long) = call {
+    suspend fun disallow(kid: Account, itemId: String) = call {
         profiles.disallowItem(kid.id, itemId)
     }
 

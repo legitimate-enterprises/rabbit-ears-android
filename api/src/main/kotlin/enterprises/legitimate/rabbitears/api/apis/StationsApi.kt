@@ -59,7 +59,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -150,7 +150,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteStation(stationId: kotlin.Long) : Unit {
+    fun deleteStation(stationId: kotlin.String) : Unit {
         val localVarResponse = deleteStationWithHttpInfo(stationId = stationId)
 
         return when (localVarResponse.responseType) {
@@ -178,7 +178,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteStationWithHttpInfo(stationId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteStationWithHttpInfo(stationId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteStationRequestConfig(stationId = stationId)
 
         return request<Unit, Unit>(
@@ -192,7 +192,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param stationId 
      * @return RequestConfig
      */
-    fun deleteStationRequestConfig(stationId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteStationRequestConfig(stationId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -221,7 +221,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun deleteStationImage(stationId: kotlin.Long) : Unit {
+    fun deleteStationImage(stationId: kotlin.String) : Unit {
         val localVarResponse = deleteStationImageWithHttpInfo(stationId = stationId)
 
         return when (localVarResponse.responseType) {
@@ -249,7 +249,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun deleteStationImageWithHttpInfo(stationId: kotlin.Long) : ApiResponse<Unit?> {
+    fun deleteStationImageWithHttpInfo(stationId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = deleteStationImageRequestConfig(stationId = stationId)
 
         return request<Unit, Unit>(
@@ -263,7 +263,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param stationId 
      * @return RequestConfig
      */
-    fun deleteStationImageRequestConfig(stationId: kotlin.Long) : RequestConfig<Unit> {
+    fun deleteStationImageRequestConfig(stationId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -293,7 +293,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getStation(stationId: kotlin.Long) : Station {
+    fun getStation(stationId: kotlin.String) : Station {
         val localVarResponse = getStationWithHttpInfo(stationId = stationId)
 
         return when (localVarResponse.responseType) {
@@ -322,7 +322,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getStationWithHttpInfo(stationId: kotlin.Long) : ApiResponse<Station?> {
+    fun getStationWithHttpInfo(stationId: kotlin.String) : ApiResponse<Station?> {
         val localVariableConfig = getStationRequestConfig(stationId = stationId)
 
         return request<Unit, Station>(
@@ -336,7 +336,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param stationId 
      * @return RequestConfig
      */
-    fun getStationRequestConfig(stationId: kotlin.Long) : RequestConfig<Unit> {
+    fun getStationRequestConfig(stationId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -357,7 +357,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * The station&#39;s custom image, which Station.imageUrl points at.
      * Anyone who sees the station. Not found while it has none, and, for a title&#39;s artwork, while that title is not one of its playlist&#39;s entries or the active profile may not see it.
      * @param stationId 
-     * @param v Read by nothing; imageUrl carries it so that a new image has a new address. (optional)
+     * @param v Read by nothing; imageUrl carries it, the image&#39;s id, so that a new image has a new address. (optional)
      * @param ifNoneMatch  (optional)
      * @return java.io.File
      * @throws IllegalStateException If the request is not correctly configured
@@ -368,7 +368,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getStationImage(stationId: kotlin.Long, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
+    fun getStationImage(stationId: kotlin.String, v: kotlin.String? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
         val localVarResponse = getStationImageWithHttpInfo(stationId = stationId, v = v, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
@@ -391,7 +391,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * The station&#39;s custom image, which Station.imageUrl points at.
      * Anyone who sees the station. Not found while it has none, and, for a title&#39;s artwork, while that title is not one of its playlist&#39;s entries or the active profile may not see it.
      * @param stationId 
-     * @param v Read by nothing; imageUrl carries it so that a new image has a new address. (optional)
+     * @param v Read by nothing; imageUrl carries it, the image&#39;s id, so that a new image has a new address. (optional)
      * @param ifNoneMatch  (optional)
      * @return ApiResponse<java.io.File?>
      * @throws IllegalStateException If the request is not correctly configured
@@ -399,7 +399,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getStationImageWithHttpInfo(stationId: kotlin.Long, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+    fun getStationImageWithHttpInfo(stationId: kotlin.String, v: kotlin.String?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
         val localVariableConfig = getStationImageRequestConfig(stationId = stationId, v = v, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
@@ -411,11 +411,11 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * To obtain the request config of the operation getStationImage
      *
      * @param stationId 
-     * @param v Read by nothing; imageUrl carries it so that a new image has a new address. (optional)
+     * @param v Read by nothing; imageUrl carries it, the image&#39;s id, so that a new image has a new address. (optional)
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getStationImageRequestConfig(stationId: kotlin.Long, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    fun getStationImageRequestConfig(stationId: kotlin.String, v: kotlin.String?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -454,7 +454,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listStationSchedule(stationId: kotlin.Long, date: java.time.LocalDate? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : StationProgramPage {
+    fun listStationSchedule(stationId: kotlin.String, date: java.time.LocalDate? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : StationProgramPage {
         val localVarResponse = listStationScheduleWithHttpInfo(stationId = stationId, date = date, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -486,7 +486,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listStationScheduleWithHttpInfo(stationId: kotlin.Long, date: java.time.LocalDate?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<StationProgramPage?> {
+    fun listStationScheduleWithHttpInfo(stationId: kotlin.String, date: java.time.LocalDate?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<StationProgramPage?> {
         val localVariableConfig = listStationScheduleRequestConfig(stationId = stationId, date = date, limit = limit, offset = offset)
 
         return request<Unit, StationProgramPage>(
@@ -503,7 +503,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listStationScheduleRequestConfig(stationId: kotlin.Long, date: java.time.LocalDate?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listStationScheduleRequestConfig(stationId: kotlin.String, date: java.time.LocalDate?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -635,7 +635,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceStation(stationId: kotlin.Long, stationInput: StationInput) : Station {
+    fun replaceStation(stationId: kotlin.String, stationInput: StationInput) : Station {
         val localVarResponse = replaceStationWithHttpInfo(stationId = stationId, stationInput = stationInput)
 
         return when (localVarResponse.responseType) {
@@ -665,7 +665,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceStationWithHttpInfo(stationId: kotlin.Long, stationInput: StationInput) : ApiResponse<Station?> {
+    fun replaceStationWithHttpInfo(stationId: kotlin.String, stationInput: StationInput) : ApiResponse<Station?> {
         val localVariableConfig = replaceStationRequestConfig(stationId = stationId, stationInput = stationInput)
 
         return request<StationInput, Station>(
@@ -680,7 +680,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param stationInput 
      * @return RequestConfig
      */
-    fun replaceStationRequestConfig(stationId: kotlin.Long, stationInput: StationInput) : RequestConfig<StationInput> {
+    fun replaceStationRequestConfig(stationId: kotlin.String, stationInput: StationInput) : RequestConfig<StationInput> {
         val localVariableBody = stationInput
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -712,7 +712,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun replaceStationImage(stationId: kotlin.Long, body: java.io.File) : Station {
+    fun replaceStationImage(stationId: kotlin.String, body: java.io.File) : Station {
         val localVarResponse = replaceStationImageWithHttpInfo(stationId = stationId, body = body)
 
         return when (localVarResponse.responseType) {
@@ -742,7 +742,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun replaceStationImageWithHttpInfo(stationId: kotlin.Long, body: java.io.File) : ApiResponse<Station?> {
+    fun replaceStationImageWithHttpInfo(stationId: kotlin.String, body: java.io.File) : ApiResponse<Station?> {
         val localVariableConfig = replaceStationImageRequestConfig(stationId = stationId, body = body)
 
         return request<java.io.File, Station>(
@@ -757,7 +757,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param body 
      * @return RequestConfig
      */
-    fun replaceStationImageRequestConfig(stationId: kotlin.Long, body: java.io.File) : RequestConfig<java.io.File> {
+    fun replaceStationImageRequestConfig(stationId: kotlin.String, body: java.io.File) : RequestConfig<java.io.File> {
         val localVariableBody = body
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -788,7 +788,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun rescheduleStation(stationId: kotlin.Long) : Station {
+    fun rescheduleStation(stationId: kotlin.String) : Station {
         val localVarResponse = rescheduleStationWithHttpInfo(stationId = stationId)
 
         return when (localVarResponse.responseType) {
@@ -817,7 +817,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun rescheduleStationWithHttpInfo(stationId: kotlin.Long) : ApiResponse<Station?> {
+    fun rescheduleStationWithHttpInfo(stationId: kotlin.String) : ApiResponse<Station?> {
         val localVariableConfig = rescheduleStationRequestConfig(stationId = stationId)
 
         return request<Unit, Station>(
@@ -831,7 +831,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param stationId 
      * @return RequestConfig
      */
-    fun rescheduleStationRequestConfig(stationId: kotlin.Long) : RequestConfig<Unit> {
+    fun rescheduleStationRequestConfig(stationId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -862,7 +862,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun startStationPlayback(stationId: kotlin.Long, stationPlaybackRequest: StationPlaybackRequest) : StationPlayback {
+    fun startStationPlayback(stationId: kotlin.String, stationPlaybackRequest: StationPlaybackRequest) : StationPlayback {
         val localVarResponse = startStationPlaybackWithHttpInfo(stationId = stationId, stationPlaybackRequest = stationPlaybackRequest)
 
         return when (localVarResponse.responseType) {
@@ -892,7 +892,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun startStationPlaybackWithHttpInfo(stationId: kotlin.Long, stationPlaybackRequest: StationPlaybackRequest) : ApiResponse<StationPlayback?> {
+    fun startStationPlaybackWithHttpInfo(stationId: kotlin.String, stationPlaybackRequest: StationPlaybackRequest) : ApiResponse<StationPlayback?> {
         val localVariableConfig = startStationPlaybackRequestConfig(stationId = stationId, stationPlaybackRequest = stationPlaybackRequest)
 
         return request<StationPlaybackRequest, StationPlayback>(
@@ -907,7 +907,7 @@ open class StationsApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param stationPlaybackRequest 
      * @return RequestConfig
      */
-    fun startStationPlaybackRequestConfig(stationId: kotlin.Long, stationPlaybackRequest: StationPlaybackRequest) : RequestConfig<StationPlaybackRequest> {
+    fun startStationPlaybackRequestConfig(stationId: kotlin.String, stationPlaybackRequest: StationPlaybackRequest) : RequestConfig<StationPlaybackRequest> {
         val localVariableBody = stationPlaybackRequest
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()

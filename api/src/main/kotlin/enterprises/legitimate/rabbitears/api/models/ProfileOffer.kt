@@ -47,16 +47,19 @@ import kotlinx.serialization.encoding.Encoder
  * @param toProfileId The adult offered to.
  * @param toName
  * @param createdAt
+ * @param modifiedAt
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class ProfileOffer (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "profileId")
-    val profileId: kotlin.Long,
+    val profileId: kotlin.String,
 
     @SerialName(value = "profileName")
     val profileName: kotlin.String,
@@ -66,27 +69,38 @@ data class ProfileOffer (
 
     /* The offering household. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long,
+    val householdId: kotlin.String,
 
     @SerialName(value = "householdName")
     val householdName: kotlin.String,
 
     /* The adult who offered. */
     @SerialName(value = "fromProfileId")
-    val fromProfileId: kotlin.Long,
+    val fromProfileId: kotlin.String,
 
     @SerialName(value = "fromName")
     val fromName: kotlin.String,
 
     /* The adult offered to. */
     @SerialName(value = "toProfileId")
-    val toProfileId: kotlin.Long,
+    val toProfileId: kotlin.String,
 
     @SerialName(value = "toName")
     val toName: kotlin.String,
 
     @Contextual @SerialName(value = "createdAt")
-    val createdAt: java.time.OffsetDateTime
+    val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

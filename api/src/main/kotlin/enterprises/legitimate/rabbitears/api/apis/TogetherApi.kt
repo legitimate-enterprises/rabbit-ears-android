@@ -55,7 +55,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
     companion object {
         @JvmStatic
         val defaultBasePath: String by lazy {
-            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v1")
+            System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
     }
 
@@ -76,7 +76,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getWatchTogether(watchTogetherId: kotlin.Long, after: kotlin.Int? = null, rttMs: kotlin.Int? = null, floorMs: kotlin.Int? = null) : WatchTogether {
+    fun getWatchTogether(watchTogetherId: kotlin.String, after: kotlin.Int? = null, rttMs: kotlin.Int? = null, floorMs: kotlin.Int? = null) : WatchTogether {
         val localVarResponse = getWatchTogetherWithHttpInfo(watchTogetherId = watchTogetherId, after = after, rttMs = rttMs, floorMs = floorMs)
 
         return when (localVarResponse.responseType) {
@@ -108,7 +108,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getWatchTogetherWithHttpInfo(watchTogetherId: kotlin.Long, after: kotlin.Int?, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : ApiResponse<WatchTogether?> {
+    fun getWatchTogetherWithHttpInfo(watchTogetherId: kotlin.String, after: kotlin.Int?, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : ApiResponse<WatchTogether?> {
         val localVariableConfig = getWatchTogetherRequestConfig(watchTogetherId = watchTogetherId, after = after, rttMs = rttMs, floorMs = floorMs)
 
         return request<Unit, WatchTogether>(
@@ -125,7 +125,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param floorMs The least lead, in milliseconds, the member&#39;s player needs to start on time, for a platform that starts imprecisely. Used with &#x60;rttMs&#x60;. (optional)
      * @return RequestConfig
      */
-    fun getWatchTogetherRequestConfig(watchTogetherId: kotlin.Long, after: kotlin.Int?, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : RequestConfig<Unit> {
+    fun getWatchTogetherRequestConfig(watchTogetherId: kotlin.String, after: kotlin.Int?, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -166,7 +166,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun joinWatchTogether(watchTogetherId: kotlin.Long) : WatchTogether {
+    fun joinWatchTogether(watchTogetherId: kotlin.String) : WatchTogether {
         val localVarResponse = joinWatchTogetherWithHttpInfo(watchTogetherId = watchTogetherId)
 
         return when (localVarResponse.responseType) {
@@ -195,7 +195,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun joinWatchTogetherWithHttpInfo(watchTogetherId: kotlin.Long) : ApiResponse<WatchTogether?> {
+    fun joinWatchTogetherWithHttpInfo(watchTogetherId: kotlin.String) : ApiResponse<WatchTogether?> {
         val localVariableConfig = joinWatchTogetherRequestConfig(watchTogetherId = watchTogetherId)
 
         return request<Unit, WatchTogether>(
@@ -209,7 +209,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param watchTogetherId 
      * @return RequestConfig
      */
-    fun joinWatchTogetherRequestConfig(watchTogetherId: kotlin.Long) : RequestConfig<Unit> {
+    fun joinWatchTogetherRequestConfig(watchTogetherId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -238,7 +238,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws ServerException If the API returns a server error response
      */
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun leaveWatchTogether(watchTogetherId: kotlin.Long) : Unit {
+    fun leaveWatchTogether(watchTogetherId: kotlin.String) : Unit {
         val localVarResponse = leaveWatchTogetherWithHttpInfo(watchTogetherId = watchTogetherId)
 
         return when (localVarResponse.responseType) {
@@ -266,7 +266,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @throws IOException Rethrows the OkHttp execute method exception
      */
     @Throws(IllegalStateException::class, IOException::class)
-    fun leaveWatchTogetherWithHttpInfo(watchTogetherId: kotlin.Long) : ApiResponse<Unit?> {
+    fun leaveWatchTogetherWithHttpInfo(watchTogetherId: kotlin.String) : ApiResponse<Unit?> {
         val localVariableConfig = leaveWatchTogetherRequestConfig(watchTogetherId = watchTogetherId)
 
         return request<Unit, Unit>(
@@ -280,7 +280,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param watchTogetherId 
      * @return RequestConfig
      */
-    fun leaveWatchTogetherRequestConfig(watchTogetherId: kotlin.Long) : RequestConfig<Unit> {
+    fun leaveWatchTogetherRequestConfig(watchTogetherId: kotlin.String) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
@@ -312,7 +312,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun listWatchTogethers(itemId: kotlin.Long? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : WatchTogetherPage {
+    fun listWatchTogethers(itemId: kotlin.String? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : WatchTogetherPage {
         val localVarResponse = listWatchTogethersWithHttpInfo(itemId = itemId, limit = limit, offset = offset)
 
         return when (localVarResponse.responseType) {
@@ -343,7 +343,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun listWatchTogethersWithHttpInfo(itemId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<WatchTogetherPage?> {
+    fun listWatchTogethersWithHttpInfo(itemId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<WatchTogetherPage?> {
         val localVariableConfig = listWatchTogethersRequestConfig(itemId = itemId, limit = limit, offset = offset)
 
         return request<Unit, WatchTogetherPage>(
@@ -359,7 +359,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param offset  (optional, default to 0)
      * @return RequestConfig
      */
-    fun listWatchTogethersRequestConfig(itemId: kotlin.Long?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+    fun listWatchTogethersRequestConfig(itemId: kotlin.String?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
         val localVariableBody = null
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {
@@ -477,7 +477,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun setWatchTogetherState(watchTogetherId: kotlin.Long, watchTogetherStateInput: WatchTogetherStateInput, rttMs: kotlin.Int? = null, floorMs: kotlin.Int? = null) : WatchTogether {
+    fun setWatchTogetherState(watchTogetherId: kotlin.String, watchTogetherStateInput: WatchTogetherStateInput, rttMs: kotlin.Int? = null, floorMs: kotlin.Int? = null) : WatchTogether {
         val localVarResponse = setWatchTogetherStateWithHttpInfo(watchTogetherId = watchTogetherId, watchTogetherStateInput = watchTogetherStateInput, rttMs = rttMs, floorMs = floorMs)
 
         return when (localVarResponse.responseType) {
@@ -509,7 +509,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun setWatchTogetherStateWithHttpInfo(watchTogetherId: kotlin.Long, watchTogetherStateInput: WatchTogetherStateInput, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : ApiResponse<WatchTogether?> {
+    fun setWatchTogetherStateWithHttpInfo(watchTogetherId: kotlin.String, watchTogetherStateInput: WatchTogetherStateInput, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : ApiResponse<WatchTogether?> {
         val localVariableConfig = setWatchTogetherStateRequestConfig(watchTogetherId = watchTogetherId, watchTogetherStateInput = watchTogetherStateInput, rttMs = rttMs, floorMs = floorMs)
 
         return request<WatchTogetherStateInput, WatchTogether>(
@@ -526,7 +526,7 @@ open class TogetherApi(basePath: kotlin.String = defaultBasePath, client: Call.F
      * @param floorMs The least lead, in milliseconds, the member&#39;s player needs to start on time, for a platform that starts imprecisely. Used with &#x60;rttMs&#x60;. (optional)
      * @return RequestConfig
      */
-    fun setWatchTogetherStateRequestConfig(watchTogetherId: kotlin.Long, watchTogetherStateInput: WatchTogetherStateInput, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : RequestConfig<WatchTogetherStateInput> {
+    fun setWatchTogetherStateRequestConfig(watchTogetherId: kotlin.String, watchTogetherStateInput: WatchTogetherStateInput, rttMs: kotlin.Int?, floorMs: kotlin.Int?) : RequestConfig<WatchTogetherStateInput> {
         val localVariableBody = watchTogetherStateInput
         val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
             .apply {

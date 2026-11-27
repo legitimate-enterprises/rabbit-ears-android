@@ -50,7 +50,7 @@ import kotlinx.serialization.encoding.Encoder
 data class UpNext (
 
     @SerialName(value = "itemId")
-    val itemId: kotlin.Long,
+    val itemId: kotlin.String,
 
     @SerialName(value = "kind")
     val kind: UpNext.Kind,
@@ -61,7 +61,7 @@ data class UpNext (
 
     /* From a playlist, the edition its row plays; absent for the default. */
     @SerialName(value = "editionId")
-    val editionId: kotlin.Long? = null,
+    val editionId: kotlin.String? = null,
 
     /* From a playlist, the row's index in the play order, which the next getUpNext passes. */
     @SerialName(value = "index")

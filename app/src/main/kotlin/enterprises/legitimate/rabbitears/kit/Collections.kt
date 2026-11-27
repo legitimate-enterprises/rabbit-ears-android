@@ -14,7 +14,7 @@ val Collection.caption: String
     get() = Format.plural(movieCount, "movie")
 
 /** The movies with [itemId] at [to], as a drag shows them before the server answers. */
-fun List<Item>.moved(itemId: Long, to: Int): List<Item> {
+fun List<Item>.moved(itemId: String, to: Int): List<Item> {
     val at = indexOfFirst { it.id == itemId }
     if (at < 0) return this
     return toMutableList().apply { add(to.coerceIn(0, lastIndex), removeAt(at)) }
@@ -52,7 +52,7 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
     }
 
     /** One collection, fresh from the server, replacing its copy in the list; null when unseen. */
-    suspend fun get(id: Long): Collection? {
+    suspend fun get(id: String): Collection? {
         var fresh: Collection? = null
         write {
             fresh =
@@ -64,7 +64,7 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
     }
 
     /** The movies in release order; null when they could not be read. */
-    suspend fun movies(id: Long): List<Item>? {
+    suspend fun movies(id: String): List<Item>? {
         var movies: List<Item>? = null
         write {
             movies =
@@ -81,7 +81,7 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
     }
 
     /** The collections a movie is in; only its details carry them. */
-    suspend fun ofMovie(itemId: Long): List<Collection> = runCatching {
+    suspend fun ofMovie(itemId: String): List<Collection> = runCatching {
         api.call { items.getItem(itemId) }.collections
     }
         .getOrNull()
@@ -118,12 +118,12 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
         collections = collections.filter { it.id != collection.id }
     }
 
-    suspend fun add(collectionId: Long, itemId: Long) = write {
+    suspend fun add(collectionId: String, itemId: String) = write {
         api.call { collections.addCollectionMovie(collectionId, itemId) }
         replace(api.call { collections.getCollection(collectionId) })
     }
 
-    suspend fun remove(collectionId: Long, itemId: Long) = write {
+    suspend fun remove(collectionId: String, itemId: String) = write {
         api.call { collections.removeCollectionMovie(collectionId, itemId) }
         replace(api.call { collections.getCollection(collectionId) })
     }
@@ -132,7 +132,7 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
      * Puts a movie at [to], counted from 0 among the rows the caller shows; the server counts all
      * the movies, so with some hidden the index can differ. The caller reads the movies again.
      */
-    suspend fun move(collectionId: Long, itemId: Long, to: Int) = write {
+    suspend fun move(collectionId: String, itemId: String, to: Int) = write {
         replace(
             api.call {
                 collections.replaceCollectionMoviePosition(
@@ -145,7 +145,7 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
     }
 
     /** Back to release order. */
-    suspend fun resetOrder(collectionId: Long) = write {
+    suspend fun resetOrder(collectionId: String) = write {
         replace(api.call { collections.resetCollectionOrder(collectionId) })
     }
 

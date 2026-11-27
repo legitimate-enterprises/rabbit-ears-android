@@ -55,16 +55,18 @@ import kotlinx.serialization.encoding.Encoder
  * @param times
  * @param onAir
  * @param createdAt
- * @param updatedAt
+ * @param modifiedAt
  * @param rating For display: the highest rating of anything the playlist contains, on the MPAA scale for movies and the TV Parental Guidelines for tv. Absent for music, for an empty playlist, and when anything it contains is unrated or rated off that scale. Recalculated hourly and by rescheduleStation only. Which kids see the station does not follow it; see listStations.
  * @param imageUrl Server-relative URL of the custom image the owner set, served by getStationImage with the device token like artwork; it changes whenever the image does. Absent while none is set, and while getStationImage would not find it.
+ * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
+ * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
  */
 @Serializable
 
 data class Station (
 
     @SerialName(value = "id")
-    val id: kotlin.Long,
+    val id: kotlin.String,
 
     @SerialName(value = "name")
     val name: kotlin.String,
@@ -74,15 +76,15 @@ data class Station (
 
     /* The adult profile that owns it. */
     @SerialName(value = "ownerId")
-    val ownerId: kotlin.Long,
+    val ownerId: kotlin.String,
 
     /* The owner's household. */
     @SerialName(value = "householdId")
-    val householdId: kotlin.Long,
+    val householdId: kotlin.String,
 
     /* The owner's playlist it plays. A station made without a playlistId owns its own playlist, which no playlist listing shows; the owner edits what the station plays through that playlist's entries (addPlaylistEntry, replacePlaylistEntry, removePlaylistEntry), and deleting the station deletes it. */
     @SerialName(value = "playlistId")
-    val playlistId: kotlin.Long,
+    val playlistId: kotlin.String,
 
     @Contextual @SerialName(value = "order")
     val order: StationOrder,
@@ -105,8 +107,8 @@ data class Station (
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
 
-    @Contextual @SerialName(value = "updatedAt")
-    val updatedAt: java.time.OffsetDateTime,
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     /* For display: the highest rating of anything the playlist contains, on the MPAA scale for movies and the TV Parental Guidelines for tv. Absent for music, for an empty playlist, and when anything it contains is unrated or rated off that scale. Recalculated hourly and by rescheduleStation only. Which kids see the station does not follow it; see listStations. */
     @SerialName(value = "rating")
@@ -114,7 +116,15 @@ data class Station (
 
     /* Server-relative URL of the custom image the owner set, served by getStationImage with the device token like artwork; it changes whenever the image does. Absent while none is set, and while getStationImage would not find it. */
     @SerialName(value = "imageUrl")
-    val imageUrl: kotlin.String? = null
+    val imageUrl: kotlin.String? = null,
+
+    /* The profile that created it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "createdBy")
+    val createdBy: kotlin.String? = null,
+
+    /* The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone. */
+    @SerialName(value = "modifiedBy")
+    val modifiedBy: kotlin.String? = null
 
 ) {
 

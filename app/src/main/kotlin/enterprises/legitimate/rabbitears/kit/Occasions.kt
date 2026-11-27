@@ -33,7 +33,7 @@ object OccasionWash {
  */
 class OccasionsModel(
     private val api: Api,
-    private val profileId: Long,
+    private val profileId: String,
     private val today: () -> LocalDate = LocalDate::now,
 ) {
     var shelves by mutableStateOf<List<OccasionShelf>>(emptyList())
@@ -51,7 +51,7 @@ class OccasionsModel(
     }
 
     /** Every title the profile may see in an occasion, for its own screen; null if unreadable. */
-    suspend fun members(occasionId: Long): List<Item>? = runCatching {
+    suspend fun members(occasionId: String): List<Item>? = runCatching {
         pages { offset ->
             api.call {
                     items.listItems(occasionId = occasionId, limit = PAGE, offset = offset ?: 0)
@@ -62,7 +62,7 @@ class OccasionsModel(
         .getOrNull()
 
     /** A details page's rows: each occasion in season [itemId] is in, with its other titles. */
-    suspend fun containing(itemId: Long): List<OccasionShelf> {
+    suspend fun containing(itemId: String): List<OccasionShelf> {
         val active =
             runCatching {
                 api.call { profiles.listActiveOccasions(profileId, today(), itemId) }.items
@@ -71,7 +71,7 @@ class OccasionsModel(
         return active.mapNotNull { shelf(it, excluding = itemId) }
     }
 
-    private suspend fun shelf(occasion: ActiveOccasion, excluding: Long? = null): OccasionShelf? =
+    private suspend fun shelf(occasion: ActiveOccasion, excluding: String? = null): OccasionShelf? =
         runCatching {
             // One more than a row shows, so leaving the title out still fills it.
             api.call {

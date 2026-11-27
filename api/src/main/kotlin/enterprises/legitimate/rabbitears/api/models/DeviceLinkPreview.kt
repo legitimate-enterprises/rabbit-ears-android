@@ -37,6 +37,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param deviceName
  * @param platform
  * @param createdAt When the device asked.
+ * @param modifiedAt
  * @param expiresAt
  */
 @Serializable
@@ -52,6 +53,9 @@ data class DeviceLinkPreview (
     /* When the device asked. */
     @Contextual @SerialName(value = "createdAt")
     val createdAt: java.time.OffsetDateTime,
+
+    @Contextual @SerialName(value = "modifiedAt")
+    val modifiedAt: java.time.OffsetDateTime,
 
     @Contextual @SerialName(value = "expiresAt")
     val expiresAt: java.time.OffsetDateTime

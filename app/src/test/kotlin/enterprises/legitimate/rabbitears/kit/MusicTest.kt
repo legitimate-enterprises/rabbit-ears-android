@@ -19,24 +19,24 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 object MusicJson {
-    fun song(id: Long, album: Long = 50, title: String = "Song $id", track: Int = id.toInt()) =
-        """{"id":$id,"libraryId":1,"albumId":$album,"albumTitle":"In Rainbows","albumArtistId":40,""" +
-            """"artistId":40,"artistName":"Radiohead","title":"$title","lossless":true,""" +
+    fun song(id: String, album: Long = 50, title: String = "Song $id", track: Int = id.toInt()) =
+        """{"id":$id,"libraryId":"1","albumId":$album,"albumTitle":"In Rainbows","albumArtistId":"40",""" +
+            """"artistId":"40","artistName":"Radiohead","title":"$title","lossless":true,""" +
             """"trackNumber":$track,"durationMs":200000,"codec":"flac"}"""
 
-    fun album(id: Long, title: String = "Album $id", year: Int = 2007) =
-        """{"id":$id,"libraryId":1,"artistId":40,"artistName":"Radiohead","title":"$title",""" +
+    fun album(id: String, title: String = "Album $id", year: Int = 2007) =
+        """{"id":$id,"libraryId":"1","artistId":"40","artistName":"Radiohead","title":"$title",""" +
             """"songCount":10,"durationMs":2520000,"lossless":true,"genres":[],"addedAt":"${Json.T}",""" +
             """"year":$year}"""
 
-    fun artist(id: Long) =
-        """{"id":$id,"libraryId":1,"name":"Radiohead","sortName":"Radiohead","albumCount":9,""" +
+    fun artist(id: String) =
+        """{"id":$id,"libraryId":"1","name":"Radiohead","sortName":"Radiohead","albumCount":9,""" +
             """"songCount":112,"genres":[],"addedAt":"${Json.T}"}"""
 
     fun stream(session: Long, verdict: String = "direct_play") =
         """{"sessionId":$session,"entry":{"position":0,"verdict":"$verdict","videoAction":"copy",""" +
             """"audioAction":"copy","subtitleAction":"none","bad":false},""" +
-            """"streamUrl":"/api/v1/streams/a$session/file","mediaFileId":1,"streamKind":"file","positionMs":0,""" +
+            """"streamUrl":"/api/v2/streams/a$session/file","mediaFileId":"1","streamKind":"file","positionMs":0,""" +
             """"negotiated":{"verdict":"$verdict","width":0,"height":0,"bitrate":900000,""" +
             """"audioCodec":"flac","lossless":true},"rungs":[],"sidecars":[],""" +
             """"audio":{"source":{"codec":"flac","bitrate":2116000,"lossless":true},""" +
@@ -45,7 +45,7 @@ object MusicJson {
 
 class MusicPlayerTest {
     class Output : AudioOutput {
-        val loads = mutableListOf<Pair<String, Long>>()
+        val loads = mutableListOf<Pair<String, String>>()
         var stopped = 0
         override var positionMs = 0L
         override var isPaused = true
@@ -81,8 +81,8 @@ class MusicPlayerTest {
         PlayerModelTest.Capabilities(
             DeviceFacts(emptyList(), ScreenFacts(2400, 1080, 60.0), emptyList(), PathFacts()),
         )
-    private val player = MusicPlayer(server.api(), 1, output, capabilities, scope, retryMs = 0)
-    private val songs = (1L..4).map { song(it) }
+    private val player = MusicPlayer(server.api(), "1", output, capabilities, scope, retryMs = 0)
+    private val songs = (1..4).map { song("$it") }
 
     @After fun cancel() = scope.cancel()
 
@@ -99,11 +99,11 @@ class MusicPlayerTest {
     @Test
     fun playStartsASessionForTheSongWithItsPlaylist() = runBlocking {
         answers(7)
-        player.play(songs, start = 1, source = "In Rainbows", playlistId = 12)
+        player.play(songs, start = 1, source = "In Rainbows", playlistId = "12")
         val body = server.called("POST /playback/sessions").single().body
-        assertTrue(body.contains(""""itemId":2"""))
-        assertTrue(body.contains(""""playlistId":12"""))
-        assertEquals("http://media.example.com:8477/api/v1/streams/a7/file" to 2L, output.loads[0])
+        assertTrue(body.contains(""""itemId":"2""""))
+        assertTrue(body.contains(""""playlistId":"12""""))
+        assertEquals("http://media.example.com:8477/api/v2/streams/a7/file" to "2", output.loads[0])
         assertTrue(player.playing)
         assertEquals("Direct play", player.playback())
         assertEquals("In Rainbows", player.queue.source)
@@ -117,8 +117,8 @@ class MusicPlayerTest {
         answers(8)
         player.songEnded()
         assertTrue(server.called("DELETE /playback/sessions/7").single().query!!.contains("200000"))
-        assertEquals(2L, player.current?.id)
-        assertEquals(8L, player.stream?.sessionId)
+        assertEquals("2", player.current?.id)
+        assertEquals("8", player.stream?.sessionId)
     }
 
     @Test
@@ -153,7 +153,7 @@ class MusicPlayerTest {
         server.error("POST /playback/sessions", 404, "not_found")
         player.next()
         assertEquals("“Song 2” can’t be played", player.alert)
-        assertEquals(1L, player.current?.id)
+        assertEquals("1", player.current?.id)
         assertTrue(player.playing)
     }
 
@@ -171,7 +171,7 @@ class MusicPlayerTest {
     @Test
     fun threeQueuedFailuresInARowStopWithOneAlert() = runBlocking {
         answers(7)
-        player.play((1L..6).map { song(it) }, source = "x")
+        player.play((1..6).map { song("$it") }, source = "x")
         server.error("POST /playback/sessions", 500, "internal")
         player.songEnded()
         assertEquals("These songs can’t be played", player.alert)
@@ -189,8 +189,8 @@ class MusicPlayerTest {
             if (route == "POST /playback/sessions" && refusals-- > 0) throw IOException("refused")
         }
         player.songEnded()
-        assertEquals(2L, player.current?.id)
-        assertEquals(8L, player.stream?.sessionId)
+        assertEquals("2", player.current?.id)
+        assertEquals("8", player.stream?.sessionId)
         assertEquals(5, server.called("POST /playback/sessions").size)
         assertNull(player.alert)
     }
@@ -198,7 +198,7 @@ class MusicPlayerTest {
     @Test
     fun aServerThatStaysDownStillStopsTheMusicAfterThreeSongs() = runBlocking {
         answers(7)
-        player.play((1L..6).map { song(it) }, source = "x")
+        player.play((1..6).map { song("$it") }, source = "x")
         server.before = { route ->
             if (route == "POST /playback/sessions") throw IOException("refused")
         }
@@ -218,7 +218,7 @@ class MusicPlayerTest {
         assertEquals(1, server.called("POST /playback/sessions").size)
         answers(8)
         player.previous()
-        assertEquals(2L, player.current?.id)
+        assertEquals("2", player.current?.id)
     }
 
     @Test
@@ -245,12 +245,12 @@ class MusicPlayerTest {
         assertTrue(server.called("DELETE /playback/sessions/7").single().query!!.contains("42000"))
         assertNull(player.stream)
         assertEquals(1, output.stopped)
-        assertEquals(2L, player.current?.id)
+        assertEquals("2", player.current?.id)
         answers(8)
         player.resume()
         val body = server.called("POST /playback/sessions").last().body
-        assertTrue(body.contains(""""itemId":2""") && body.contains(""""positionMs":42000"""))
-        assertEquals(8L, player.stream?.sessionId)
+        assertTrue(body.contains(""""itemId":"2"""") && body.contains(""""positionMs":42000"""))
+        assertEquals("8", player.stream?.sessionId)
     }
 
     @Test
@@ -269,8 +269,8 @@ class MusicPlayerTest {
         server.on("POST /playback/sessions", 201, MusicJson.stream(8))
         player.resume()
         val body = server.called("POST /playback/sessions").last().body
-        assertTrue(body.contains(""""itemId":2""") && body.contains(""""positionMs":42000"""))
-        assertEquals(8L, player.stream?.sessionId)
+        assertTrue(body.contains(""""itemId":"2"""") && body.contains(""""positionMs":42000"""))
+        assertEquals("8", player.stream?.sessionId)
         assertTrue(player.playing)
         assertNull(player.alert)
     }
@@ -295,31 +295,31 @@ class MusicModelTest {
 
     @Test
     fun anAlbumReadsItsSongsInTrackOrder() = runBlocking {
-        server.on("GET /music/albums/50", body = MusicJson.album(50, "In Rainbows"))
-        server.on("GET /music/songs", body = Json.page(MusicJson.song(1), MusicJson.song(2)))
-        val detail = model.album(50)!!
+        server.on("GET /music/albums/50", body = MusicJson.album("50", "In Rainbows"))
+        server.on("GET /music/songs", body = Json.page(MusicJson.song("1"), MusicJson.song("2")))
+        val detail = model.album("50")!!
         assertEquals("In Rainbows", detail.album.title)
-        assertEquals(listOf(1L, 2L), detail.songs.map { it.id })
+        assertEquals(listOf("1", "2"), detail.songs.map { it.id })
         assertTrue(server.called("GET /music/songs").single().query!!.contains("albumId=50"))
     }
 
     @Test
     fun anArtistHasFivePopularSongsAndAlbumsNewestFirst() = runBlocking {
-        server.on("GET /music/artists/40", body = MusicJson.artist(40))
-        server.on("GET /music/songs", body = Json.page(MusicJson.song(1)))
+        server.on("GET /music/artists/40", body = MusicJson.artist("40"))
+        server.on("GET /music/songs", body = Json.page(MusicJson.song("1")))
         server.on(
             "GET /music/albums",
-            body = Json.page(MusicJson.album(1, year = 1997), MusicJson.album(2, year = 2007)),
+            body = Json.page(MusicJson.album("1", year = 1997), MusicJson.album("2", year = 2007)),
         )
-        val detail = model.artist(40)!!
-        assertEquals(listOf(2L, 1L), detail.albums.map { it.id })
+        val detail = model.artist("40")!!
+        assertEquals(listOf("2", "1"), detail.albums.map { it.id })
         val query = server.called("GET /music/songs").single().query!!
         assertTrue(query.contains("sort=popular") && query.contains("limit=5"))
     }
 
     @Test
     fun albumsLoadOnceAndAnErrorIsNamed() = runBlocking {
-        server.on("GET /music/albums", body = Json.page(MusicJson.album(1)))
+        server.on("GET /music/albums", body = Json.page(MusicJson.album("1")))
         model.loadAlbums()
         model.loadAlbums()
         assertEquals(1, server.called("GET /music/albums").size)
@@ -329,17 +329,17 @@ class MusicModelTest {
         assertNull(model.artists)
     }
 
-    private fun library(id: Long, kind: String) =
+    private fun library(id: String, kind: String) =
         """{"id":$id,"name":"Library $id","kind":"$kind","scanHour":3,"watchFiles":false,""" +
             """"folders":[],"stats":{"movies":0,"shows":0,"seasons":0,"episodes":0,"files":0,""" +
-            """"bytes":0,"unmatched":0},"createdAt":"${Json.T}","updatedAt":"${Json.T}"}"""
+            """"bytes":0,"unmatched":0},"createdAt":"${Json.T}","modifiedAt":"${Json.T}"}"""
 
     @Test
     fun theGenresAreThoseOfMusicLibrariesOnceEachByName() = runBlocking {
-        server.on("GET /libraries", body = Json.page(library(1, "movies"), library(2, "music")))
+        server.on("GET /libraries", body = Json.page(library("1", "movies"), library("2", "music")))
         server.on(
             "GET /genres",
-            body = Json.page("""{"id":8,"name":"Rock"}""", """{"id":3,"name":"Jazz"}"""),
+            body = Json.page("""{"id":"8","name":"Rock"}""", """{"id":"3","name":"Jazz"}"""),
         )
         assertEquals(listOf("Jazz", "Rock"), model.genres().map { it.name })
         assertTrue(server.called("GET /genres").single().query!!.contains("libraryId=2"))
@@ -347,28 +347,28 @@ class MusicModelTest {
 
     @Test
     fun aListIsReadAgainOnlyForAnotherGenreOrSort() = runBlocking {
-        server.on("GET /music/albums", body = Json.page(MusicJson.album(1)))
-        model.loadAlbums(genreId = 8)
-        model.loadAlbums(genreId = 8)
+        server.on("GET /music/albums", body = Json.page(MusicJson.album("1")))
+        model.loadAlbums(genreId = "8")
+        model.loadAlbums(genreId = "8")
         assertEquals(1, server.called("GET /music/albums").size)
         assertTrue(server.called("GET /music/albums").single().query!!.contains("genreId=8"))
         model.loadAlbums()
         assertEquals(2, server.called("GET /music/albums").size)
 
-        server.on("GET /music/songs", body = Json.page(MusicJson.song(1)))
-        model.loadSongs(SongSort.Popular, genreId = 8)
-        model.loadSongs(SongSort.Popular, genreId = 8)
+        server.on("GET /music/songs", body = Json.page(MusicJson.song("1")))
+        model.loadSongs(SongSort.Popular, genreId = "8")
+        model.loadSongs(SongSort.Popular, genreId = "8")
         val query = server.called("GET /music/songs").single().query!!
         assertTrue(query.contains("sort=popular") && query.contains("genreId=8"))
-        model.loadSongs(SongSort.Added, genreId = 8)
+        model.loadSongs(SongSort.Added, genreId = "8")
         assertEquals(2, server.called("GET /music/songs").size)
     }
 
     @Test
     fun aWatchChangeElsewhereReadsEachListAgain() = runBlocking {
-        server.on("GET /music/albums", body = Json.page(MusicJson.album(1)))
-        server.on("GET /music/artists", body = Json.page(MusicJson.artist(40)))
-        server.on("GET /music/songs", body = Json.page(MusicJson.song(1)))
+        server.on("GET /music/albums", body = Json.page(MusicJson.album("1")))
+        server.on("GET /music/artists", body = Json.page(MusicJson.artist("40")))
+        server.on("GET /music/songs", body = Json.page(MusicJson.song("1")))
         for (watched in listOf(0, 0, 1)) {
             model.loadAlbums(watched = watched)
             model.loadArtists(watched = watched)

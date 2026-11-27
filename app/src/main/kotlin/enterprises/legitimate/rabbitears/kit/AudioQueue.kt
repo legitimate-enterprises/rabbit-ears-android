@@ -21,7 +21,7 @@ data class AudioQueue(
     /** What it plays from, as in "Playing from In Rainbows". */
     val source: String = "",
     /** The music playlist it plays from, sent with each song's playback. */
-    val playlistId: Long? = null,
+    val playlistId: String? = null,
 ) {
     /** [id] is unique within the queue, since a song may be queued twice. */
     data class Entry(
@@ -105,7 +105,7 @@ data class AudioQueue(
             songs: List<MusicSong>,
             start: Int = 0,
             source: String,
-            playlistId: Long? = null,
+            playlistId: String? = null,
             shuffled: Boolean = false,
             random: Random = Random,
         ): AudioQueue =

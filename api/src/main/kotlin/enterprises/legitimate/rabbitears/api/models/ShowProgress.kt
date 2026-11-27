@@ -42,7 +42,7 @@ import kotlinx.serialization.Contextual
 data class ShowProgress (
 
     @SerialName(value = "showId")
-    val showId: kotlin.Long,
+    val showId: kotlin.String,
 
     /* Seasons, specials included. */
     @SerialName(value = "seasons")
@@ -65,7 +65,7 @@ data class ShowProgress (
 
     /* Of the episodes watched or in progress, the latest played is next if it is in progress, else the first unwatched episode after it, else none and this is absent. With no episode watched or in progress, the first episode. */
     @SerialName(value = "nextEpisodeId")
-    val nextEpisodeId: kotlin.Long? = null
+    val nextEpisodeId: kotlin.String? = null
 
 ) {
 
