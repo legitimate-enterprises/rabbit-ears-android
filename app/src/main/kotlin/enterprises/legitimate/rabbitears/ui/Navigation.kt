@@ -23,8 +23,9 @@ sealed interface Route {
 
     /**
      * [audioTrackId] is the details screen's pick. [title] names a video, which the catalog does
-     * not hold. [run] is the playlist being played, which goes on to its next row and names each
-     * row's edition. [editionId] is the edition picked in details; none plays the default.
+     * not hold. [run] is the playlist or Shuffle being played, which goes on to its next row and
+     * names each row's edition. [editionId] is the edition picked in details; none plays the
+     * default.
      */
     data class Player(
         val itemId: String,

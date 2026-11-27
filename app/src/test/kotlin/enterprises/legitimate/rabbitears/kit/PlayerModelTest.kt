@@ -137,6 +137,37 @@ class PlayerModelTest {
     }
 
     @Test
+    fun everyShuffledRowAsksForTheBeginningWithNoPlaylist() = runBlocking {
+        val run =
+            PlaylistRun.shuffled(listOf("101", "102").map(::episode), kotlin.random.Random(3))!!
+        for (row in listOf(run, run.next()!!)) {
+            val player =
+                PlayerModel(
+                    server.api(),
+                    "1",
+                    row.itemId,
+                    output,
+                    capabilities,
+                    scope,
+                    row.playlistId,
+                    row.editionId,
+                )
+            server.on("POST /playback/sessions", 201, stream())
+            player.start(startMs = 0)
+        }
+        val bodies = server.called("POST /playback/sessions").map { it.body }
+        assertEquals(2, bodies.size)
+        assertTrue(bodies.all { it.contains(""""positionMs":0""") })
+        assertTrue(bodies.none { it.contains(""""playlistId":"""") })
+    }
+
+    private fun episode(id: String) =
+        Serializer.kotlinxSerializationJson.decodeFromString(
+            Item.serializer(),
+            Json.item(id, "episode", parent = 11, season = 1, episode = 1),
+        )
+
+    @Test
     fun aChosenEditionIsSentAndNoneLeavesItToTheServer() = runBlocking {
         val cut =
             PlayerModel(server.api(), "1", "101", output, capabilities, scope, editionId = "32")

@@ -16,9 +16,10 @@ data class UpNextPlay(
 
 /**
  * What the server plays after [itemId] for the profile, from [run]'s row when it was played from a
- * playlist; null for nothing.
+ * playlist, or [run]'s next row when no playlist holds it; null for nothing.
  */
 suspend fun Api.upNext(profileId: String, itemId: String, run: PlaylistRun?): UpNextPlay? {
+    if (run != null && run.playlistId == null) return run.next()?.upNext
     val answer = call {
         profiles.getUpNextWithHttpInfo(profileId, itemId, run?.playlistId, run?.index)
     }

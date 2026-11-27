@@ -71,8 +71,10 @@ import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.MediaSummary
 import enterprises.legitimate.rabbitears.kit.OccasionShelf
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
+import enterprises.legitimate.rabbitears.kit.PlaylistRun
 import enterprises.legitimate.rabbitears.kit.crewLines
 import enterprises.legitimate.rabbitears.kit.placeholderKind
+import enterprises.legitimate.rabbitears.kit.playable
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 import kotlinx.coroutines.launch
 
@@ -619,13 +621,13 @@ private fun Show(item: Item) {
                     verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
                     Titles(null, {}, Catalog.title(item), meta, big = wide)
-                    if (wide) ShowActions(target, seasons)
+                    if (wide) ShowActions(item, target, seasons)
                     if (wide) Overview(item)
                 }
             }
         }
         if (!wide) {
-            item { ShowActions(target, seasons) }
+            item { ShowActions(item, target, seasons) }
             item { Overview(item) }
         }
         item {
@@ -652,7 +654,7 @@ private fun Show(item: Item) {
 }
 
 @Composable
-private fun ShowActions(target: Item?, seasons: List<Item>) {
+private fun ShowActions(show: Item, target: Item?, seasons: List<Item>) {
     val nav = LocalNav.current
     val c = nav.catalog.catalog
     Actions {
@@ -665,11 +667,25 @@ private fun ShowActions(target: Item?, seasons: List<Item>) {
                 icon = R.drawable.ic_play,
             )
         }
+        ShufflePill(c.episodes(show.id))
         (seasons.firstOrNull { it.id == target?.parentId } ?: seasons.firstOrNull())?.let { season
             ->
             Pill("Episodes", { nav.open(Route.Details(season.id)) })
         }
     }
+}
+
+/** Shuffle over [titles] from the beginning of each; absent when none of them can play. */
+@Composable
+internal fun ShufflePill(titles: List<Item>) {
+    val nav = LocalNav.current
+    val playable = nav.catalog.offline.playable(titles)
+    if (playable.isEmpty()) return
+    Pill(
+        "Shuffle",
+        { PlaylistRun.shuffled(playable)?.let { nav.play(it.itemId, 0, run = it) } },
+        icon = R.drawable.ic_shuffle,
+    )
 }
 
 @Composable
@@ -717,6 +733,7 @@ private fun Season(item: Item) {
                         icon = R.drawable.ic_play,
                     )
                 }
+                ShufflePill(c.episodes(item.id))
                 Pill(
                     if (unwatched == 0) "Mark all unwatched" else "Mark all watched",
                     { scope.launch { nav.catalog.setWatched(unwatched > 0, item) } },

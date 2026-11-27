@@ -275,6 +275,7 @@ fun CollectionScreen(id: String) {
                             if (collection.customOrder == true)
                                 Text("In your order", color = Palette.dim)
                         }
+                        if (!ordering) ShufflePill(movies.orEmpty())
                     }
                 }
             }

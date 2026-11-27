@@ -5,6 +5,7 @@ import enterprises.legitimate.rabbitears.api.models.PlaylistPlayOrderItem
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class UpNextTest {
@@ -44,6 +45,18 @@ class UpNextTest {
         assertEquals(2, next?.run?.index)
         assertEquals("22", next?.run?.itemId)
         assertEquals("6", next?.editionId)
+    }
+
+    @Test
+    fun aShuffleFollowsItsOwnRowsToTheEndWithoutAskingTheServer() = runBlocking {
+        val run = PlaylistRun(null, listOf(row("22"), row("20"), row("21")))
+        val second = api.upNext("1", "22", run)
+        assertEquals("20", second?.itemId)
+        assertEquals(1, second?.run?.index)
+        val third = api.upNext("1", "20", second?.run)
+        assertEquals("21", third?.itemId)
+        assertNull(api.upNext("1", "21", third?.run))
+        assertTrue(server.calls.isEmpty())
     }
 
     @Test

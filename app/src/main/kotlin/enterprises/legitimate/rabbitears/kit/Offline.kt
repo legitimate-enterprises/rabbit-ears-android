@@ -31,6 +31,14 @@ suspend fun <T> OfflineLibrary?.answer(local: OfflineLibrary.() -> T, remote: su
     if (this == null) remote() else or(local, remote)
 
 /**
+ * What Shuffle may play of [titles]: those with a file, and only those on the device while the
+ * server is known to be out of reach, as the catalog may then hold kept answers.
+ */
+fun OfflineLibrary?.playable(titles: List<Item>): List<Item> = titles.filter {
+    it.unavailable != true && (this == null || !isUnreachable || has(it.id))
+}
+
+/**
  * What one profile has on this device, in the shapes the server answers with, so the usual models
  * and screens show it when the server can't be reached. [unreachable] is whether the app already
  * knows the server is out of reach, so nothing waits on it.
@@ -186,9 +194,7 @@ class OfflineLibrary(
             val rest = run.rows.drop(run.index + 1)
             val i = rest.indexOfFirst { has(it.itemId) }
             if (i < 0) return null
-            val row = rest[i]
-            val title = row.item?.let(Catalog::title) ?: row.song?.title ?: ""
-            return UpNextPlay(title, row.itemId, run.copy(index = run.index + 1 + i), row.editionId)
+            return run.copy(index = run.index + 1 + i).upNext
         }
         catalog().let { c ->
             val item = c.item(itemId) ?: return@let

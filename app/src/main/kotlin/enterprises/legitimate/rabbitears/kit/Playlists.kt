@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import enterprises.legitimate.rabbitears.api.models.Edition
+import enterprises.legitimate.rabbitears.api.models.Item
+import enterprises.legitimate.rabbitears.api.models.ItemKind
 import enterprises.legitimate.rabbitears.api.models.Playlist
 import enterprises.legitimate.rabbitears.api.models.PlaylistAccess
 import enterprises.legitimate.rabbitears.api.models.PlaylistEntriesInput
@@ -13,13 +15,15 @@ import enterprises.legitimate.rabbitears.api.models.PlaylistEntryKind
 import enterprises.legitimate.rabbitears.api.models.PlaylistInput
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
 import enterprises.legitimate.rabbitears.api.models.PlaylistPlayOrderItem
+import kotlin.random.Random
 
 /**
  * The rest of a pass through a playlist's video rows: [rows] in play order and the [index] now
- * playing. The server expanded every container, so nothing here does.
+ * playing. The server expanded every container, so nothing here does. Shuffle's run has no
+ * [playlistId], so its Up next is its own next row and never the server's.
  */
 data class PlaylistRun(
-    val playlistId: String,
+    val playlistId: String?,
     val rows: List<PlaylistPlayOrderItem>,
     val index: Int = 0,
 ) {
@@ -33,6 +37,36 @@ data class PlaylistRun(
         get() = rows[index].editionName
 
     fun next(): PlaylistRun? = if (index + 1 < rows.size) copy(index = index + 1) else null
+
+    /** Up next as the row at [index]. */
+    val upNext: UpNextPlay
+        get() =
+            rows[index].let {
+                UpNextPlay(
+                    it.item?.let(Catalog::title) ?: it.song?.title ?: "",
+                    it.itemId,
+                    this,
+                    it.editionId,
+                )
+            }
+
+    companion object {
+        /**
+         * Shuffle over [titles], movies or episodes: one uniformly random order of them all, each
+         * in its default edition; null for none.
+         */
+        fun shuffled(titles: List<Item>, random: Random = Random): PlaylistRun? =
+            titles
+                .takeIf { it.isNotEmpty() }
+                ?.shuffled(random)
+                ?.map {
+                    val kind =
+                        if (it.kind == ItemKind.episode) PlaylistEntryKind.episode
+                        else PlaylistEntryKind.movie
+                    PlaylistPlayOrderItem(it.id, it.id, kind, item = it)
+                }
+                ?.let { PlaylistRun(null, it) }
+    }
 }
 
 /** The entry's name: a season is named with its show, which alone does not say which. */

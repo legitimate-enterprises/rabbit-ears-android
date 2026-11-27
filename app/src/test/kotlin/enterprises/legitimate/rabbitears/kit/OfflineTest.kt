@@ -1,10 +1,13 @@
 package enterprises.legitimate.rabbitears.kit
 
+import enterprises.legitimate.rabbitears.api.infrastructure.Serializer
 import enterprises.legitimate.rabbitears.api.models.DownloadQuality
 import enterprises.legitimate.rabbitears.api.models.DownloadTarget
 import enterprises.legitimate.rabbitears.api.models.DownloadTitle
 import enterprises.legitimate.rabbitears.api.models.DownloadTitle.Kind
+import enterprises.legitimate.rabbitears.api.models.Item
 import enterprises.legitimate.rabbitears.api.models.ItemKind
+import enterprises.legitimate.rabbitears.api.models.PlaylistPlayOrderItem
 import java.nio.file.Files
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -122,6 +125,36 @@ class OfflineTest {
         assertEquals("103", offline.upNext("101", null)?.itemId)
         assertNull(offline.upNext("103", null))
     }
+
+    @Test
+    fun outOfReachShuffleTakesOnlyWhatIsOnTheDevice() {
+        library()
+        val kept =
+            listOf("101", "102", "103").map {
+                Serializer.kotlinxSerializationJson.decodeFromString(
+                    Item.serializer(),
+                    Json.item(it, "episode", parent = 11, season = 1, episode = it.toInt() - 100),
+                )
+            }
+        assertEquals(listOf("101", "103"), offline.playable(kept).map { it.id })
+        unreachable = false
+        assertEquals(listOf("101", "102", "103"), offline.playable(kept).map { it.id })
+    }
+
+    @Test
+    fun aShuffleOnTheDeviceSkipsWhatIsNotDownloaded() {
+        library()
+        val rows = listOf("103", "102", "101").map { row(it) }
+        val next = offline.upNext("103", PlaylistRun(null, rows))
+        assertEquals("101", next?.itemId)
+        assertEquals(2, next?.run?.index)
+        assertNull(offline.upNext("101", next?.run))
+    }
+
+    private fun row(id: String) =
+        Serializer.kotlinxSerializationJson.decodeFromString<PlaylistPlayOrderItem>(
+            """{"entryId":$id,"itemId":$id,"kind":"episode"}""",
+        )
 
     @Test
     fun musicAndYouTubeShowWhatIsDownloaded() = runBlocking {
