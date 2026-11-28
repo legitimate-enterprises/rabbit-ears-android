@@ -342,6 +342,7 @@ private fun Destination(tab: Tab, route: Route?, modifier: Modifier, bottom: Boo
             is Route.StationEditor -> StationEditor(route.stationId)
             Route.Preferences -> Preferences()
             Route.Household -> ManageHousehold()
+            Route.Friends -> Friends()
             else ->
                 when (tab) {
                     Tab.Home -> Home()

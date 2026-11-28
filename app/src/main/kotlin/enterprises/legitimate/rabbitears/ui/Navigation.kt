@@ -7,6 +7,7 @@ import enterprises.legitimate.rabbitears.kit.CatalogModel
 import enterprises.legitimate.rabbitears.kit.CollectionsModel
 import enterprises.legitimate.rabbitears.kit.Downloads
 import enterprises.legitimate.rabbitears.kit.FavoritesModel
+import enterprises.legitimate.rabbitears.kit.FriendsModel
 import enterprises.legitimate.rabbitears.kit.MusicModel
 import enterprises.legitimate.rabbitears.kit.MusicPlayer
 import enterprises.legitimate.rabbitears.kit.OccasionsModel
@@ -66,6 +67,8 @@ sealed interface Route {
 
     data object Household : Route
 
+    data object Friends : Route
+
     /** Tuned in to a movies or TV station; a music station plays in the music player. */
     data class Tune(val station: enterprises.legitimate.rabbitears.api.models.Station) : Route
 
@@ -93,6 +96,7 @@ class Navigator(
     val stations by lazy { StationsModel(catalog.api) }
     val occasions by lazy { OccasionsModel(catalog.api, catalog.profileId) }
     val favorites by lazy { FavoritesModel(catalog.api, catalog.profileId) }
+    val friends by lazy { FriendsModel(catalog.api, catalog.profileId, adult = !app.isKid) }
     private val togethers = mutableMapOf<String, WatchTogetherModel>()
 
     /** Watch together on a title, kept from details into the player. */

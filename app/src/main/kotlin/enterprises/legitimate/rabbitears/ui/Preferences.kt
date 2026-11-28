@@ -138,6 +138,7 @@ fun Preferences() {
                 Pill("Password", { changingPassword = true })
                 app.adminUrl?.let { admin -> Pill("Admin", { uri.openUri(admin) }) }
                 DeleteAccount()
+                FriendsEntry()
             }
         }
     }
