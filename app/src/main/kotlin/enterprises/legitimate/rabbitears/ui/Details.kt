@@ -270,6 +270,15 @@ private fun WatchedPill(item: Item) {
     )
 }
 
+/** Takes a title in progress out of it, so it plays from the top; nothing when not in progress. */
+@Composable
+private fun DismissPill(item: Item) {
+    val nav = LocalNav.current
+    val scope = rememberCoroutineScope()
+    if (nav.catalog.catalog.isInProgress(item.id))
+        Pill("Dismiss", { scope.launch { nav.catalog.dismiss(item) } })
+}
+
 /** Previous and Next, each only when that neighbor exists, opening it in place of this page. */
 @Composable
 private fun Neighbors(related: ItemRelated?, episode: Boolean) {
@@ -505,7 +514,10 @@ private fun Movie(item: Item, editions: List<Edition>) {
                     }
                     FavoriteStar(item.id, FavoriteKind.movie)
                     // An adult marks watched in More; a kid has no More.
-                    if (nav.app.isKid) WatchedPill(item)
+                    if (nav.app.isKid) {
+                        WatchedPill(item)
+                        DismissPill(item)
+                    }
                     together?.let { TogetherAction(it) }
                     Neighbors(related, episode = false)
                 }

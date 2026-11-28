@@ -716,6 +716,21 @@ class DownloadsTest {
     }
 
     @Test
+    fun syncSendsAnOfflineDismissalAsOneWithWhenItHappened() = runBlocking {
+        server.on("POST /profiles/1/downloads/resolve", body = resolution(title("1")))
+        filed()
+        store.dismiss("1", "1", atMs = 1_000)
+        server.on("DELETE /profiles/1/watch-state/1/position", 204)
+        server.on("POST /profiles/1/downloads/sync", body = """{"keep":[1],"remove":[]}""")
+        downloads.sync(api, "1")
+
+        val sent = server.called("DELETE /profiles/1/watch-state/1/position").single()
+        assertEquals("at=1970-01-01T00:00:01Z", sent.query)
+        assertTrue(server.calls.none { it.route.startsWith("PUT /profiles/1/watch-state/") })
+        assertTrue(store.unsynced("1").isEmpty())
+    }
+
+    @Test
     fun syncBringsAStandingRequestUpToDate() = runBlocking {
         server.on("POST /profiles/1/downloads/resolve", body = resolution(title("1")))
         filed(DownloadTarget(collectionId = "9"))

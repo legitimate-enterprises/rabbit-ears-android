@@ -120,6 +120,51 @@ class OfflineTest {
     }
 
     @Test
+    fun aDismissOfflineIsKeptForTheNextSyncAsADismissal() = runBlocking {
+        library()
+        store.record("1", "1", 40_000, watched = true, atMs = 1_000)
+        store.synced("1", store.watch("1", "1")!!.copy(synced = true))
+        val model = CatalogModel(server.api(), "1", offline)
+        model.load()
+        assertTrue(model.catalog.isInProgress("1"))
+        model.dismiss(model.catalog.item("1")!!)
+        assertNull(model.error)
+        assertFalse(model.catalog.isInProgress("1"))
+        assertTrue(model.catalog.isWatched("1"))
+        val mark = store.unsynced("1").single()
+        assertTrue(mark.dismissed)
+        assertTrue(mark.watched)
+        assertEquals(0L, mark.positionMs)
+    }
+
+    @Test
+    fun aDismissOfflineOverAPlayNotYetSentForgetsThePositionAndKeepsThePlay() = runBlocking {
+        library()
+        store.record("1", "1", 40_000, watched = false, atMs = 1_000)
+        val model = CatalogModel(server.api(), "1", offline)
+        model.load()
+        model.dismiss(model.catalog.item("1")!!)
+        val mark = store.unsynced("1").single()
+        assertFalse(mark.dismissed)
+        assertEquals(0L, mark.positionMs)
+        assertEquals(1_000L, mark.atMs)
+    }
+
+    @Test
+    fun aDismissOfATitleNotOnTheDeviceNeedsTheServer() = runBlocking {
+        library()
+        val model = CatalogModel(server.api(), "1", offline)
+        model.dismiss(
+            Serializer.kotlinxSerializationJson.decodeFromString(
+                Item.serializer(),
+                Json.item("2", "movie"),
+            ),
+        )
+        assertNotNull(model.error)
+        assertTrue(store.unsynced("1").isEmpty())
+    }
+
+    @Test
     fun upNextIsTheNextDownloadedEpisode() {
         library()
         assertEquals("103", offline.upNext("101", null)?.itemId)

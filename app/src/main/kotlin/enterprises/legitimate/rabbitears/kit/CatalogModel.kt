@@ -183,6 +183,28 @@ class CatalogModel(
         for (target in targets) write(target.id, WatchStateInput(watched)) ?: return
     }
 
+    /**
+     * Takes a movie or episode out of progress, so Play starts it from the top, keeping whether it
+     * was watched and when it last played. With no server, a downloaded title's dismissal is kept
+     * for the next sync.
+     */
+    suspend fun dismiss(item: Item) {
+        try {
+            val send = suspend { api.call { profiles.dismissWatchState(profileId, item.id) } }
+            offline?.or(
+                {
+                    if (!has(item.id)) throw IOException()
+                    dismiss(item.id)
+                },
+                send,
+            ) ?: send()
+            catalog.watchState(item.id)?.let { catalog = catalog.with(it.copy(positionMs = 0)) }
+            error = null
+        } catch (e: Exception) {
+            error = AppError.from(e, AppError.SignedOut).message
+        }
+    }
+
     /** Marks a selection in one request; a show or season marks each episode. */
     suspend fun setWatched(watched: Boolean, items: List<Item>) {
         try {

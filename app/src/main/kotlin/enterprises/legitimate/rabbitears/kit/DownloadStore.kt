@@ -79,7 +79,10 @@ data class StoredTitle(
         get() = if (sizeBytes <= 0) 0.0 else minOf(1.0, receivedBytes.toDouble() / sizeBytes)
 }
 
-/** A profile's watch state as this device last knew it, [synced] once the server has it. */
+/**
+ * A profile's watch state as this device last knew it, [synced] once the server has it. A
+ * [dismissed] change only took the title out of progress, so it is sent as a dismissal.
+ */
 @Serializable
 data class LocalWatch(
     val itemId: String,
@@ -88,6 +91,7 @@ data class LocalWatch(
     val atMs: Long,
     val synced: Boolean,
     val editionId: String? = null,
+    val dismissed: Boolean = false,
 )
 
 /** One profile's downloads settings on this device; [keep] is keep-after-watched by library. */
@@ -499,6 +503,27 @@ class DownloadStore(
             watch = watch,
             requests = if (ended) policed(s, profileId, itemId, watched) else s.requests,
         )
+    }
+
+    /**
+     * Takes the title out of progress as of [atMs], keeping whether it was watched. A change not
+     * yet sent keeps its own time with the position forgotten, so the play it records still counts.
+     */
+    fun dismiss(profileId: String, itemId: String, atMs: Long) = update { s ->
+        val local = s.watch[profileId]?.get(itemId)
+        val mark =
+            if (local != null && !local.synced && !local.dismissed) local.copy(positionMs = 0)
+            else
+                LocalWatch(
+                    itemId,
+                    0,
+                    local?.watched == true,
+                    atMs,
+                    synced = false,
+                    local?.editionId,
+                    dismissed = true,
+                )
+        s.copy(watch = s.watch + (profileId to (s.watch[profileId].orEmpty() + (itemId to mark))))
     }
 
     /** The changes still to send, oldest first, as the server must apply them. */

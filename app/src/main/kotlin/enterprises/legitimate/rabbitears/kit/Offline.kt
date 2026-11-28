@@ -104,6 +104,9 @@ class OfflineLibrary(
             ended,
         )
 
+    /** Keeps a dismissal made with no server, as of now, for the next sync. */
+    fun dismiss(itemId: String) = store.dismiss(profileId, itemId, System.currentTimeMillis())
+
     fun songs(): List<MusicSong> =
         onDevice(Kind.song)
             .mapNotNull { meta.song(it.itemId) }

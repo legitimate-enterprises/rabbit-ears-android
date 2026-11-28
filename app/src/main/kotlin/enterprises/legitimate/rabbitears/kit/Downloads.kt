@@ -450,6 +450,11 @@ class Downloads(
             val input = WatchStateInput(mark.watched, mark.positionMs, mark.editionId, at)
             val state =
                 try {
+                    if (mark.dismissed) {
+                        api.call { profiles.dismissWatchState(profileId, mark.itemId, at) }
+                        store.synced(profileId, mark.copy(synced = true), mark.atMs)
+                        continue
+                    }
                     api.call { profiles.putWatchState(profileId, mark.itemId, input) }
                 } catch (e: Exception) {
                     // A title gone from the server takes its change with it.

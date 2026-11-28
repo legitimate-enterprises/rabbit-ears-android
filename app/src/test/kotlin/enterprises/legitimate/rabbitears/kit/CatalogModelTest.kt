@@ -261,6 +261,55 @@ class CatalogModelTest {
     }
 
     @Test
+    fun dismissForgetsWhereToResumeAndKeepsWhetherItWasWatched() = runBlocking {
+        library()
+        server.on(
+            "GET /profiles/1/watch-state",
+            body =
+                Json.page(
+                    Json.watch(
+                        1,
+                        position = 600_000,
+                        watched = true,
+                        played = "2026-02-01T00:00:00Z",
+                    ),
+                ),
+        )
+        model.load()
+        assertEquals(listOf("1"), model.catalog.continueWatching.map { it.id })
+        server.on("DELETE /profiles/1/watch-state/1/position", 204)
+        model.dismiss(model.catalog.item("1")!!)
+        assertEquals(1, server.called("DELETE /profiles/1/watch-state/1/position").size)
+        assertNull(model.error)
+        assertFalse(model.catalog.isInProgress("1"))
+        assertTrue(model.catalog.isWatched("1"))
+        assertTrue(model.catalog.continueWatching.isEmpty())
+        assertEquals(
+            "2026-02-01T00:00Z",
+            model.catalog.watchState("1")!!.lastPlayedAt.toString(),
+        )
+    }
+
+    @Test
+    fun aDismissTheServerRefusesLeavesTheTitleInProgress() = runBlocking {
+        library()
+        server.on(
+            "GET /profiles/1/watch-state",
+            body = Json.page(Json.watch(1, position = 600_000)),
+        )
+        model.load()
+        server.error(
+            "DELETE /profiles/1/watch-state/1/position",
+            500,
+            "internal",
+            "Database is locked.",
+        )
+        model.dismiss(model.catalog.item("1")!!)
+        assertTrue(model.catalog.isInProgress("1"))
+        assertEquals("Database is locked.", model.error)
+    }
+
+    @Test
     fun searchIsOneUniversalQueryWithNineLists() = runBlocking {
         server.on(
             "GET /search",

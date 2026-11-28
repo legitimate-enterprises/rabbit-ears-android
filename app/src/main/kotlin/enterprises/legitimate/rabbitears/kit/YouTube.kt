@@ -151,6 +151,12 @@ class YouTubeModel(
             api.call { profiles.putWatchState(profileId, video.id, WatchStateInput(watched)) }
         } != null
 
+    /** Dismiss on Video: it leaves In progress, still watched or not as it was. */
+    suspend fun dismiss(video: YouTubeVideo): Boolean =
+        read({ if (has(video.id)) dismiss(video.id) else throw IOException() }) {
+            api.call { profiles.dismissWatchState(profileId, video.id) }
+        } != null
+
     /** Null after an error, which [error] names; [local] answers when the server can't. */
     private suspend fun <T> read(
         local: (OfflineLibrary.() -> T?)? = null,

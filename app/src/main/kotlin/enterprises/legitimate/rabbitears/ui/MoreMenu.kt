@@ -102,9 +102,12 @@ fun ActionMenu(
     var downloading by remember { mutableStateOf<DownloadAsk?>(null) }
     DropdownMenu(open, close) {
         val actions =
-            titleActions(item?.let { TitleKind.of(it.kind) }, !nav.app.isKid).filter {
-                favorite || it != TitleAction.Favorite
-            }
+            titleActions(
+                    item?.let { TitleKind.of(it.kind) },
+                    !nav.app.isKid,
+                    item != null && nav.catalog.catalog.isInProgress(item.id),
+                )
+                .filter { favorite || it != TitleAction.Favorite }
         val target =
             if (collection) DownloadTarget(collectionId = id)
             else DownloadTarget(itemId = id, editionId = editionId)
@@ -147,8 +150,9 @@ fun ActionMenu(
 }
 
 /**
- * A video's menu: Download, an adult's Mark as watched, and when [favorite] its star. Mark as
- * watched closes the menu, since the video shown is not read again until [changed] runs.
+ * A video's menu: Download, an adult's Mark as watched and, while it is in progress, Dismiss, and
+ * when [favorite] its star. Both close the menu, since the video shown is not read again until
+ * [changed] runs.
  */
 @Composable
 fun VideoMenu(
@@ -170,11 +174,16 @@ fun VideoMenu(
         ) {
             downloading = it
         }
-        val actions = titleActions(TitleKind.Video, !nav.app.isKid)
+        val actions = titleActions(TitleKind.Video, !nav.app.isKid, video.positionMs > 0)
         if (TitleAction.Watched in actions)
             MenuAction(if (video.watched) "Mark as unwatched" else "Mark as watched") {
                 close()
                 scope.launch { if (nav.youtube.setWatched(video, !video.watched)) changed() }
+            }
+        if (TitleAction.Dismiss in actions)
+            MenuAction("Dismiss") {
+                close()
+                scope.launch { if (nav.youtube.dismiss(video)) changed() }
             }
         if (favorite && TitleAction.Favorite in actions)
             FavoriteMenuItem(video.id, TitleKind.Video.favoriteKind)
@@ -206,6 +215,8 @@ private fun ItemActions(shown: Item, actions: List<TitleAction>) {
             scope.launch { nav.catalog.setWatched(!watched, item) }
         }
     }
+    if (TitleAction.Dismiss in actions)
+        MenuAction("Dismiss") { scope.launch { nav.catalog.dismiss(item) } }
     if (TitleAction.Favorite in actions)
         FavoriteMenuItem(item.id, TitleKind.of(item.kind).favoriteKind)
     if (TitleAction.KidsContent in actions) {

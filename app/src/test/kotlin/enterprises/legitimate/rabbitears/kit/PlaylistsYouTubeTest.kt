@@ -308,6 +308,20 @@ class YouTubeTest {
     }
 
     @Test
+    fun dismissForgetsWhereAVideoResumes() = runBlocking {
+        val started =
+            Serializer.kotlinxSerializationJson.decodeFromString(
+                YouTubeVideo.serializer(),
+                video("1").replace(""""positionMs":0""", """"positionMs":630000"""),
+            )
+        server.on("DELETE /profiles/1/watch-state/1/position", 204)
+        assertTrue(model.dismiss(started))
+        assertEquals("DELETE /profiles/1/watch-state/1/position", server.calls.single().route)
+        server.error("DELETE /profiles/1/watch-state/1/position", 404, "not_found")
+        assertFalse(model.dismiss(started))
+    }
+
+    @Test
     fun forKidsIsSetOnTheChannel() = runBlocking {
         server.on(
             "PUT /youtube/channels/30/for-kids",

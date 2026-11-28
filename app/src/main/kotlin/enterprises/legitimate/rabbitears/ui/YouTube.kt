@@ -451,6 +451,8 @@ fun VideoScreen(id: String) {
                         { scope.launch { if (model.setWatched(v, !v.watched)) version++ } },
                         icon = R.drawable.ic_check,
                     )
+                    if (resuming)
+                        Pill("Dismiss", { scope.launch { if (model.dismiss(v)) version++ } })
                     together?.let { TogetherAction(it) }
                 }
                 together?.let { TogetherNote(it, v.title) }
