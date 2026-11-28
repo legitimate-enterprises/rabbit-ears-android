@@ -354,9 +354,8 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
     /**
      * GET /people/{personId}/artwork
      * The person&#39;s headshot.
-     * 
+     * The image Person.headshotUrl names, cached for a day and revalidated; kept because released clients use it.
      * @param personId 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return java.io.File
      * @throws IllegalStateException If the request is not correctly configured
@@ -367,8 +366,10 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getPersonArtwork(personId: kotlin.String, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
-        val localVarResponse = getPersonArtworkWithHttpInfo(personId = personId, v = v, ifNoneMatch = ifNoneMatch)
+    @Deprecated(message = "This operation is deprecated.")
+    fun getPersonArtwork(personId: kotlin.String, ifNoneMatch: kotlin.String? = null) : java.io.File {
+        @Suppress("DEPRECATION")
+        val localVarResponse = getPersonArtworkWithHttpInfo(personId = personId, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as java.io.File
@@ -388,9 +389,8 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
     /**
      * GET /people/{personId}/artwork
      * The person&#39;s headshot.
-     * 
+     * The image Person.headshotUrl names, cached for a day and revalidated; kept because released clients use it.
      * @param personId 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return ApiResponse<java.io.File?>
      * @throws IllegalStateException If the request is not correctly configured
@@ -398,8 +398,10 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getPersonArtworkWithHttpInfo(personId: kotlin.String, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
-        val localVariableConfig = getPersonArtworkRequestConfig(personId = personId, v = v, ifNoneMatch = ifNoneMatch)
+    @Deprecated(message = "This operation is deprecated.")
+    fun getPersonArtworkWithHttpInfo(personId: kotlin.String, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+        @Suppress("DEPRECATION")
+        val localVariableConfig = getPersonArtworkRequestConfig(personId = personId, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
             localVariableConfig
@@ -410,18 +412,13 @@ open class PeopleApi(basePath: kotlin.String = defaultBasePath, client: Call.Fac
      * To obtain the request config of the operation getPersonArtwork
      *
      * @param personId 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getPersonArtworkRequestConfig(personId: kotlin.String, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    @Deprecated(message = "This operation is deprecated.")
+    fun getPersonArtworkRequestConfig(personId: kotlin.String, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
-        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
-            .apply {
-                if (v != null) {
-                    put("v", listOf(v.toString()))
-                }
-            }
+        val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["Accept"] = "application/json"
         ifNoneMatch?.apply { localVariableHeaders["If-None-Match"] = this.toString() }

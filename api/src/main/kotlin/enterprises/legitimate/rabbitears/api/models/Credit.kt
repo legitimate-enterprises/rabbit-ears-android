@@ -32,6 +32,7 @@ import kotlinx.serialization.Contextual
  * @param personId
  * @param name
  * @param profilePath
+ * @param headshotUrl Server-relative URL of the person's headshot, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  * @param character Cast only.
  * @param job Crew only: Director, Writer, Screenplay or Creator.
  * @param department
@@ -48,6 +49,10 @@ data class Credit (
 
     @SerialName(value = "profilePath")
     val profilePath: kotlin.String? = null,
+
+    /* Server-relative URL of the person's headshot, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
+    @SerialName(value = "headshotUrl")
+    val headshotUrl: kotlin.String? = null,
 
     /* Cast only. */
     @SerialName(value = "character")

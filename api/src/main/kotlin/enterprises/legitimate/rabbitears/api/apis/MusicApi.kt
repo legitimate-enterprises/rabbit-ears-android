@@ -290,7 +290,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     /**
      * GET /music/albums
      * Albums of Music libraries, for the Albums view, Artist details, More by and CarPlay&#39;s Albums tab.
-     * Recently added (Home and CarPlay&#39;s Recent tab) is &#x60;sort&#x3D;added&#x60;. An album&#39;s art is &#x60;/items/{id}/artwork/poster&#x60;. While a kid is active an album whose every song is explicit is left out, and the counts, duration and lossless of the rest cover only their clean songs. 
+     * Recently added (Home and CarPlay&#39;s Recent tab) is &#x60;sort&#x3D;added&#x60;. An album&#39;s art is its posterUrl. While a kid is active an album whose every song is explicit is left out, and the counts, duration and lossless of the rest cover only their clean songs. 
      * @param libraryId One Music library; absent spans every Music library. (optional)
      * @param artistId Only albums whose album artist this is. (optional)
      * @param genreId  (optional)
@@ -329,7 +329,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     /**
      * GET /music/albums
      * Albums of Music libraries, for the Albums view, Artist details, More by and CarPlay&#39;s Albums tab.
-     * Recently added (Home and CarPlay&#39;s Recent tab) is &#x60;sort&#x3D;added&#x60;. An album&#39;s art is &#x60;/items/{id}/artwork/poster&#x60;. While a kid is active an album whose every song is explicit is left out, and the counts, duration and lossless of the rest cover only their clean songs. 
+     * Recently added (Home and CarPlay&#39;s Recent tab) is &#x60;sort&#x3D;added&#x60;. An album&#39;s art is its posterUrl. While a kid is active an album whose every song is explicit is left out, and the counts, duration and lossless of the rest cover only their clean songs. 
      * @param libraryId One Music library; absent spans every Music library. (optional)
      * @param artistId Only albums whose album artist this is. (optional)
      * @param genreId  (optional)
@@ -410,7 +410,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     /**
      * GET /music/artists
      * Artists of Music libraries A to Z by sort name, as the Artists view and CarPlay&#39;s Artists tab list them.
-     * An artist&#39;s image is &#x60;/items/{id}/artwork/poster&#x60;. While a kid is active an artist with no song but explicit ones is left out, and its counts leave out explicit songs and the albums holding only them. 
+     * An artist&#39;s image is its posterUrl. While a kid is active an artist with no song but explicit ones is left out, and its counts leave out explicit songs and the albums holding only them. 
      * @param libraryId One Music library; absent spans every Music library. (optional)
      * @param genreId  (optional)
      * @param letter Only those filed under this letter of &#x60;listMusicLetters&#x60;. (optional)
@@ -447,7 +447,7 @@ open class MusicApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     /**
      * GET /music/artists
      * Artists of Music libraries A to Z by sort name, as the Artists view and CarPlay&#39;s Artists tab list them.
-     * An artist&#39;s image is &#x60;/items/{id}/artwork/poster&#x60;. While a kid is active an artist with no song but explicit ones is left out, and its counts leave out explicit songs and the albums holding only them. 
+     * An artist&#39;s image is its posterUrl. While a kid is active an artist with no song but explicit ones is left out, and its counts leave out explicit songs and the albums holding only them. 
      * @param libraryId One Music library; absent spans every Music library. (optional)
      * @param genreId  (optional)
      * @param letter Only those filed under this letter of &#x60;listMusicLetters&#x60;. (optional)

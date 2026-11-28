@@ -356,10 +356,9 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
     /**
      * GET /collections/{collectionId}/artwork/{kind}
      * The collection&#39;s image.
-     * A TMDB collection&#39;s own poster or backdrop. A custom collection, or a TMDB one without that image, shows its first movie&#39;s, in listCollectionMovies order for the active profile. 404 when none has one. 
+     * A TMDB collection&#39;s own poster or backdrop. A custom collection, or a TMDB one without that image, shows its first movie&#39;s, in listCollectionMovies order for the active profile. 404 when none has one. The image Collection.posterUrl or backdropUrl names, cached for a day and revalidated; kept because released clients use it. 
      * @param collectionId 
      * @param kind 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return java.io.File
      * @throws IllegalStateException If the request is not correctly configured
@@ -370,8 +369,10 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getCollectionArtwork(collectionId: kotlin.String, kind: ArtworkKind, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
-        val localVarResponse = getCollectionArtworkWithHttpInfo(collectionId = collectionId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
+    @Deprecated(message = "This operation is deprecated.")
+    fun getCollectionArtwork(collectionId: kotlin.String, kind: ArtworkKind, ifNoneMatch: kotlin.String? = null) : java.io.File {
+        @Suppress("DEPRECATION")
+        val localVarResponse = getCollectionArtworkWithHttpInfo(collectionId = collectionId, kind = kind, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as java.io.File
@@ -391,10 +392,9 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
     /**
      * GET /collections/{collectionId}/artwork/{kind}
      * The collection&#39;s image.
-     * A TMDB collection&#39;s own poster or backdrop. A custom collection, or a TMDB one without that image, shows its first movie&#39;s, in listCollectionMovies order for the active profile. 404 when none has one. 
+     * A TMDB collection&#39;s own poster or backdrop. A custom collection, or a TMDB one without that image, shows its first movie&#39;s, in listCollectionMovies order for the active profile. 404 when none has one. The image Collection.posterUrl or backdropUrl names, cached for a day and revalidated; kept because released clients use it. 
      * @param collectionId 
      * @param kind 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return ApiResponse<java.io.File?>
      * @throws IllegalStateException If the request is not correctly configured
@@ -402,8 +402,10 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getCollectionArtworkWithHttpInfo(collectionId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
-        val localVariableConfig = getCollectionArtworkRequestConfig(collectionId = collectionId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
+    @Deprecated(message = "This operation is deprecated.")
+    fun getCollectionArtworkWithHttpInfo(collectionId: kotlin.String, kind: ArtworkKind, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+        @Suppress("DEPRECATION")
+        val localVariableConfig = getCollectionArtworkRequestConfig(collectionId = collectionId, kind = kind, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
             localVariableConfig
@@ -415,18 +417,13 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
      *
      * @param collectionId 
      * @param kind 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getCollectionArtworkRequestConfig(collectionId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    @Deprecated(message = "This operation is deprecated.")
+    fun getCollectionArtworkRequestConfig(collectionId: kotlin.String, kind: ArtworkKind, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
-        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
-            .apply {
-                if (v != null) {
-                    put("v", listOf(v.toString()))
-                }
-            }
+        val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["Accept"] = "application/json"
         ifNoneMatch?.apply { localVariableHeaders["If-None-Match"] = this.toString() }

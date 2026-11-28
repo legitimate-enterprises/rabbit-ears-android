@@ -58,6 +58,8 @@ import kotlinx.serialization.encoding.Encoder
  * @param unavailable A movie or episode with files, every one of them marked missing (MediaFile.missingAt): it stays listed and startPlayback answers 409 until a file is back. Absent means false.
  * @param kidsContent Movies and shows only: whether it is kids' content, which an adult with hideKidsContent does not browse. It is kidsContentOverride when set, else whether it is rated G (a movie) or TV-Y, TV-Y7 or TV-G (a show). A show's seasons and episodes follow it.
  * @param kidsContentOverride Movies and shows only. An adult's setKidsContent; absent when none is set and the rating decides.
+ * @param posterUrl Server-relative URL of the poster the item shows, served by getArtwork; it changes exactly when the image does. It is the item's own under the metadata settings, else its nearest ancestor's: a season's or episode's show, a song's album, a video's channel. An artist's is its newest album's that the active profile may hear. Absent when there is none.
+ * @param backdropUrl Server-relative URL of the backdrop the item shows, served by getArtwork, chosen as posterUrl is; an artist has none. Absent when there is none.
  */
 @Serializable
 
@@ -131,7 +133,15 @@ data class Item (
 
     /* Movies and shows only. An adult's setKidsContent; absent when none is set and the rating decides. */
     @SerialName(value = "kidsContentOverride")
-    val kidsContentOverride: kotlin.Boolean? = null
+    val kidsContentOverride: kotlin.Boolean? = null,
+
+    /* Server-relative URL of the poster the item shows, served by getArtwork; it changes exactly when the image does. It is the item's own under the metadata settings, else its nearest ancestor's: a season's or episode's show, a song's album, a video's channel. An artist's is its newest album's that the active profile may hear. Absent when there is none. */
+    @SerialName(value = "posterUrl")
+    val posterUrl: kotlin.String? = null,
+
+    /* Server-relative URL of the backdrop the item shows, served by getArtwork, chosen as posterUrl is; an artist has none. Absent when there is none. */
+    @SerialName(value = "backdropUrl")
+    val backdropUrl: kotlin.String? = null
 
 ) {
 

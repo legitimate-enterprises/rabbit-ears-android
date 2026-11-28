@@ -40,6 +40,7 @@ import kotlinx.serialization.Contextual
  * @param externalId The YouTube channel id (UC...) or playlist id (PL...) the folder follows, when its tvshow.nfo names one.
  * @param sourceUrl The channel or playlist on YouTube, for Open on YouTube.
  * @param forKids Always present. Set by an adult with setYouTubeChannelForKids; a new channel is not. A kid under rating ceilings sees the channels for kids and their videos; an adult with hideKidsContent does not browse them.
+ * @param posterUrl Server-relative URL of the channel's avatar, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  */
 @Serializable
 
@@ -82,7 +83,11 @@ data class YouTubeChannel (
 
     /* Always present. Set by an adult with setYouTubeChannelForKids; a new channel is not. A kid under rating ceilings sees the channels for kids and their videos; an adult with hideKidsContent does not browse them. */
     @SerialName(value = "forKids")
-    val forKids: kotlin.Boolean? = null
+    val forKids: kotlin.Boolean? = null,
+
+    /* Server-relative URL of the channel's avatar, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
+    @SerialName(value = "posterUrl")
+    val posterUrl: kotlin.String? = null
 
 ) {
 

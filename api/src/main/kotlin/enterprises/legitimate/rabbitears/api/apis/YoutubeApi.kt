@@ -212,7 +212,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
     /**
      * GET /youtube/channels
      * Channels of YouTube libraries, for the Channels view and the Channel select.
-     * Every channel folder with videos in the library. A channel&#39;s avatar is &#x60;/items/{id}/artwork/poster&#x60;. While a kid is active only the channels the kid may see are listed: under rating ceilings those forKids, on a manual allow list those on it. An adult with hideKidsContent is not listed channels forKids. 
+     * Every channel folder with videos in the library. A channel&#39;s avatar is its posterUrl. While a kid is active only the channels the kid may see are listed: under rating ceilings those forKids, on a manual allow list those on it. An adult with hideKidsContent is not listed channels forKids. 
      * @param libraryId One YouTube library; absent spans every YouTube library. (optional)
      * @param q Case-insensitive substring of the title. (optional)
      * @param sort  (optional)
@@ -248,7 +248,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
     /**
      * GET /youtube/channels
      * Channels of YouTube libraries, for the Channels view and the Channel select.
-     * Every channel folder with videos in the library. A channel&#39;s avatar is &#x60;/items/{id}/artwork/poster&#x60;. While a kid is active only the channels the kid may see are listed: under rating ceilings those forKids, on a manual allow list those on it. An adult with hideKidsContent is not listed channels forKids. 
+     * Every channel folder with videos in the library. A channel&#39;s avatar is its posterUrl. While a kid is active only the channels the kid may see are listed: under rating ceilings those forKids, on a manual allow list those on it. An adult with hideKidsContent is not listed channels forKids. 
      * @param libraryId One YouTube library; absent spans every YouTube library. (optional)
      * @param q Case-insensitive substring of the title. (optional)
      * @param sort  (optional)
@@ -314,7 +314,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
     /**
      * GET /youtube/videos
      * Videos of YouTube libraries with the active profile&#39;s watch state.
-     * Home&#39;s New from your channels is &#x60;sort&#x3D;newest&#x60; with &#x60;unwatched&#x3D;true&#x60;; its Continue watching takes &#x60;inProgress&#x3D;true&#x60; with &#x60;sort&#x3D;played&#x60;. A video&#39;s thumbnail is &#x60;/items/{id}/artwork/poster&#x60;. Only videos of the channels listYouTubeChannels lists to the active profile are listed. 
+     * Home&#39;s New from your channels is &#x60;sort&#x3D;newest&#x60; with &#x60;unwatched&#x3D;true&#x60;; its Continue watching takes &#x60;inProgress&#x3D;true&#x60; with &#x60;sort&#x3D;played&#x60;. A video&#39;s thumbnail is its posterUrl. Only videos of the channels listYouTubeChannels lists to the active profile are listed. 
      * @param libraryId One YouTube library; absent spans every YouTube library. (optional)
      * @param channelId  (optional)
      * @param unwatched Only videos the active profile has not watched. (optional, default to false)
@@ -353,7 +353,7 @@ open class YoutubeApi(basePath: kotlin.String = defaultBasePath, client: Call.Fa
     /**
      * GET /youtube/videos
      * Videos of YouTube libraries with the active profile&#39;s watch state.
-     * Home&#39;s New from your channels is &#x60;sort&#x3D;newest&#x60; with &#x60;unwatched&#x3D;true&#x60;; its Continue watching takes &#x60;inProgress&#x3D;true&#x60; with &#x60;sort&#x3D;played&#x60;. A video&#39;s thumbnail is &#x60;/items/{id}/artwork/poster&#x60;. Only videos of the channels listYouTubeChannels lists to the active profile are listed. 
+     * Home&#39;s New from your channels is &#x60;sort&#x3D;newest&#x60; with &#x60;unwatched&#x3D;true&#x60;; its Continue watching takes &#x60;inProgress&#x3D;true&#x60; with &#x60;sort&#x3D;played&#x60;. A video&#39;s thumbnail is its posterUrl. Only videos of the channels listYouTubeChannels lists to the active profile are listed. 
      * @param libraryId One YouTube library; absent spans every YouTube library. (optional)
      * @param channelId  (optional)
      * @param unwatched Only videos the active profile has not watched. (optional, default to false)

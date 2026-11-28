@@ -39,7 +39,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 /**
- * One entry: itemId, or collectionId for a collection. The object its kind names is present: item for a movie, show, season or episode, with show for a season or episode; artist, album or song for music; collection for a collection. The row's title is item.metadata.title else item.parsedTitle, artist.name, album.title, song.title or collection.name; its art is /items/{itemId}/artwork/poster, a song's /items/{song.albumId}/artwork/poster, a collection's /collections/{collectionId}/artwork/poster. 
+ * One entry: itemId, or collectionId for a collection. The object its kind names is present: item for a movie, show, season or episode, with show for a season or episode; artist, album or song for music; collection for a collection. The row's title is item.metadata.title else item.parsedTitle, artist.name, album.title, song.title or collection.name; its art is that object's posterUrl. 
  *
  * @param id
  * @param playlistId

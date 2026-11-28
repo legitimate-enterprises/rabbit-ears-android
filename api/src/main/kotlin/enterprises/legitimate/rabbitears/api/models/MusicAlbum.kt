@@ -44,6 +44,7 @@ import kotlinx.serialization.Contextual
  * @param overview
  * @param musicBrainzId The MusicBrainz release MBID when matched.
  * @param lastPlayedAt When the active profile last played one of its songs; absent when never.
+ * @param posterUrl Server-relative URL of the album's cover, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  */
 @Serializable
 
@@ -94,7 +95,11 @@ data class MusicAlbum (
 
     /* When the active profile last played one of its songs; absent when never. */
     @Contextual @SerialName(value = "lastPlayedAt")
-    val lastPlayedAt: java.time.OffsetDateTime? = null
+    val lastPlayedAt: java.time.OffsetDateTime? = null,
+
+    /* Server-relative URL of the album's cover, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
+    @SerialName(value = "posterUrl")
+    val posterUrl: kotlin.String? = null
 
 ) {
 

@@ -33,6 +33,7 @@ import kotlinx.serialization.Contextual
  * @param name
  * @param tmdbId Absent for people added by hand.
  * @param profilePath Provider headshot name; present when the artwork endpoint has an image.
+ * @param headshotUrl Server-relative URL of the person's headshot, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  */
 @Serializable
 
@@ -50,7 +51,11 @@ data class Person (
 
     /* Provider headshot name; present when the artwork endpoint has an image. */
     @SerialName(value = "profilePath")
-    val profilePath: kotlin.String? = null
+    val profilePath: kotlin.String? = null,
+
+    /* Server-relative URL of the person's headshot, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
+    @SerialName(value = "headshotUrl")
+    val headshotUrl: kotlin.String? = null
 
 ) {
 

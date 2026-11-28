@@ -40,6 +40,7 @@ import kotlinx.serialization.Contextual
  * @param addedAt
  * @param overview The bio.
  * @param musicBrainzId The MusicBrainz artist MBID when matched.
+ * @param posterUrl Server-relative URL of the artist's image, served by getArtwork; it changes exactly when the image does. It is its newest album's that the active profile may hear. Absent when there is none.
  */
 @Serializable
 
@@ -78,7 +79,11 @@ data class MusicArtist (
 
     /* The MusicBrainz artist MBID when matched. */
     @SerialName(value = "musicBrainzId")
-    val musicBrainzId: kotlin.String? = null
+    val musicBrainzId: kotlin.String? = null,
+
+    /* Server-relative URL of the artist's image, served by getArtwork; it changes exactly when the image does. It is its newest album's that the active profile may hear. Absent when there is none. */
+    @SerialName(value = "posterUrl")
+    val posterUrl: kotlin.String? = null
 
 ) {
 

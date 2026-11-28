@@ -28,6 +28,7 @@ import okhttp3.Call
 import okhttp3.HttpUrl
 
 import enterprises.legitimate.rabbitears.api.models.ArtworkKind
+import enterprises.legitimate.rabbitears.api.models.ArtworkStore
 import enterprises.legitimate.rabbitears.api.models.Error
 import enterprises.legitimate.rabbitears.api.models.Genre
 import enterprises.legitimate.rabbitears.api.models.GenreInput
@@ -733,6 +734,86 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     }
 
     /**
+     * GET /artwork/{store}/{name}
+     * The image a posterUrl, backdropUrl or headshotUrl names.
+     * An address names one image and never another, so the answer is cached for a year, immutable; when what a title, collection or person shows changes, the data carries a new address. Clients never build one. Any device of the server may fetch any address; which profile is shown an address is decided by the data that carries it.
+     * @param store 
+     * @param name 
+     * @param ifNoneMatch  (optional)
+     * @return java.io.File
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun getArtwork(store: ArtworkStore, name: kotlin.String, ifNoneMatch: kotlin.String? = null) : java.io.File {
+        val localVarResponse = getArtworkWithHttpInfo(store = store, name = name, ifNoneMatch = ifNoneMatch)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as java.io.File
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * GET /artwork/{store}/{name}
+     * The image a posterUrl, backdropUrl or headshotUrl names.
+     * An address names one image and never another, so the answer is cached for a year, immutable; when what a title, collection or person shows changes, the data carries a new address. Clients never build one. Any device of the server may fetch any address; which profile is shown an address is decided by the data that carries it.
+     * @param store 
+     * @param name 
+     * @param ifNoneMatch  (optional)
+     * @return ApiResponse<java.io.File?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun getArtworkWithHttpInfo(store: ArtworkStore, name: kotlin.String, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+        val localVariableConfig = getArtworkRequestConfig(store = store, name = name, ifNoneMatch = ifNoneMatch)
+
+        return request<Unit, java.io.File>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation getArtwork
+     *
+     * @param store 
+     * @param name 
+     * @param ifNoneMatch  (optional)
+     * @return RequestConfig
+     */
+    fun getArtworkRequestConfig(store: ArtworkStore, name: kotlin.String, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+        ifNoneMatch?.apply { localVariableHeaders["If-None-Match"] = this.toString() }
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/artwork/{store}/{name}".replace("{"+"store"+"}", encodeURIComponent(store.toString())).replace("{"+"name"+"}", encodeURIComponent(name.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
      * GET /genres/{genreId}
      * 
      * 
@@ -954,10 +1035,9 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     /**
      * GET /items/{itemId}/artwork/{kind}
      * The item&#39;s image, or its nearest ancestor&#39;s when it has none.
-     * 
+     * The image Item.posterUrl or backdropUrl names, cached for a day and revalidated; kept because released clients use it.
      * @param itemId 
      * @param kind 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return java.io.File
      * @throws IllegalStateException If the request is not correctly configured
@@ -968,8 +1048,10 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
-    fun getItemArtwork(itemId: kotlin.String, kind: ArtworkKind, v: kotlin.Long? = null, ifNoneMatch: kotlin.String? = null) : java.io.File {
-        val localVarResponse = getItemArtworkWithHttpInfo(itemId = itemId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
+    @Deprecated(message = "This operation is deprecated.")
+    fun getItemArtwork(itemId: kotlin.String, kind: ArtworkKind, ifNoneMatch: kotlin.String? = null) : java.io.File {
+        @Suppress("DEPRECATION")
+        val localVarResponse = getItemArtworkWithHttpInfo(itemId = itemId, kind = kind, ifNoneMatch = ifNoneMatch)
 
         return when (localVarResponse.responseType) {
             ResponseType.Success -> (localVarResponse as Success<*>).data as java.io.File
@@ -989,10 +1071,9 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
     /**
      * GET /items/{itemId}/artwork/{kind}
      * The item&#39;s image, or its nearest ancestor&#39;s when it has none.
-     * 
+     * The image Item.posterUrl or backdropUrl names, cached for a day and revalidated; kept because released clients use it.
      * @param itemId 
      * @param kind 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return ApiResponse<java.io.File?>
      * @throws IllegalStateException If the request is not correctly configured
@@ -1000,8 +1081,10 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      */
     @Suppress("UNCHECKED_CAST")
     @Throws(IllegalStateException::class, IOException::class)
-    fun getItemArtworkWithHttpInfo(itemId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
-        val localVariableConfig = getItemArtworkRequestConfig(itemId = itemId, kind = kind, v = v, ifNoneMatch = ifNoneMatch)
+    @Deprecated(message = "This operation is deprecated.")
+    fun getItemArtworkWithHttpInfo(itemId: kotlin.String, kind: ArtworkKind, ifNoneMatch: kotlin.String?) : ApiResponse<java.io.File?> {
+        @Suppress("DEPRECATION")
+        val localVariableConfig = getItemArtworkRequestConfig(itemId = itemId, kind = kind, ifNoneMatch = ifNoneMatch)
 
         return request<Unit, java.io.File>(
             localVariableConfig
@@ -1013,18 +1096,13 @@ open class ItemsApi(basePath: kotlin.String = defaultBasePath, client: Call.Fact
      *
      * @param itemId 
      * @param kind 
-     * @param v The &#x60;Artwork-Generation&#x60; of the latest response the client has seen. An image asked for with it is the same until the generation moves, which it does once any image has been added, replaced or removed and changes have stopped for a few seconds, so the answer is cached for a year, immutable, and the client asks again only under a new generation. Without it the answer is cached for a day and revalidated. Any value is served the current image. (optional)
      * @param ifNoneMatch  (optional)
      * @return RequestConfig
      */
-    fun getItemArtworkRequestConfig(itemId: kotlin.String, kind: ArtworkKind, v: kotlin.Long?, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
+    @Deprecated(message = "This operation is deprecated.")
+    fun getItemArtworkRequestConfig(itemId: kotlin.String, kind: ArtworkKind, ifNoneMatch: kotlin.String?) : RequestConfig<Unit> {
         val localVariableBody = null
-        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
-            .apply {
-                if (v != null) {
-                    put("v", listOf(v.toString()))
-                }
-            }
+        val localVariableQuery: MultiValueMap = mutableMapOf()
         val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
         localVariableHeaders["Accept"] = "application/json"
         ifNoneMatch?.apply { localVariableHeaders["If-None-Match"] = this.toString() }

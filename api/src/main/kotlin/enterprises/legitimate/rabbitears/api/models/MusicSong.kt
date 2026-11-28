@@ -44,6 +44,7 @@ import kotlinx.serialization.Contextual
  * @param year
  * @param codec ffprobe name of the file's audio codec, such as flac or mp3.
  * @param unavailable Its file is marked missing (MediaFile.missingAt); startPlayback answers 409. Absent means false.
+ * @param posterUrl Server-relative URL of the song's art, its album's, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  */
 @Serializable
 
@@ -96,7 +97,11 @@ data class MusicSong (
 
     /* Its file is marked missing (MediaFile.missingAt); startPlayback answers 409. Absent means false. */
     @SerialName(value = "unavailable")
-    val unavailable: kotlin.Boolean? = null
+    val unavailable: kotlin.Boolean? = null,
+
+    /* Server-relative URL of the song's art, its album's, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
+    @SerialName(value = "posterUrl")
+    val posterUrl: kotlin.String? = null
 
 ) {
 

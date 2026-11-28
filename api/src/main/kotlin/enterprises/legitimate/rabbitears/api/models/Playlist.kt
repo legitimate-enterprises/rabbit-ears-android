@@ -48,6 +48,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param ownerName The owner's name, present when the playlist is shared with the profile or a household of theirs, for \"Shared by\".
  * @param artItemId The item whose poster stands for the playlist: the item of its first entry the active profile may see, which may be a show, season, artist or album, or for a collection its first such movie.
  * @param lastPlayedAt When playback last started with this playlistId.
+ * @param posterUrl Server-relative URL of artItemId's poster, as that item's posterUrl, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  * @param imageUrl Server-relative URL of the custom image the owner set, served by getPlaylistImage with the device token like artwork; it changes whenever the image does. Absent while none is set, and while getPlaylistImage would not find it; the client then shows artItemId's poster.
  * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
  * @param modifiedBy The profile that last changed it; absent when none did, as for what the server made, or when that profile is gone.
@@ -101,6 +102,10 @@ data class Playlist (
     /* When playback last started with this playlistId. */
     @Contextual @SerialName(value = "lastPlayedAt")
     val lastPlayedAt: java.time.OffsetDateTime? = null,
+
+    /* Server-relative URL of artItemId's poster, as that item's posterUrl, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
+    @SerialName(value = "posterUrl")
+    val posterUrl: kotlin.String? = null,
 
     /* Server-relative URL of the custom image the owner set, served by getPlaylistImage with the device token like artwork; it changes whenever the image does. Absent while none is set, and while getPlaylistImage would not find it; the client then shows artItemId's poster. */
     @SerialName(value = "imageUrl")

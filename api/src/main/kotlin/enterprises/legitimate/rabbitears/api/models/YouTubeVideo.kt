@@ -45,6 +45,7 @@ import kotlinx.serialization.Contextual
  * @param externalId YouTube's video id, when a sidecar names it.
  * @param sourceUrl The video on YouTube, for Open on YouTube.
  * @param unavailable Its file is marked missing (MediaFile.missingAt); startPlayback answers 409. Absent means false.
+ * @param posterUrl Server-relative URL of the video's thumbnail, else its channel's avatar, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  */
 @Serializable
 
@@ -103,7 +104,11 @@ data class YouTubeVideo (
 
     /* Its file is marked missing (MediaFile.missingAt); startPlayback answers 409. Absent means false. */
     @SerialName(value = "unavailable")
-    val unavailable: kotlin.Boolean? = null
+    val unavailable: kotlin.Boolean? = null,
+
+    /* Server-relative URL of the video's thumbnail, else its channel's avatar, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
+    @SerialName(value = "posterUrl")
+    val posterUrl: kotlin.String? = null
 
 ) {
 
