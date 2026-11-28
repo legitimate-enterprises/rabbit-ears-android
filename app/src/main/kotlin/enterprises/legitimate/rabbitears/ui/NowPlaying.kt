@@ -85,6 +85,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.AudioDetails
+import enterprises.legitimate.rabbitears.api.models.FavoriteKind
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
 import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.AudioQueue
@@ -750,6 +751,7 @@ fun NowPlaying(route: Route.NowPlaying) {
                         { player.scope.launch { player.stop() } },
                         icon = R.drawable.ic_stop,
                     )
+                    FavoriteStar(song.id, FavoriteKind.song)
                     player.queue.upNext.firstOrNull()?.let {
                         Text(
                             "${it.song.title} · ${Format.length(it.song.durationMs)}",

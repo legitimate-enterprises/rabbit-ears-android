@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
+import enterprises.legitimate.rabbitears.api.models.FavoriteKind
 import enterprises.legitimate.rabbitears.api.models.Genre
 import enterprises.legitimate.rabbitears.api.models.MusicAlbum
 import enterprises.legitimate.rabbitears.api.models.MusicSong
@@ -333,7 +334,7 @@ fun AlbumTile(album: MusicAlbum, modifier: Modifier = Modifier, selection: Selec
     }
 }
 
-/** A song in a list; the one playing is goldenrod. */
+/** A song in a list; the one playing is goldenrod. A long press opens its menu. */
 @Composable
 private fun SongRow(
     song: MusicSong,
@@ -344,48 +345,55 @@ private fun SongRow(
     onClick: () -> Unit,
 ) {
     val color = if (current) Palette.accent else Palette.text
-    Row(
-        Modifier.fillMaxWidth().pick(selection, song.id, open = onClick).padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        number?.let {
-            Text(
-                "$it",
-                Modifier.width(20.dp),
-                color = if (current) Palette.accent else Palette.dim,
-                textAlign = TextAlign.End,
-            )
-        }
-        if (album) AlbumArt(song.albumId, song.posterUrl, 40.dp, 4.dp)
-        Column(Modifier.weight(1f)) {
-            Text(
-                song.title,
-                color = color,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Medium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            if (album)
+    Hold(Held.Song(song), selection, onClick) { gesture ->
+        Row(
+            Modifier.fillMaxWidth().then(gesture).padding(vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            number?.let {
                 Text(
-                    "${song.artistName} · ${song.albumTitle}",
-                    fontSize = 12.sp,
-                    color = Palette.dim,
+                    "$it",
+                    Modifier.width(20.dp),
+                    color = if (current) Palette.accent else Palette.dim,
+                    textAlign = TextAlign.End,
+                )
+            }
+            if (album) AlbumArt(song.albumId, song.posterUrl, 40.dp, 4.dp)
+            Column(Modifier.weight(1f)) {
+                Text(
+                    song.title,
+                    color = color,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
+                if (album)
+                    Text(
+                        "${song.artistName} · ${song.albumTitle}",
+                        fontSize = 12.sp,
+                        color = Palette.dim,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+            }
+            if (isDownloaded(song.id)) DownloadedMark()
+            Text(Format.length(song.durationMs), color = Palette.dim, fontSize = 13.sp)
         }
-        if (isDownloaded(song.id)) DownloadedMark()
-        Text(Format.length(song.durationMs), color = Palette.dim, fontSize = 13.sp)
     }
 }
 
+/** Play and Shuffle, and the star of the artist or album [id] is. */
 @Composable
-private fun PlayShuffle(onPlay: (shuffled: Boolean) -> Unit) {
-    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+private fun PlayShuffle(id: String, kind: FavoriteKind, onPlay: (shuffled: Boolean) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         Pill("Play", { onPlay(false) }, primary = true, icon = R.drawable.ic_play)
         Pill("Shuffle", { onPlay(true) }, icon = R.drawable.ic_shuffle)
+        FavoriteStar(id, kind)
     }
 }
 
@@ -457,7 +465,7 @@ fun ArtistScreen(id: String) {
                 }
             }
         }
-        item { PlayShuffle(play) }
+        item { PlayShuffle(artist.id, FavoriteKind.artist, play) }
         artist.overview?.let { item { Text(it, color = Palette.secondary, lineHeight = 21.sp) } }
         if (d.popular.isNotEmpty()) {
             item { SectionTitle("Popular") }
@@ -530,7 +538,7 @@ fun AlbumScreen(id: String) {
                 }
             }
         }
-        item { PlayShuffle { play(0, it) } }
+        item { PlayShuffle(album.id, FavoriteKind.album) { play(0, it) } }
         d.songs.forEachIndexed { index, song ->
             val disc = song.discNumber ?: 1
             if (discs.size > 1 && d.songs.indexOfFirst { (it.discNumber ?: 1) == disc } == index)

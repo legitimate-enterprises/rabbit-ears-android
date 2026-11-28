@@ -77,8 +77,9 @@ fun MoreMenu(
 
 /**
  * The menu [MoreMenu] and a long press on a title share, with [extras] before and [after] what the
- * profile may do to it. What its entries open is hosted here, outside the dropdown, so it outlives
- * the menu closing. Nothing is read until the menu opens.
+ * profile may do to it. It stars the title only when [favorite], as a long press's menu does; a
+ * page's star is beside its Play. What its entries open is hosted here, outside the dropdown, so it
+ * outlives the menu closing. Nothing is read until the menu opens.
  */
 @Composable
 fun ActionMenu(
@@ -93,13 +94,17 @@ fun ActionMenu(
     name: String? = null,
     extras: (@Composable (close: () -> Unit) -> Unit)? = null,
     after: (@Composable (close: () -> Unit) -> Unit)? = null,
+    favorite: Boolean = false,
 ) {
     val nav = LocalNav.current
     var adding by remember { mutableStateOf<AddTarget?>(null) }
     var collecting by remember { mutableStateOf(false) }
     var downloading by remember { mutableStateOf<DownloadAsk?>(null) }
     DropdownMenu(open, close) {
-        val actions = titleActions(item?.let { TitleKind.of(it.kind) }, !nav.app.isKid)
+        val actions =
+            titleActions(item?.let { TitleKind.of(it.kind) }, !nav.app.isKid).filter {
+                favorite || it != TitleAction.Favorite
+            }
         val target =
             if (collection) DownloadTarget(collectionId = id)
             else DownloadTarget(itemId = id, editionId = editionId)
@@ -112,7 +117,7 @@ fun ActionMenu(
         extras?.invoke(close)
         DownloadMenuItem(ask, close) { downloading = it }
         item?.let { ItemActions(it, actions) }
-        if (actions.isNotEmpty()) {
+        if (TitleAction.Playlist in actions) {
             if (item != null) HorizontalDivider(color = Palette.divider)
             if (TitleAction.Playlist in actions)
                 MenuAction("Add to playlist") {
@@ -142,8 +147,8 @@ fun ActionMenu(
 }
 
 /**
- * A video's menu: Download, and an adult's Mark as watched. That closes the menu, since the video
- * shown is not read again until [changed] runs.
+ * A video's menu: Download, an adult's Mark as watched, and when [favorite] its star. Mark as
+ * watched closes the menu, since the video shown is not read again until [changed] runs.
  */
 @Composable
 fun VideoMenu(
@@ -151,6 +156,7 @@ fun VideoMenu(
     close: () -> Unit,
     video: YouTubeVideo,
     changed: () -> Unit,
+    favorite: Boolean = false,
     extras: (@Composable (close: () -> Unit) -> Unit)? = null,
 ) {
     val nav = LocalNav.current
@@ -164,11 +170,14 @@ fun VideoMenu(
         ) {
             downloading = it
         }
-        if (TitleAction.Watched in titleActions(TitleKind.Video, !nav.app.isKid))
+        val actions = titleActions(TitleKind.Video, !nav.app.isKid)
+        if (TitleAction.Watched in actions)
             MenuAction(if (video.watched) "Mark as unwatched" else "Mark as watched") {
                 close()
                 scope.launch { if (nav.youtube.setWatched(video, !video.watched)) changed() }
             }
+        if (favorite && TitleAction.Favorite in actions)
+            FavoriteMenuItem(video.id, TitleKind.Video.favoriteKind)
     }
     downloading?.let { DownloadDialog(it) { downloading = null } }
 }
@@ -197,6 +206,8 @@ private fun ItemActions(shown: Item, actions: List<TitleAction>) {
             scope.launch { nav.catalog.setWatched(!watched, item) }
         }
     }
+    if (TitleAction.Favorite in actions)
+        FavoriteMenuItem(item.id, TitleKind.of(item.kind).favoriteKind)
     if (TitleAction.KidsContent in actions) {
         Checked("Kids’ content", item.kidsContent == true) {
             scope.launch { nav.catalog.setKidsContent(item, item.kidsContent != true) }

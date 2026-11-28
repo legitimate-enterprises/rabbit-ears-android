@@ -6,6 +6,7 @@ import enterprises.legitimate.rabbitears.kit.AppModel
 import enterprises.legitimate.rabbitears.kit.CatalogModel
 import enterprises.legitimate.rabbitears.kit.CollectionsModel
 import enterprises.legitimate.rabbitears.kit.Downloads
+import enterprises.legitimate.rabbitears.kit.FavoritesModel
 import enterprises.legitimate.rabbitears.kit.MusicModel
 import enterprises.legitimate.rabbitears.kit.MusicPlayer
 import enterprises.legitimate.rabbitears.kit.OccasionsModel
@@ -20,6 +21,8 @@ sealed interface Route {
     data class Details(val id: String) : Route
 
     data object Search : Route
+
+    data object Favorites : Route
 
     /**
      * [audioTrackId] is the details screen's pick. [title] names a video, which the catalog does
@@ -89,6 +92,7 @@ class Navigator(
     val collections by lazy { CollectionsModel(catalog.api, offline) }
     val stations by lazy { StationsModel(catalog.api) }
     val occasions by lazy { OccasionsModel(catalog.api, catalog.profileId) }
+    val favorites by lazy { FavoritesModel(catalog.api, catalog.profileId) }
     private val togethers = mutableMapOf<String, WatchTogetherModel>()
 
     /** Watch together on a title, kept from details into the player. */

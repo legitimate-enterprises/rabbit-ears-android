@@ -397,8 +397,9 @@ fun Header(
             count?.let { Text(it, color = Palette.dim, modifier = Modifier.padding(bottom = 6.dp)) }
         }
         trailing()
+        if (compact) actions()
+        IconAction(R.drawable.ic_star, "Favorites", { nav.open(Route.Favorites) })
         if (compact) {
-            actions()
             IconAction(R.drawable.ic_search, "Search", { nav.open(Route.Search) })
             ProfileButton()
         } else SearchPill()

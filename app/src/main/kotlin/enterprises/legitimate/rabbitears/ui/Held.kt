@@ -1,19 +1,22 @@
 package enterprises.legitimate.rabbitears.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import enterprises.legitimate.rabbitears.api.models.FavoriteKind
 import enterprises.legitimate.rabbitears.api.models.Item
+import enterprises.legitimate.rabbitears.api.models.MusicSong
 import enterprises.legitimate.rabbitears.api.models.YouTubeVideo
 import enterprises.legitimate.rabbitears.kit.Selection
 import enterprises.legitimate.rabbitears.kit.TitleKind
 import enterprises.legitimate.rabbitears.kit.resumeProgress
 
-/** A movie, show, season, episode or video that a tile or row stands for. */
+/** A movie, show, season, episode, video or song that a tile or row stands for. */
 sealed interface Held {
     val id: String
 
@@ -31,6 +34,12 @@ sealed interface Held {
         override val id
             get() = video.id
     }
+
+    /** A song, whose menu only stars it; a tap plays it. */
+    class Song(val song: MusicSong) : Held {
+        override val id
+            get() = song.id
+    }
 }
 
 /** The watched fraction its tile or row shows, as its menu's Play would resume. */
@@ -40,6 +49,7 @@ fun Held.progress(): Double? =
         is Held.Title ->
             LocalNav.current.catalog.catalog.let { it.resumeProgress(it.item(id) ?: item) }
         is Held.Video -> video.resumeProgress()
+        is Held.Song -> null
     }
 
 /**
@@ -81,12 +91,18 @@ fun Hold(
                         }
                     },
                     after = held.local,
+                    favorite = true,
                 )
             }
             is Held.Video ->
-                VideoMenu(shown, close, held.video, held.changed) { dismiss ->
+                VideoMenu(shown, close, held.video, held.changed, favorite = true) { dismiss ->
                     SelectEntry(selection, held.id, dismiss)
                     PlayEntry(held.video, dismiss)
+                }
+            is Held.Song ->
+                DropdownMenu(shown, close) {
+                    SelectEntry(selection, held.id, close)
+                    FavoriteMenuItem(held.id, FavoriteKind.song)
                 }
         }
     }

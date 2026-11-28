@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.DownloadTarget
+import enterprises.legitimate.rabbitears.api.models.FavoriteKind
 import enterprises.legitimate.rabbitears.api.models.YouTubeVideo
 import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Format
@@ -444,6 +445,7 @@ fun VideoScreen(id: String) {
                             primary = true,
                             icon = R.drawable.ic_play,
                         )
+                    FavoriteStar(v.id, FavoriteKind.video)
                     Pill(
                         if (v.watched) "Unwatched" else "Watched",
                         { scope.launch { if (model.setWatched(v, !v.watched)) version++ } },

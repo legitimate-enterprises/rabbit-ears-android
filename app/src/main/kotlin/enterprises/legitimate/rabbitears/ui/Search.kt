@@ -123,6 +123,7 @@ fun Search() {
                     { music?.scope?.launch { music.play(listOf(song), 0, "Search") } },
                     { AlbumArt(song.albumId, song.posterUrl, 48.dp, 6.dp) },
                     downloaded = isDownloaded(song.id),
+                    held = Held.Song(song),
                 )
             }
         }
@@ -171,7 +172,7 @@ fun Search() {
 }
 
 @Composable
-private fun Round(
+internal fun Round(
     art: String,
     id: String,
     name: String,

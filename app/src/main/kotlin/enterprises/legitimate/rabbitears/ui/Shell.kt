@@ -158,6 +158,8 @@ private fun Browse(app: AppModel) {
         onStopOrDispose { following.cancel() }
     }
     LaunchedEffect(nav) { live.events.collect { nav.catalog.heard(it) } }
+    // The stars on pages and in menus read what the server last listed.
+    LaunchedEffect(nav, app.offline) { if (!app.offline) nav.favorites.load() }
     // Hide kids' content belongs to the profile, so a change made on another device reaches the
     // profile read again on returning to the foreground and on a household change, and the catalog
     // follows it.
@@ -327,6 +329,7 @@ private fun Destination(tab: Tab, route: Route?, modifier: Modifier, bottom: Boo
         when (route) {
             is Route.Details -> Details(route.id)
             Route.Search -> Search()
+            Route.Favorites -> Favorites()
             is Route.Person -> PersonScreen(route.id)
             is Route.Artist -> ArtistScreen(route.id)
             is Route.Album -> AlbumScreen(route.id)

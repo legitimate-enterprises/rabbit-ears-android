@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.SystemCapabilities
 import enterprises.legitimate.rabbitears.api.models.Edition
+import enterprises.legitimate.rabbitears.api.models.FavoriteKind
 import enterprises.legitimate.rabbitears.api.models.Item
 import enterprises.legitimate.rabbitears.api.models.ItemCredits
 import enterprises.legitimate.rabbitears.api.models.ItemKind
@@ -502,6 +503,7 @@ private fun Movie(item: Item, editions: List<Edition>) {
                                 picked = it.id
                             }
                     }
+                    FavoriteStar(item.id, FavoriteKind.movie)
                     // An adult marks watched in More; a kid has no More.
                     if (nav.app.isKid) WatchedPill(item)
                     together?.let { TogetherAction(it) }
@@ -669,6 +671,7 @@ private fun ShowActions(show: Item, target: Item?, seasons: List<Item>) {
                 icon = R.drawable.ic_play,
             )
         }
+        FavoriteStar(show.id, FavoriteKind.show)
         ShufflePill(c.episodes(show.id))
         (seasons.firstOrNull { it.id == target?.parentId } ?: seasons.firstOrNull())?.let { season
             ->
@@ -735,6 +738,7 @@ private fun Season(item: Item) {
                         icon = R.drawable.ic_play,
                     )
                 }
+                FavoriteStar(item.id, FavoriteKind.season)
                 ShufflePill(c.episodes(item.id))
                 Pill(
                     if (unwatched == 0) "Mark all unwatched" else "Mark all watched",
@@ -944,6 +948,7 @@ private fun Episode(item: Item) {
                         )
                         if (resuming) Pill("Start over", { nav.play(item.id, 0) })
                     }
+                    FavoriteStar(item.id, FavoriteKind.episode)
                     if (!resuming) WatchedPill(item)
                     together?.let { TogetherAction(it) }
                     Neighbors(related, episode = true)
