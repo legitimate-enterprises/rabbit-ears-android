@@ -36,6 +36,8 @@ import enterprises.legitimate.rabbitears.api.models.CeilingSuggestion
 import enterprises.legitimate.rabbitears.api.models.DeviceHouseholdInput
 import enterprises.legitimate.rabbitears.api.models.DeviceLinkPage
 import enterprises.legitimate.rabbitears.api.models.Error
+import enterprises.legitimate.rabbitears.api.models.FavoriteKind
+import enterprises.legitimate.rabbitears.api.models.FavoritePage
 import enterprises.legitimate.rabbitears.api.models.HouseholdAdultInput
 import enterprises.legitimate.rabbitears.api.models.HouseholdInvite
 import enterprises.legitimate.rabbitears.api.models.JoinCodeResendInput
@@ -515,6 +517,88 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
         return RequestConfig(
             method = RequestMethod.POST,
             path = "/household/offers",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * DELETE /profiles/{profileId}/favorites/{itemId}
+     * 
+     * 
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was unfavorited, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A favorite made later stays, and the answer is still 204. (optional)
+     * @return void
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun deleteFavorite(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime? = null) : Unit {
+        val localVarResponse = deleteFavoriteWithHttpInfo(profileId = profileId, itemId = itemId, at = at)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> Unit
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * DELETE /profiles/{profileId}/favorites/{itemId}
+     * 
+     * 
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was unfavorited, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A favorite made later stays, and the answer is still 204. (optional)
+     * @return ApiResponse<Unit?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Throws(IllegalStateException::class, IOException::class)
+    fun deleteFavoriteWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : ApiResponse<Unit?> {
+        val localVariableConfig = deleteFavoriteRequestConfig(profileId = profileId, itemId = itemId, at = at)
+
+        return request<Unit, Unit>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation deleteFavorite
+     *
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was unfavorited, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A favorite made later stays, and the answer is still 204. (optional)
+     * @return RequestConfig
+     */
+    fun deleteFavoriteRequestConfig(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (at != null) {
+                    put("at", listOf(parseDateToQueryString<java.time.OffsetDateTime>(at)))
+                }
+            }
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.DELETE,
+            path = "/profiles/{profileId}/favorites/{itemId}".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"itemId"+"}", encodeURIComponent(itemId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,
@@ -1435,6 +1519,99 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
     }
 
     /**
+     * GET /profiles/{profileId}/favorites
+     * The profile&#39;s favorites, most recently favorited first, then by item id.
+     * Only items the profile browses: a favorite hidden from it, as by a kid&#39;s ceilings, is kept and listed again once it may be seen. An adult with hideKidsContent is not listed kids&#39; content (Item.kidsContent, YouTubeChannel.forKids).
+     * @param profileId 
+     * @param kind  (optional)
+     * @param limit  (optional, default to 50)
+     * @param offset  (optional, default to 0)
+     * @return FavoritePage
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun listFavorites(profileId: kotlin.String, kind: FavoriteKind? = null, limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : FavoritePage {
+        val localVarResponse = listFavoritesWithHttpInfo(profileId = profileId, kind = kind, limit = limit, offset = offset)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as FavoritePage
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * GET /profiles/{profileId}/favorites
+     * The profile&#39;s favorites, most recently favorited first, then by item id.
+     * Only items the profile browses: a favorite hidden from it, as by a kid&#39;s ceilings, is kept and listed again once it may be seen. An adult with hideKidsContent is not listed kids&#39; content (Item.kidsContent, YouTubeChannel.forKids).
+     * @param profileId 
+     * @param kind  (optional)
+     * @param limit  (optional, default to 50)
+     * @param offset  (optional, default to 0)
+     * @return ApiResponse<FavoritePage?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun listFavoritesWithHttpInfo(profileId: kotlin.String, kind: FavoriteKind?, limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<FavoritePage?> {
+        val localVariableConfig = listFavoritesRequestConfig(profileId = profileId, kind = kind, limit = limit, offset = offset)
+
+        return request<Unit, FavoritePage>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation listFavorites
+     *
+     * @param profileId 
+     * @param kind  (optional)
+     * @param limit  (optional, default to 50)
+     * @param offset  (optional, default to 0)
+     * @return RequestConfig
+     */
+    fun listFavoritesRequestConfig(profileId: kotlin.String, kind: FavoriteKind?, limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (kind != null) {
+                    put("kind", listOf(kind.toString()))
+                }
+                if (limit != null) {
+                    put("limit", listOf(limit.toString()))
+                }
+                if (offset != null) {
+                    put("offset", listOf(offset.toString()))
+                }
+            }
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/profiles/{profileId}/favorites".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
      * GET /household/device-links
      * Links that adults of the device household approved or denied, newest first. Kids get 403.
      * 
@@ -2225,6 +2402,88 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
         return RequestConfig(
             method = RequestMethod.PUT,
             path = "/me/household",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * PUT /profiles/{profileId}/favorites/{itemId}
+     * Favorite an item of a FavoriteKind the profile may see.
+     * 
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was favorited, as a device that was offline knows it; absent is now, and a time ahead of the server&#39;s is taken as now. An item already a favorite keeps its createdAt. (optional)
+     * @return void
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun putFavorite(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime? = null) : Unit {
+        val localVarResponse = putFavoriteWithHttpInfo(profileId = profileId, itemId = itemId, at = at)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> Unit
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * PUT /profiles/{profileId}/favorites/{itemId}
+     * Favorite an item of a FavoriteKind the profile may see.
+     * 
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was favorited, as a device that was offline knows it; absent is now, and a time ahead of the server&#39;s is taken as now. An item already a favorite keeps its createdAt. (optional)
+     * @return ApiResponse<Unit?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Throws(IllegalStateException::class, IOException::class)
+    fun putFavoriteWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : ApiResponse<Unit?> {
+        val localVariableConfig = putFavoriteRequestConfig(profileId = profileId, itemId = itemId, at = at)
+
+        return request<Unit, Unit>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation putFavorite
+     *
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was favorited, as a device that was offline knows it; absent is now, and a time ahead of the server&#39;s is taken as now. An item already a favorite keeps its createdAt. (optional)
+     * @return RequestConfig
+     */
+    fun putFavoriteRequestConfig(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (at != null) {
+                    put("at", listOf(parseDateToQueryString<java.time.OffsetDateTime>(at)))
+                }
+            }
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.PUT,
+            path = "/profiles/{profileId}/favorites/{itemId}".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"itemId"+"}", encodeURIComponent(itemId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,
