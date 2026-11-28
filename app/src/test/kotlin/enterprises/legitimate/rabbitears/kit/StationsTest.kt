@@ -65,8 +65,10 @@ object StationJson {
         times: String = "[]",
         rating: String? = null,
         timing: String = "hour",
+        smart: Boolean = false,
     ) =
         """{"id":$id,"name":"$name","kind":"$kind","ownerId":"1","householdId":"1","playlistId":"12",""" +
+            """"smart":$smart,""" +
             """"order":"$order","visibility":"$visibility","timing":"$timing","days":$days,""" +
             """"times":$times,""" +
             """"onAir":$onAir,"createdAt":"${Json.T}","modifiedAt":"${Json.T}"""" +
@@ -264,6 +266,20 @@ class StationsModelTest {
         assertEquals(listOf("4"), model.mine(PlaylistKind.music, "1").map { it.id })
         assertTrue(model.mine(PlaylistKind.music, "2").isEmpty())
         assertTrue(model.mine(PlaylistKind.movies, "1").isEmpty())
+    }
+
+    @Test
+    fun aStationOnRulesIsNotOfferedToAddTo() = runBlocking {
+        server.on(
+            "GET /stations",
+            body =
+                Json.page(
+                    StationJson.station("4", onAir),
+                    StationJson.station("5", onAir, smart = true),
+                ),
+        )
+        model.load()
+        assertEquals(listOf("4"), model.mine(PlaylistKind.movies, "1").map { it.id })
     }
 
     @Test

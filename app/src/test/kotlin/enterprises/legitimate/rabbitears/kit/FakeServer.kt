@@ -135,9 +135,26 @@ object Json {
         source: String = "custom",
         movies: Int = 2,
         customOrder: Boolean = false,
+        smart: Boolean = false,
     ) =
         """{"id":$id,"source":"$source","name":"$name","movieCount":$movies,"customOrder":$customOrder,""" +
-            """"createdAt":"$T","modifiedAt":"$T"}"""
+            """"smart":$smart,"createdAt":"$T","modifiedAt":"$T"}"""
+
+    fun playlist(
+        id: String,
+        name: String = "Road trip",
+        kind: String = "movies",
+        access: String = "owner",
+        smart: Boolean = false,
+    ) =
+        """{"id":$id,"profileId":"1","name":"$name","kind":"$kind","itemCount":0,"access":"$access",""" +
+            """"smart":$smart,"durationMs":0,"createdAt":"$T","modifiedAt":"$T"}"""
+
+    /** A 400 naming each of [fields], path to message. */
+    fun refusal(vararg fields: Pair<String, String>) =
+        """{"code":"bad_request","message":"Invalid.","fields":[""" +
+            fields.joinToString(",") { (f, m) -> """{"field":"$f","message":"$m"}""" } +
+            "]}"
 
     fun page(vararg items: String) =
         """{"items":[${items.joinToString(",")}],"total":${items.size}}"""

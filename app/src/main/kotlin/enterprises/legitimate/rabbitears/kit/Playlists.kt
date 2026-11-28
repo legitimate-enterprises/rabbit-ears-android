@@ -120,9 +120,17 @@ val PlaylistEntry.artUrl: String?
 val Playlist.isOwned: Boolean
     get() = access == PlaylistAccess.owner
 
-/** Whether the profile may add, remove and reorder its entries. */
+/** Whether rules choose its entries; a copy stored without the flag is not smart. */
+val Playlist.isSmart: Boolean
+    get() = smart == true
+
+/** Whether the profile may add, remove and reorder its entries; a smart one's follow its rules. */
 val Playlist.isEditable: Boolean
-    get() = access != PlaylistAccess.read
+    get() = access != PlaylistAccess.read && !isSmart
+
+/** Whether the profile gets Edit rules: the server takes rules from the owner alone. */
+val Playlist.editsRules: Boolean
+    get() = isOwned && isSmart
 
 /** Whether it carries the Shared badge; a copy stored without the flag is not shared. */
 val Playlist.isShared: Boolean
@@ -184,6 +192,62 @@ class PlaylistsModel(
                     .also { playlists = playlists + it }
         }
         return created
+    }
+
+    /**
+     * Makes a smart playlist: the playlist, then its rules. A refusal of the rules deletes the
+     * playlist again, so none is left without them, and [draft] carries why.
+     */
+    suspend fun create(draft: SmartDraft): Playlist? {
+        val kind = draft.kind
+        if (!adult || kind == null || !draft.validate()) return null
+        return draft.submit {
+            val made = api.call {
+                playlists.createPlaylist(profileId, PlaylistInput(name(draft.name)!!, kind))
+            }
+            try {
+                api.call { playlists.replacePlaylistRules(profileId, made.id, draft.rules()) }
+            } catch (e: Exception) {
+                runCatching { api.call { playlists.deletePlaylist(profileId, made.id) } }
+                throw e
+            }
+            api.call { playlists.getPlaylist(profileId, made.id) }
+                .also { playlists = playlists + it }
+        }
+    }
+
+    /**
+     * A smart playlist's rules as a draft to edit, named [name]; null when they could not be read.
+     */
+    suspend fun draft(playlistId: String, kind: PlaylistKind, name: String): SmartDraft? {
+        var draft: SmartDraft? = null
+        write {
+            val rules = api.call { playlists.getPlaylistRules(profileId, playlistId) }
+            draft = SmartDraft(kind, name, rules)
+        }
+        return draft
+    }
+
+    /**
+     * Replaces a playlist's rules, renaming a listed one whose name changed. A station's own
+     * playlist is listed nowhere, so it takes the rules alone.
+     */
+    suspend fun saveRules(playlistId: String, draft: SmartDraft): Boolean {
+        if (!draft.validate()) return false
+        return draft.submit {
+            api.call { playlists.replacePlaylistRules(profileId, playlistId, draft.rules()) }
+            val listed = playlists.firstOrNull { it.id == playlistId } ?: return@submit
+            val trimmed = name(draft.name)
+            if (trimmed != null && trimmed != listed.name)
+                api.call {
+                    playlists.replacePlaylist(
+                        profileId,
+                        playlistId,
+                        PlaylistInput(trimmed, listed.kind),
+                    )
+                }
+            refresh(playlistId)
+        } != null
     }
 
     suspend fun rename(playlist: Playlist, name: String): Boolean {

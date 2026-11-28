@@ -153,8 +153,12 @@ class StationsModel(val api: Api) {
 
     fun of(kind: PlaylistKind) = stations.filter { it.kind == kind }
 
-    /** The stations of [kind] that [profileId] owns, which are the ones it may add to. */
-    fun mine(kind: PlaylistKind, profileId: String) = of(kind).filter { it.ownerId == profileId }
+    /**
+     * The stations of [kind] that [profileId] owns and may add to: one on rules plays what they
+     * match.
+     */
+    fun mine(kind: PlaylistKind, profileId: String) =
+        of(kind).filter { it.ownerId == profileId && it.smart != true }
 
     /** A new private station of [kind], continuous and in order, with its own empty contents. */
     suspend fun create(name: String, kind: PlaylistKind): Station? =

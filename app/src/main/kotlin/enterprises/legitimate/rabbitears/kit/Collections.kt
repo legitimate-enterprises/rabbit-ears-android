@@ -13,6 +13,12 @@ import enterprises.legitimate.rabbitears.api.models.Item
 val Collection.caption: String
     get() = Format.plural(movieCount, "movie")
 
+/** Whether [adult] may rename, delete and edit the rules of it: a custom one, an adult's. */
+fun Collection.manageable(adult: Boolean): Boolean = adult && source == CollectionSource.custom
+
+/** Whether [adult] may add, remove and reorder its movies, which a smart one's rules choose. */
+fun Collection.moviesEditable(adult: Boolean): Boolean = manageable(adult) && smart != true
+
 /** The movies with [itemId] at [to], as a drag shows them before the server answers. */
 fun List<Item>.moved(itemId: String, to: Int): List<Item> {
     val at = indexOfFirst { it.id == itemId }
@@ -36,7 +42,7 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
 
     /** The ones a movie can be added to. */
     val custom: List<Collection>
-        get() = collections.filter { it.source == CollectionSource.custom }
+        get() = collections.filter { it.source == CollectionSource.custom && it.smart != true }
 
     suspend fun load() {
         write {
@@ -99,6 +105,49 @@ class CollectionsModel(val api: Api, private val offline: OfflineLibrary? = null
                     .also { collections = (collections + it).sortedBy { c -> c.name.lowercase() } }
         }
         return created
+    }
+
+    /**
+     * Makes a smart collection: the collection, then its rules. A refusal of the rules deletes the
+     * collection again, so none is left without them, and [draft] carries why.
+     */
+    suspend fun create(draft: SmartDraft): Collection? {
+        if (draft.kind != null || !draft.validate()) return null
+        return draft.submit {
+            val made = api.call {
+                collections.createCollection(CollectionInput(draft.name.trim().take(100)))
+            }
+            try {
+                api.call { collections.replaceCollectionRules(made.id, draft.rules()) }
+            } catch (e: Exception) {
+                runCatching { api.call { collections.deleteCollection(made.id) } }
+                throw e
+            }
+            api.call { collections.getCollection(made.id) }
+                .also { collections = (collections + it).sortedBy { c -> c.name.lowercase() } }
+        }
+    }
+
+    /** The smart collection's rules as a draft to edit; null when they could not be read. */
+    suspend fun draft(collection: Collection): SmartDraft? {
+        var draft: SmartDraft? = null
+        write {
+            val rules = api.call { collections.getCollectionRules(collection.id) }
+            draft = SmartDraft(null, collection.name, rules)
+        }
+        return draft
+    }
+
+    /** Replaces a collection's rules, renaming it when its name changed. */
+    suspend fun saveRules(id: String, draft: SmartDraft): Boolean {
+        if (!draft.validate()) return false
+        return draft.submit {
+            api.call { collections.replaceCollectionRules(id, draft.rules()) }
+            val trimmed = draft.name.trim().take(100)
+            if (collections.firstOrNull { it.id == id }?.name?.let { it != trimmed } == true)
+                api.call { collections.replaceCollection(id, CollectionInput(trimmed)) }
+            replace(api.call { collections.getCollection(id) })
+        } != null
     }
 
     suspend fun rename(collection: Collection, name: String): Boolean {
