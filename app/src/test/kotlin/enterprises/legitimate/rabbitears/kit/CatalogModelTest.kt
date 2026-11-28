@@ -49,6 +49,25 @@ class CatalogModelTest {
     }
 
     @Test
+    fun theSortTitleTheServerSendsIsWhatByTitleReads() = runBlocking {
+        server.on(
+            "GET /items",
+            body =
+                Json.page(
+                    Json.item("1", "movie", "The Matrix", sort = "Matrix"),
+                    Json.item("2", "movie", "Brazil"),
+                    Json.item("3", "movie", "Notorious"),
+                ),
+        )
+        server.on("GET /profiles/1/watch-state", body = Json.page())
+        model.load()
+        assertEquals(
+            listOf("2", "1", "3"),
+            model.catalog.grid(ItemKind.movie, sort = GridSort.Title).map { it.id },
+        )
+    }
+
+    @Test
     fun aLoadUnderWayGivesWayToALaterOneThatAnswersFirst() = runBlocking {
         library()
         val answer = CountDownLatch(1)

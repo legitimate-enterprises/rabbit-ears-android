@@ -104,8 +104,10 @@ object Json {
         year: Int? = null,
         genres: String = "[]",
         kids: Boolean? = null,
+        sort: String? = null,
     ): String {
         val extra = buildList {
+            sort?.let { add(""""sortTitle":"$it"""") }
             kids?.let { add(""""kidsContent":$it""") }
             parent?.let { add(""""parentId":$it""") }
             season?.let { add(""""seasonNumber":$it""") }

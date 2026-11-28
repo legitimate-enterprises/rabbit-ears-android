@@ -241,7 +241,7 @@ class Catalog(
             .sortedWith(
                 when (sort) {
                     GridSort.RecentlyAdded -> compareByDescending { it.addedAt }
-                    GridSort.Title -> compareBy(String.CASE_INSENSITIVE_ORDER) { title(it) }
+                    GridSort.Title -> compareBy(String.CASE_INSENSITIVE_ORDER) { sortTitle(it) }
                     GridSort.Year -> compareByDescending { year(it) ?: 0 }
                 },
             )
@@ -303,6 +303,12 @@ class Catalog(
         private val EPOCH: OffsetDateTime = OffsetDateTime.parse("1970-01-01T00:00:00Z")
 
         fun title(item: Item): String = item.metadata?.title ?: item.parsedTitle
+
+        /**
+         * What a movie or show sorts by: the server's sort title, else the title shown. Articles
+         * are the server's to drop, never this client's.
+         */
+        fun sortTitle(item: Item): String = item.sortTitle ?: title(item)
 
         fun year(item: Item): Int? = item.parsedYear ?: item.metadata?.releaseDate?.year
 

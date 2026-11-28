@@ -281,6 +281,35 @@ class CatalogTest {
     }
 
     @Test
+    fun byTitleFollowsTheServersSortTitleElseTheTitleShown() {
+        val c =
+            Catalog(
+                listOf(
+                        Json.item("1", "movie", "The Matrix", sort = "Matrix"),
+                        Json.item("2", "movie", "A Quiet Place", sort = "Quiet Place"),
+                        Json.item("3", "movie", "Die Hard", sort = "Die Hard"),
+                        Json.item(
+                            "4",
+                            "movie",
+                            "2001: A Space Odyssey",
+                            sort = "2001: A Space Odyssey",
+                        ),
+                        Json.item("5", "movie", "Brazil"),
+                        Json.item("6", "movie", "the Lobster", sort = "lobster"),
+                        Json.item("10", "show", "The Wire", sort = "Wire"),
+                        Json.item("11", "show", "Atlanta"),
+                    )
+                    .map(::item),
+            )
+        assertEquals(
+            listOf("4", "5", "3", "6", "1", "2"),
+            c.grid(ItemKind.movie, sort = GridSort.Title).map { it.id },
+        )
+        assertEquals(listOf("11", "10"), c.grid(ItemKind.show, sort = GridSort.Title).map { it.id })
+        assertEquals("The Matrix", Catalog.title(c.item("1")!!))
+    }
+
+    @Test
     fun gridFiltersSortsAndCounts() {
         val c = catalog(Json.watch(1, watched = true), Json.watch(101, position = 1000))
         assertEquals(listOf("1", "2", "3"), c.grid(ItemKind.movie).map { it.id })
