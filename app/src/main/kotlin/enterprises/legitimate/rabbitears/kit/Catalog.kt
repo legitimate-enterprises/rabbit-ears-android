@@ -13,6 +13,7 @@ enum class GridFilter(val label: String) {
     All("All"),
     Unwatched("Unwatched"),
     InProgress("In progress"),
+    Favorites("Favorites"),
     Kids("Kids"),
 }
 
@@ -225,6 +226,8 @@ class Catalog(
         filter: GridFilter = GridFilter.All,
         sort: GridSort = GridSort.RecentlyAdded,
         genre: String? = null,
+        /** The profile's favorites, which [GridFilter.Favorites] keeps. */
+        favorites: Set<String> = emptySet(),
     ): List<Item> =
         (if (filter == GridFilter.Kids) items.values + kids.values else items.values)
             .distinctBy { it.id }
@@ -235,6 +238,7 @@ class Catalog(
                     GridFilter.All -> true
                     GridFilter.Unwatched -> unwatchedCount(it.id) > 0
                     GridFilter.InProgress -> isInProgress(it.id) || showStarted(it)
+                    GridFilter.Favorites -> it.id in favorites
                     GridFilter.Kids -> it.kidsContent == true
                 }
             }

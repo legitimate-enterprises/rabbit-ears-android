@@ -94,6 +94,7 @@ fun Grid(kind: ItemKind) {
             GridFilter.All,
             GridFilter.Unwatched,
             GridFilter.InProgress,
+            GridFilter.Favorites,
             GridFilter.Kids.takeUnless { nav.app.isKid },
         )
     // The filter is stored per device, so a kid may find an adult's Kids.
@@ -110,7 +111,7 @@ fun Grid(kind: ItemKind) {
             GridView.Stations,
         )
     val genres = c.genres(kind)
-    val titles = c.grid(kind, filter, sort, genre)
+    val titles = c.grid(kind, filter, sort, genre, nav.favorites.ids)
     val wide = LocalWidth.current != WidthClass.Compact
     val count =
         when (view) {

@@ -329,11 +329,27 @@ class CatalogTest {
         val started = catalog(Json.watch(2, position = 1000))
         assertEquals(listOf("2"), started.grid(ItemKind.movie, GridFilter.InProgress).map { it.id })
         assertEquals(
-            listOf("All", "Unwatched", "In progress", "Kids"),
+            listOf("All", "Unwatched", "In progress", "Favorites", "Kids"),
             GridFilter.entries.map { it.label },
         )
         assertEquals(listOf("Drama"), c.genres(ItemKind.show).map { it.name })
         assertEquals(5, c.unwatchedCount("10"))
+    }
+
+    @Test
+    fun theFavoritesChipKeepsOnlyTheGridsStarredTitles() {
+        val c = catalog()
+        val starred = setOf("3", "10", "101")
+        assertEquals(
+            listOf("3"),
+            c.grid(ItemKind.movie, GridFilter.Favorites, favorites = starred).map { it.id },
+        )
+        assertEquals(
+            listOf("10"),
+            c.grid(ItemKind.show, GridFilter.Favorites, favorites = starred).map { it.id },
+        )
+        assertTrue(c.grid(ItemKind.movie, GridFilter.Favorites).isEmpty())
+        assertEquals(3, c.grid(ItemKind.movie, favorites = starred).size)
     }
 
     @Test
