@@ -35,11 +35,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -59,42 +54,19 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun Who(app: AppModel) {
-    // The profile whose PIN is asked for, and what entering it unlocks.
-    var asking by remember {
-        mutableStateOf<Pair<Account, suspend (String?) -> Unit>?>(
-            app.pinFor?.let { remembered -> remembered to { app.choose(remembered, it) } },
-        )
-    }
-    var addingKid by remember { mutableStateOf(false) }
-    var addingAdult by remember { mutableStateOf(false) }
+    // The profile whose PIN is asked for.
+    var asking by remember { mutableStateOf(app.pinFor) }
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
-    if (addingKid)
-        return AddKid(app) {
-            addingKid = false
-            scope.launch { app.lock() }
-        }
-
-    fun pick(profile: Account, unlock: suspend (String?) -> Unit = { app.choose(profile, it) }) {
-        if (profile.hasPin) asking = profile to unlock
+    fun pick(profile: Account) {
+        if (profile.hasPin) asking = profile
         else
             scope.launch {
                 error =
-                    runCatching { unlock(null) }
+                    runCatching { app.choose(profile) }
                         .exceptionOrNull()
                         ?.let { AppError.from(it).message }
-            }
-    }
-
-    // A locked device adds anyone only as the active adult, unlocked as its tile would be.
-    fun asAdult(open: () -> Unit) {
-        val adult = app.serverActiveProfile
-        if (!app.locked || adult == null) open()
-        else
-            pick(adult) {
-                app.unlock(adult, it)
-                open()
             }
     }
 
@@ -107,28 +79,13 @@ fun Who(app: AppModel) {
         verticalArrangement = Arrangement.spacedBy(40.dp, Alignment.CenterVertically),
     ) {
         Text("Who's watching?", style = MaterialTheme.typography.headlineMedium)
-        // A name stands for an adder tile: Add kid for any adult, Add adult for the owner.
-        val tiles: List<Any> =
-            app.profiles +
-                listOfNotNull(
-                    "Add kid".takeIf { app.canAddKid },
-                    "Add adult".takeIf { app.isOwner },
-                )
         val across = if (LocalWidth.current == WidthClass.Compact) 2 else 4
         Column(verticalArrangement = Arrangement.spacedBy(28.dp)) {
-            tiles.chunked(across).forEach { row ->
+            app.profiles.chunked(across).forEach { row ->
                 Row(horizontalArrangement = Arrangement.spacedBy(40.dp)) {
                     row.forEach { profile ->
-                        if (profile is Account)
-                            ProfileTile(profile.name, { pick(profile) }) {
-                                Avatar(profile, 96.dp, profile.hasPin)
-                            }
-                        else {
-                            val kid = profile == "Add kid"
-                            val open = {
-                                asAdult { if (kid) addingKid = true else addingAdult = true }
-                            }
-                            ProfileTile(profile.toString(), open, Palette.secondary) { AddCircle() }
+                        ProfileTile(profile.name, { pick(profile) }) {
+                            Avatar(profile, 96.dp, profile.hasPin)
                         }
                     }
                 }
@@ -149,12 +106,7 @@ fun Who(app: AppModel) {
         }
     }
 
-    asking?.let { (profile, unlock) -> PinDialog(profile, { unlock(it) }) { asking = null } }
-    if (addingAdult)
-        AddAdult(app) {
-            addingAdult = false
-            scope.launch { app.lock() }
-        }
+    asking?.let { profile -> PinDialog(profile, { app.choose(profile, it) }) { asking = null } }
 }
 
 /** Right after signing in, the household of the adult's several that this phone is in. */
@@ -259,12 +211,7 @@ internal fun ChoiceRow(
 }
 
 @Composable
-private fun ProfileTile(
-    name: String,
-    onClick: () -> Unit,
-    color: Color = Palette.text,
-    avatar: @Composable () -> Unit,
-) {
+private fun ProfileTile(name: String, onClick: () -> Unit, avatar: @Composable () -> Unit) {
     Column(
         Modifier.width(96.dp).clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -273,29 +220,11 @@ private fun ProfileTile(
         avatar()
         Text(
             name,
-            color = color,
+            color = Palette.text,
             fontSize = 16.sp,
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
         )
-    }
-}
-
-@Composable
-private fun AddCircle() {
-    val dash = PathEffect.dashPathEffect(floatArrayOf(12f, 10f))
-    Box(
-        Modifier.size(96.dp).drawBehind {
-            drawCircle(
-                Color.White.copy(alpha = 0.4f),
-                size.minDimension / 2 - 2.dp.toPx(),
-                Offset(size.width / 2, size.height / 2),
-                style = Stroke(2.dp.toPx(), pathEffect = dash),
-            )
-        },
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(painterResource(R.drawable.ic_plus), null, tint = Palette.secondary)
     }
 }
 

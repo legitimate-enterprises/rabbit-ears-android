@@ -62,7 +62,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -79,7 +78,6 @@ import enterprises.legitimate.rabbitears.kit.Catalog
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.ProfileColors
 import enterprises.legitimate.rabbitears.kit.Selection
-import enterprises.legitimate.rabbitears.kit.adminUrl
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -407,8 +405,8 @@ fun Header(
 }
 
 /**
- * The profile's avatar, and its name when [named], opening the menu of what a profile does: switch
- * profile, an adult's preferences, household and password, an admin's console, and sign out.
+ * The profile's avatar, and its name when [named], opening the profile menu: switch profile, an
+ * adult's preferences, and sign out.
  */
 @Composable
 fun ProfileButton(named: Boolean = false) {
@@ -416,9 +414,6 @@ fun ProfileButton(named: Boolean = false) {
     val profile = nav.app.activeProfile ?: return
     val scope = rememberCoroutineScope()
     var open by remember { mutableStateOf(false) }
-    var changingPassword by remember { mutableStateOf(false) }
-    val uri = LocalUriHandler.current
-    if (changingPassword) ChangePassword { changingPassword = false }
     Box {
         Column(
             Modifier.clickable { open = true }
@@ -442,26 +437,11 @@ fun ProfileButton(named: Boolean = false) {
                 open = false
                 scope.launch { nav.switchProfile() }
             }
-            if (!nav.app.isKid) {
+            if (!nav.app.isKid)
                 MenuAction("Preferences") {
                     open = false
                     nav.open(Route.Preferences)
                 }
-                MenuAction("Manage household") {
-                    open = false
-                    nav.open(Route.Household)
-                }
-                nav.app.adminUrl?.let { admin ->
-                    MenuAction("Admin") {
-                        open = false
-                        uri.openUri(admin)
-                    }
-                }
-                MenuAction("Password") {
-                    open = false
-                    changingPassword = true
-                }
-            }
             MenuAction("Sign out") {
                 open = false
                 scope.launch { nav.app.signOut() }

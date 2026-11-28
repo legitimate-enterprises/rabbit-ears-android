@@ -1,5 +1,6 @@
 package enterprises.legitimate.rabbitears.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
@@ -36,6 +38,7 @@ import enterprises.legitimate.rabbitears.api.models.Account
 import enterprises.legitimate.rabbitears.api.models.AccountKind
 import enterprises.legitimate.rabbitears.kit.AppError
 import enterprises.legitimate.rabbitears.kit.ProfileColors
+import enterprises.legitimate.rabbitears.kit.adminUrl
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 import kotlinx.coroutines.launch
 
@@ -46,6 +49,14 @@ fun Preferences() {
     val profile = app.activeProfile ?: return
     val scope = rememberCoroutineScope()
     var error by remember { mutableStateOf<String?>(null) }
+    var addingKid by remember { mutableStateOf(false) }
+    var addingAdult by remember { mutableStateOf(false) }
+    var changingPassword by remember { mutableStateOf(false) }
+    val uri = LocalUriHandler.current
+    BackHandler(addingKid) { addingKid = false }
+    if (addingKid) return AddKid(app) { addingKid = false }
+    if (addingAdult) AddAdult(app) { addingAdult = false }
+    if (changingPassword) ChangePassword { changingPassword = false }
     val save = { who: Account, color: String?, hide: Boolean? ->
         scope.launch {
             error =
@@ -118,7 +129,16 @@ fun Preferences() {
                     }
             }
             DownloadsPreferences()
-            if (!app.isKid) DeleteAccount()
+            if (!app.isKid) {
+                Text("Household", style = MaterialTheme.typography.titleLarge)
+                if (app.canAddKid) Pill("Add a kid", { addingKid = true })
+                if (app.isOwner) Pill("Add an adult", { addingAdult = true })
+                Pill("Manage household", { nav.open(Route.Household) })
+                Text("Account", style = MaterialTheme.typography.titleLarge)
+                Pill("Password", { changingPassword = true })
+                app.adminUrl?.let { admin -> Pill("Admin", { uri.openUri(admin) }) }
+                DeleteAccount()
+            }
         }
     }
 }

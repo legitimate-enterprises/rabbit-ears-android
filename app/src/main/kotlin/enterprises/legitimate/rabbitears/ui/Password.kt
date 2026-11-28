@@ -17,7 +17,7 @@ import enterprises.legitimate.rabbitears.kit.changePassword
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 import kotlinx.coroutines.launch
 
-/** The profile menu's Password: the current one, then a new one twice. */
+/** Preferences' Password: the current one, then a new one twice. */
 @Composable
 fun ChangePassword(close: () -> Unit) {
     val app = LocalNav.current.app
