@@ -47,6 +47,7 @@ import enterprises.legitimate.rabbitears.api.models.PlaylistShareInput
 import enterprises.legitimate.rabbitears.api.models.PlaylistSharePage
 import enterprises.legitimate.rabbitears.api.models.ShareCandidatePage
 import enterprises.legitimate.rabbitears.api.models.ShareHouseholdList
+import enterprises.legitimate.rabbitears.api.models.SmartRules
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -77,7 +78,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     /**
      * POST /profiles/{profileId}/playlists/{playlistId}/entries/batch
      * Add many to a playlist, appended in order.
-     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position and rank are ignored: the entries take the ranks of generateNKeysBetween after the last entry&#39;s; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be.
+     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position and rank are ignored: the entries take the ranks of generateNKeysBetween after the last entry&#39;s; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be; a smart playlist answers 409.
      * @param profileId 
      * @param playlistId 
      * @param playlistEntriesInput 
@@ -110,7 +111,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     /**
      * POST /profiles/{profileId}/playlists/{playlistId}/entries/batch
      * Add many to a playlist, appended in order.
-     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position and rank are ignored: the entries take the ranks of generateNKeysBetween after the last entry&#39;s; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be.
+     * Each entry is checked as &#x60;addPlaylistEntry&#x60; checks it, and its position and rank are ignored: the entries take the ranks of generateNKeysBetween after the last entry&#39;s; a title of several editions without an editionId takes its default edition. A station&#39;s own playlist is written through its owner&#39;s profile, as &#x60;addPlaylistEntry&#x60; writes it. Nothing is added unless every entry may be; a smart playlist answers 409.
      * @param profileId 
      * @param playlistId 
      * @param playlistEntriesInput 
@@ -155,7 +156,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     /**
      * POST /profiles/{profileId}/playlists/{playlistId}/entries
      * Add to playlist. Absent position appends. The owner and those it is shared with for write may; read access answers 403.
-     * A movies playlist takes movies and collections; a tv playlist takes shows, seasons and episodes; a music playlist takes artists, albums and songs. Another kind, YouTube channels and videos among them, answers 400; an item or collection the profile may not see answers 404. The same item may appear more than once, and a show may sit beside its own episodes.  A movie, episode or song entry plays one edition. editionId names it; without one, a title with a single edition is stored with that edition, and a title with several answers 400 with the field editionId. An editionId of another item, or on a show, season, album, artist or collection, answers 400. The entry keeps its edition when the title gains another. 
+     * A movies playlist takes movies and collections; a tv playlist takes shows, seasons and episodes; a music playlist takes artists, albums and songs. Another kind, YouTube channels and videos among them, answers 400; an item or collection the profile may not see answers 404. The same item may appear more than once, and a show may sit beside its own episodes.  A movie, episode or song entry plays one edition. editionId names it; without one, a title with a single edition is stored with that edition, and a title with several answers 400 with the field editionId. An editionId of another item, or on a show, season, album, artist or collection, answers 400. The entry keeps its edition when the title gains another.  A smart playlist&#39;s entries follow its rules: adding, moving and removing one answers 409. 
      * @param profileId 
      * @param playlistId 
      * @param playlistEntryInput 
@@ -189,7 +190,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     /**
      * POST /profiles/{profileId}/playlists/{playlistId}/entries
      * Add to playlist. Absent position appends. The owner and those it is shared with for write may; read access answers 403.
-     * A movies playlist takes movies and collections; a tv playlist takes shows, seasons and episodes; a music playlist takes artists, albums and songs. Another kind, YouTube channels and videos among them, answers 400; an item or collection the profile may not see answers 404. The same item may appear more than once, and a show may sit beside its own episodes.  A movie, episode or song entry plays one edition. editionId names it; without one, a title with a single edition is stored with that edition, and a title with several answers 400 with the field editionId. An editionId of another item, or on a show, season, album, artist or collection, answers 400. The entry keeps its edition when the title gains another. 
+     * A movies playlist takes movies and collections; a tv playlist takes shows, seasons and episodes; a music playlist takes artists, albums and songs. Another kind, YouTube channels and videos among them, answers 400; an item or collection the profile may not see answers 404. The same item may appear more than once, and a show may sit beside its own episodes.  A movie, episode or song entry plays one edition. editionId names it; without one, a title with a single edition is stored with that edition, and a title with several answers 400 with the field editionId. An editionId of another item, or on a show, season, album, artist or collection, answers 400. The entry keeps its edition when the title gains another.  A smart playlist&#39;s entries follow its rules: adding, moving and removing one answers 409. 
      * @param profileId 
      * @param playlistId 
      * @param playlistEntryInput 
@@ -1094,6 +1095,82 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     }
 
     /**
+     * GET /profiles/{profileId}/playlists/{playlistId}/rules
+     * A smart playlist&#39;s rules. Access as getPlaylist; a playlist without rules answers 404.
+     * 
+     * @param profileId 
+     * @param playlistId 
+     * @return SmartRules
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun getPlaylistRules(profileId: kotlin.String, playlistId: kotlin.String) : SmartRules {
+        val localVarResponse = getPlaylistRulesWithHttpInfo(profileId = profileId, playlistId = playlistId)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as SmartRules
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * GET /profiles/{profileId}/playlists/{playlistId}/rules
+     * A smart playlist&#39;s rules. Access as getPlaylist; a playlist without rules answers 404.
+     * 
+     * @param profileId 
+     * @param playlistId 
+     * @return ApiResponse<SmartRules?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun getPlaylistRulesWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String) : ApiResponse<SmartRules?> {
+        val localVariableConfig = getPlaylistRulesRequestConfig(profileId = profileId, playlistId = playlistId)
+
+        return request<Unit, SmartRules>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation getPlaylistRules
+     *
+     * @param profileId 
+     * @param playlistId 
+     * @return RequestConfig
+     */
+    fun getPlaylistRulesRequestConfig(profileId: kotlin.String, playlistId: kotlin.String) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/profiles/{profileId}/playlists/{playlistId}/rules".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"playlistId"+"}", encodeURIComponent(playlistId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
      * GET /profiles/{profileId}/playlists/{playlistId}/shares/{shareProfileId}
      * One share, by the profile it is shared with. Owner only, as listPlaylistShares.
      * 
@@ -1787,7 +1864,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
 
     /**
      * DELETE /profiles/{profileId}/playlists/{playlistId}/entries/{entryId}
-     * Access as addPlaylistEntry.
+     * Access as addPlaylistEntry; a smart playlist answers 409.
      * 
      * @param profileId 
      * @param playlistId 
@@ -1820,7 +1897,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
 
     /**
      * DELETE /profiles/{profileId}/playlists/{playlistId}/entries/{entryId}
-     * Access as addPlaylistEntry.
+     * Access as addPlaylistEntry; a smart playlist answers 409.
      * 
      * @param profileId 
      * @param playlistId 
@@ -1864,7 +1941,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
 
     /**
      * PUT /profiles/{profileId}/playlists/{playlistId}
-     * Renames a playlist. Changing the kind of one that has entries answers 409; anyone but its owner answers 403.
+     * Renames a playlist. Changing the kind of one that has entries, or of a smart one, answers 409; anyone but its owner answers 403.
      * 
      * @param profileId 
      * @param playlistId 
@@ -1898,7 +1975,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
 
     /**
      * PUT /profiles/{profileId}/playlists/{playlistId}
-     * Renames a playlist. Changing the kind of one that has entries answers 409; anyone but its owner answers 403.
+     * Renames a playlist. Changing the kind of one that has entries, or of a smart one, answers 409; anyone but its owner answers 403.
      * 
      * @param profileId 
      * @param playlistId 
@@ -1945,7 +2022,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     /**
      * PUT /profiles/{profileId}/playlists/{playlistId}/entries/{entryId}
      * Reorder. Moves the entry to position, shifting the others; absent position moves it to the end. Access as addPlaylistEntry.
-     * The body names the entry&#39;s own item or collection; any other answers 400.
+     * The body names the entry&#39;s own item or collection; any other answers 400. A smart playlist answers 409.
      * @param profileId 
      * @param playlistId 
      * @param entryId 
@@ -1980,7 +2057,7 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
     /**
      * PUT /profiles/{profileId}/playlists/{playlistId}/entries/{entryId}
      * Reorder. Moves the entry to position, shifting the others; absent position moves it to the end. Access as addPlaylistEntry.
-     * The body names the entry&#39;s own item or collection; any other answers 400.
+     * The body names the entry&#39;s own item or collection; any other answers 400. A smart playlist answers 409.
      * @param profileId 
      * @param playlistId 
      * @param entryId 
@@ -2181,6 +2258,86 @@ open class PlaylistsApi(basePath: kotlin.String = defaultBasePath, client: Call.
         return RequestConfig(
             method = RequestMethod.PUT,
             path = "/profiles/{profileId}/playlists/{playlistId}/image".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"playlistId"+"}", encodeURIComponent(playlistId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * PUT /profiles/{profileId}/playlists/{playlistId}/rules
+     * Makes the playlist smart or replaces its rules; its entries become the titles they match, at once. Its owner only; anyone else answers 403.
+     * A movies playlist holds movies, a tv playlist episodes and a music playlist songs, each title once and without an edition (its default plays), in a fixed order: movies by sort title; episodes by show, season (specials last) and number; songs by artist, album and track. An entry keeps its id while its title still matches. watched, playCount and favorite read the owner&#39;s, whoever the playlist is shared with; every profile sees only the entries it may see. While it has rules, adding, moving and removing entries, and changing its kind, answer 409. The server applies the rules again whenever the library or the owner&#39;s watch state or favorites change. A field or operator the kind lacks, or a missing, blank or extra value, answers 400 naming it, as groups.0.conditions.2.text. A station&#39;s own playlist takes rules through its owner&#39;s profile. 
+     * @param profileId 
+     * @param playlistId 
+     * @param smartRules 
+     * @return SmartRules
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun replacePlaylistRules(profileId: kotlin.String, playlistId: kotlin.String, smartRules: SmartRules) : SmartRules {
+        val localVarResponse = replacePlaylistRulesWithHttpInfo(profileId = profileId, playlistId = playlistId, smartRules = smartRules)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as SmartRules
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * PUT /profiles/{profileId}/playlists/{playlistId}/rules
+     * Makes the playlist smart or replaces its rules; its entries become the titles they match, at once. Its owner only; anyone else answers 403.
+     * A movies playlist holds movies, a tv playlist episodes and a music playlist songs, each title once and without an edition (its default plays), in a fixed order: movies by sort title; episodes by show, season (specials last) and number; songs by artist, album and track. An entry keeps its id while its title still matches. watched, playCount and favorite read the owner&#39;s, whoever the playlist is shared with; every profile sees only the entries it may see. While it has rules, adding, moving and removing entries, and changing its kind, answer 409. The server applies the rules again whenever the library or the owner&#39;s watch state or favorites change. A field or operator the kind lacks, or a missing, blank or extra value, answers 400 naming it, as groups.0.conditions.2.text. A station&#39;s own playlist takes rules through its owner&#39;s profile. 
+     * @param profileId 
+     * @param playlistId 
+     * @param smartRules 
+     * @return ApiResponse<SmartRules?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun replacePlaylistRulesWithHttpInfo(profileId: kotlin.String, playlistId: kotlin.String, smartRules: SmartRules) : ApiResponse<SmartRules?> {
+        val localVariableConfig = replacePlaylistRulesRequestConfig(profileId = profileId, playlistId = playlistId, smartRules = smartRules)
+
+        return request<SmartRules, SmartRules>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation replacePlaylistRules
+     *
+     * @param profileId 
+     * @param playlistId 
+     * @param smartRules 
+     * @return RequestConfig
+     */
+    fun replacePlaylistRulesRequestConfig(profileId: kotlin.String, playlistId: kotlin.String, smartRules: SmartRules) : RequestConfig<SmartRules> {
+        val localVariableBody = smartRules
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Content-Type"] = "application/json"
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.PUT,
+            path = "/profiles/{profileId}/playlists/{playlistId}/rules".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"playlistId"+"}", encodeURIComponent(playlistId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,

@@ -45,6 +45,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param createdAt
  * @param modifiedAt
  * @param shared For its owner, whether it is shared with any profile or household; for anyone else, true. Always sent; optional so a copy a client stored before the field existed still reads, as not shared. Clients draw a shared badge from it.
+ * @param smart True while rules choose its entries (getPlaylistRules). Always sent; optional so a copy a client stored before the field existed still reads.
  * @param ownerName The owner's name, present when the playlist is shared with the profile or a household of theirs, for \"Shared by\".
  * @param artItemId The item whose poster stands for the playlist: the item of its first entry the active profile may see, which may be a show, season, artist or album, or for a collection its first such movie.
  * @param lastPlayedAt When playback last started with this playlistId.
@@ -90,6 +91,10 @@ data class Playlist (
     /* For its owner, whether it is shared with any profile or household; for anyone else, true. Always sent; optional so a copy a client stored before the field existed still reads, as not shared. Clients draw a shared badge from it. */
     @SerialName(value = "shared")
     val shared: kotlin.Boolean? = null,
+
+    /* True while rules choose its entries (getPlaylistRules). Always sent; optional so a copy a client stored before the field existed still reads. */
+    @SerialName(value = "smart")
+    val smart: kotlin.Boolean? = null,
 
     /* The owner's name, present when the playlist is shared with the profile or a household of theirs, for \"Shared by\". */
     @SerialName(value = "ownerName")

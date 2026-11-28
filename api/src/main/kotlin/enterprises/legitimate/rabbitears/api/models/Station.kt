@@ -56,6 +56,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param onAir
  * @param createdAt
  * @param modifiedAt
+ * @param smart True while rules choose what its playlist plays (getPlaylistRules on playlistId). Always sent; optional so a copy a client stored before the field existed still reads.
  * @param rating For display: the highest rating of anything the playlist contains, on the MPAA scale for movies and the TV Parental Guidelines for tv. Absent for music, for an empty playlist, and when anything it contains is unrated or rated off that scale. Recalculated hourly and by rescheduleStation only. Which kids see the station does not follow it; see listStations.
  * @param imageUrl Server-relative URL of the custom image the owner set, served by getStationImage with the device token like artwork; it changes whenever the image does. Absent while none is set, and while getStationImage would not find it.
  * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
@@ -109,6 +110,10 @@ data class Station (
 
     @Contextual @SerialName(value = "modifiedAt")
     val modifiedAt: java.time.OffsetDateTime,
+
+    /* True while rules choose what its playlist plays (getPlaylistRules on playlistId). Always sent; optional so a copy a client stored before the field existed still reads. */
+    @SerialName(value = "smart")
+    val smart: kotlin.Boolean? = null,
 
     /* For display: the highest rating of anything the playlist contains, on the MPAA scale for movies and the TV Parental Guidelines for tv. Absent for music, for an empty playlist, and when anything it contains is unrated or rated off that scale. Recalculated hourly and by rescheduleStation only. Which kids see the station does not follow it; see listStations. */
     @SerialName(value = "rating")

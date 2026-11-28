@@ -34,6 +34,7 @@ import enterprises.legitimate.rabbitears.api.models.CollectionMoviePositionInput
 import enterprises.legitimate.rabbitears.api.models.CollectionPage
 import enterprises.legitimate.rabbitears.api.models.Error
 import enterprises.legitimate.rabbitears.api.models.ItemPage
+import enterprises.legitimate.rabbitears.api.models.SmartRules
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -64,7 +65,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
     /**
      * PUT /collections/{collectionId}/movies/{itemId}
      * Adds a movie to a custom collection.
-     * Anything but a movie answers 400; an item the profile may not see answers 404; a TMDB collection, or any while a kid is active, answers 403. 
+     * Anything but a movie answers 400; an item the profile may not see answers 404; a TMDB collection, a smart one, or any while a kid is active, answers 403. 
      * @param collectionId 
      * @param itemId 
      * @return void
@@ -96,7 +97,7 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
     /**
      * PUT /collections/{collectionId}/movies/{itemId}
      * Adds a movie to a custom collection.
-     * Anything but a movie answers 400; an item the profile may not see answers 404; a TMDB collection, or any while a kid is active, answers 403. 
+     * Anything but a movie answers 400; an item the profile may not see answers 404; a TMDB collection, a smart one, or any while a kid is active, answers 403. 
      * @param collectionId 
      * @param itemId 
      * @return ApiResponse<Unit?>
@@ -431,6 +432,79 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
         return RequestConfig(
             method = RequestMethod.GET,
             path = "/collections/{collectionId}/artwork/{kind}".replace("{"+"collectionId"+"}", encodeURIComponent(collectionId.toString())).replace("{"+"kind"+"}", encodeURIComponent(kind.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * GET /collections/{collectionId}/rules
+     * A smart collection&#39;s rules, for a collection the active profile may see; one without rules answers 404.
+     * 
+     * @param collectionId 
+     * @return SmartRules
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun getCollectionRules(collectionId: kotlin.String) : SmartRules {
+        val localVarResponse = getCollectionRulesWithHttpInfo(collectionId = collectionId)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as SmartRules
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * GET /collections/{collectionId}/rules
+     * A smart collection&#39;s rules, for a collection the active profile may see; one without rules answers 404.
+     * 
+     * @param collectionId 
+     * @return ApiResponse<SmartRules?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun getCollectionRulesWithHttpInfo(collectionId: kotlin.String) : ApiResponse<SmartRules?> {
+        val localVariableConfig = getCollectionRulesRequestConfig(collectionId = collectionId)
+
+        return request<Unit, SmartRules>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation getCollectionRules
+     *
+     * @param collectionId 
+     * @return RequestConfig
+     */
+    fun getCollectionRulesRequestConfig(collectionId: kotlin.String) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/collections/{collectionId}/rules".replace("{"+"collectionId"+"}", encodeURIComponent(collectionId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,
@@ -833,6 +907,83 @@ open class CollectionsApi(basePath: kotlin.String = defaultBasePath, client: Cal
         return RequestConfig(
             method = RequestMethod.PUT,
             path = "/collections/{collectionId}/movies/{itemId}/position".replace("{"+"collectionId"+"}", encodeURIComponent(collectionId.toString())).replace("{"+"itemId"+"}", encodeURIComponent(itemId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * PUT /collections/{collectionId}/rules
+     * Makes a custom collection smart or replaces its rules; its movies become those they match, at once. A TMDB collection, or any while a kid is active, answers 403.
+     * Movie fields only: watched, playCount and favorite answer 400. The movies keep release order. While it has rules, adding, removing and reordering its movies answer 403. The server applies the rules again whenever the library changes. Every profile sees only the movies it may see. 
+     * @param collectionId 
+     * @param smartRules 
+     * @return SmartRules
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun replaceCollectionRules(collectionId: kotlin.String, smartRules: SmartRules) : SmartRules {
+        val localVarResponse = replaceCollectionRulesWithHttpInfo(collectionId = collectionId, smartRules = smartRules)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as SmartRules
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * PUT /collections/{collectionId}/rules
+     * Makes a custom collection smart or replaces its rules; its movies become those they match, at once. A TMDB collection, or any while a kid is active, answers 403.
+     * Movie fields only: watched, playCount and favorite answer 400. The movies keep release order. While it has rules, adding, removing and reordering its movies answer 403. The server applies the rules again whenever the library changes. Every profile sees only the movies it may see. 
+     * @param collectionId 
+     * @param smartRules 
+     * @return ApiResponse<SmartRules?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun replaceCollectionRulesWithHttpInfo(collectionId: kotlin.String, smartRules: SmartRules) : ApiResponse<SmartRules?> {
+        val localVariableConfig = replaceCollectionRulesRequestConfig(collectionId = collectionId, smartRules = smartRules)
+
+        return request<SmartRules, SmartRules>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation replaceCollectionRules
+     *
+     * @param collectionId 
+     * @param smartRules 
+     * @return RequestConfig
+     */
+    fun replaceCollectionRulesRequestConfig(collectionId: kotlin.String, smartRules: SmartRules) : RequestConfig<SmartRules> {
+        val localVariableBody = smartRules
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Content-Type"] = "application/json"
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.PUT,
+            path = "/collections/{collectionId}/rules".replace("{"+"collectionId"+"}", encodeURIComponent(collectionId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,

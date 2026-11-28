@@ -44,6 +44,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param householdId The household of a custom collection; absent for TMDB.
  * @param tmdbId The TMDB collection id; absent for custom.
  * @param customOrder True while a custom collection's movies are in a hand order, set by replaceCollectionMoviePosition; false for release order, and always for TMDB. Always sent; optional so a copy a client stored before the field existed still reads.
+ * @param smart True while rules choose its movies (getCollectionRules). Always sent; optional so a copy a client stored before the field existed still reads.
  * @param posterUrl Server-relative URL of the collection's poster: its own TMDB image, else its first movie's in listCollectionMovies order for the active profile, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  * @param backdropUrl Server-relative URL of the collection's backdrop, as posterUrl, served by getArtwork; it changes exactly when the image does. Absent when there is none.
  * @param createdBy The profile that created it; absent when none did, as for what the server made, or when that profile is gone.
@@ -87,6 +88,10 @@ data class Collection (
     /* True while a custom collection's movies are in a hand order, set by replaceCollectionMoviePosition; false for release order, and always for TMDB. Always sent; optional so a copy a client stored before the field existed still reads. */
     @SerialName(value = "customOrder")
     val customOrder: kotlin.Boolean? = null,
+
+    /* True while rules choose its movies (getCollectionRules). Always sent; optional so a copy a client stored before the field existed still reads. */
+    @SerialName(value = "smart")
+    val smart: kotlin.Boolean? = null,
 
     /* Server-relative URL of the collection's poster: its own TMDB image, else its first movie's in listCollectionMovies order for the active profile, served by getArtwork; it changes exactly when the image does. Absent when there is none. */
     @SerialName(value = "posterUrl")
