@@ -65,12 +65,15 @@ import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.PlaylistRun
 import enterprises.legitimate.rabbitears.kit.PlaylistSharesModel
 import enterprises.legitimate.rabbitears.kit.ProfileColors
+import enterprises.legitimate.rabbitears.kit.SmartDraft
 import enterprises.legitimate.rabbitears.kit.artId
 import enterprises.legitimate.rabbitears.kit.artUrl
 import enterprises.legitimate.rabbitears.kit.caption
+import enterprises.legitimate.rabbitears.kit.editsRules
 import enterprises.legitimate.rabbitears.kit.isEditable
 import enterprises.legitimate.rabbitears.kit.isOwned
 import enterprises.legitimate.rabbitears.kit.isShared
+import enterprises.legitimate.rabbitears.kit.isSmart
 import enterprises.legitimate.rabbitears.kit.label
 import enterprises.legitimate.rabbitears.kit.sharedBy
 import enterprises.legitimate.rabbitears.kit.title
@@ -247,6 +250,20 @@ fun NewPlaylist(kind: PlaylistKind, onDone: () -> Unit) {
     )
 }
 
+/** A playlist whose rules choose its entries, of a [kind] the dialog lets the adult change. */
+@Composable
+fun NewSmartPlaylist(kind: PlaylistKind, onDone: () -> Unit) {
+    val model = LocalNav.current.playlists
+    val draft = remember { SmartDraft(kind) }
+    SmartRulesDialog(
+        "New smart playlist",
+        draft,
+        { model.create(draft) != null },
+        kindLocked = false,
+        onDone = onDone,
+    )
+}
+
 private fun addHint(kind: PlaylistKind) =
     when (kind) {
         PlaylistKind.movies -> "Add movies from their details."
@@ -254,11 +271,24 @@ private fun addHint(kind: PlaylistKind) =
         PlaylistKind.music -> "Add artists, albums and songs from their pages."
     }
 
-fun LazyGridScope.playlistCells(kind: PlaylistKind, nav: Navigator, onNew: () -> Unit) {
+fun LazyGridScope.playlistCells(
+    kind: PlaylistKind,
+    nav: Navigator,
+    onNewSmart: () -> Unit,
+    onNew: () -> Unit,
+) {
     val mine = nav.playlists.of(kind)
     if (!nav.app.isKid)
         item(span = { GridItemSpan(maxLineSpan) }) {
-            Row { Pill("New playlist", onNew, icon = R.drawable.ic_playlist_add) }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Pill("New playlist", onNew, icon = R.drawable.ic_playlist_add)
+                Pill(
+                    "New smart playlist",
+                    onNewSmart,
+                    icon = R.drawable.ic_sparkle,
+                    enabled = !nav.app.offline,
+                )
+            }
         }
     if (nav.playlists.loaded && mine.isEmpty())
         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -290,6 +320,15 @@ fun PlaylistScreen(id: String) {
         ) {
             renaming = false
         }
+    var version by remember { mutableStateOf(0) }
+    var ruling by remember { mutableStateOf(false) }
+    if (ruling && playlist != null)
+        EditRules(
+            { model.draft(playlist.id, playlist.kind, playlist.name) },
+            { model.saveRules(playlist.id, it).also { saved -> if (saved) version++ } },
+        ) {
+            ruling = false
+        }
     var imaging by remember { mutableStateOf<ImageRequest?>(null) }
     imaging?.let {
         ImageDialog(it) { changed ->
@@ -297,7 +336,6 @@ fun PlaylistScreen(id: String) {
             if (changed) scope.launch { model.load() }
         }
     }
-    var version by remember { mutableStateOf(0) }
     val loaded = rememberLoaded(id, version) { model.entries(id) }
     val entries = loaded.value
     val play = { entryId: String?, shuffled: Boolean ->
@@ -326,6 +364,15 @@ fun PlaylistScreen(id: String) {
                             downloading?.let { DownloadDialog(it) { downloading = null } }
                             DropdownMenu(open, { open = false }) {
                                 DownloadMenuItem(ask, { open = false }) { downloading = it }
+                                if (playlist.editsRules)
+                                    DropdownMenuItem(
+                                        { Text("Edit rules…") },
+                                        {
+                                            open = false
+                                            ruling = true
+                                        },
+                                        enabled = !nav.app.offline,
+                                    )
                                 if (playlist.isOwned) {
                                     DropdownMenuItem(
                                         { Text("Share") },
@@ -376,7 +423,17 @@ fun PlaylistScreen(id: String) {
             playlist ?: return@LazyColumn
             item {
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text(playlist.name, style = MaterialTheme.typography.headlineMedium)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            playlist.name,
+                            Modifier.weight(1f, fill = false),
+                            style = MaterialTheme.typography.headlineMedium,
+                        )
+                        if (playlist.isSmart) SmartBadge()
+                    }
                     Text(playlistCaption(playlist), color = Palette.dim)
                     playlist.sharedBy?.let { Text(it, color = Palette.dim) }
                 }

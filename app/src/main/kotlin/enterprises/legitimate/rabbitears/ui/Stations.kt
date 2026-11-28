@@ -69,6 +69,7 @@ import enterprises.legitimate.rabbitears.api.models.Weekday
 import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
+import enterprises.legitimate.rabbitears.kit.SmartDraft
 import enterprises.legitimate.rabbitears.kit.StationForm
 import enterprises.legitimate.rabbitears.kit.Stations
 import enterprises.legitimate.rabbitears.kit.isEditable
@@ -251,7 +252,7 @@ private fun kindName(kind: PlaylistKind) =
         PlaylistKind.music -> "Music station"
     }
 
-private fun kindLabel(kind: PlaylistKind) =
+fun kindLabel(kind: PlaylistKind) =
     when (kind) {
         PlaylistKind.movies -> "Movies"
         PlaylistKind.tv -> "TV"
@@ -292,6 +293,50 @@ fun StationScreen(id: String) {
             value = model.schedule(id, LocalDate.now())
         }
     val wide = LocalWidth.current != WidthClass.Compact
+    // Use rules asks first, then edits new rules; Edit rules opens the saved ones.
+    var asking by remember { mutableStateOf(false) }
+    var ruling by remember { mutableStateOf<SmartDraft?>(null) }
+    var editing by remember { mutableStateOf(false) }
+    var rescheduling by remember { mutableStateOf<Station?>(null) }
+    rescheduling?.let { RescheduleQuestion(it) { rescheduling = null } }
+    val saveRules: suspend (SmartDraft) -> Boolean = { draft ->
+        val playlistId = station?.playlistId
+        (playlistId != null && nav.playlists.saveRules(playlistId, draft)).also {
+            if (it) {
+                version++
+                rescheduling = model.get(id)
+            }
+        }
+    }
+    if (asking && station != null)
+        AlertDialog(
+            { asking = false },
+            confirmButton = {
+                TextButton(
+                    {
+                        asking = false
+                        ruling = SmartDraft(station.kind, station.name)
+                    },
+                ) {
+                    Text("Use rules")
+                }
+            },
+            dismissButton = { TextButton({ asking = false }) { Text("Cancel") } },
+            title = { Text("Use rules?") },
+            text = { Text("Replaces this station's titles with those the rules match.") },
+            containerColor = Palette.raised,
+        )
+    ruling?.let {
+        SmartRulesDialog("Use rules", it, { saveRules(it) }, named = false) { ruling = null }
+    }
+    if (editing && station != null)
+        EditRules(
+            { nav.playlists.draft(station.playlistId, station.kind, station.name) },
+            saveRules,
+            named = false,
+        ) {
+            editing = false
+        }
     LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
         item { BackBar("Back") }
         model.error?.let { item { Text(it, color = Palette.accent) } }
@@ -309,6 +354,7 @@ fun StationScreen(id: String) {
                 )
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(station.name, style = MaterialTheme.typography.headlineMedium)
+                    if (station.smart == true) SmartBadge()
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -331,6 +377,9 @@ fun StationScreen(id: String) {
                 )
                 if (owned) {
                     Pill("Edit station", { nav.open(Route.StationEditor(station.id)) })
+                    if (station.smart == true)
+                        Pill("Edit rules…", { editing = true }, enabled = !nav.app.offline)
+                    else Pill("Use rules…", { asking = true }, enabled = !nav.app.offline)
                     StationImageActions(station) { model.get(id) }
                 }
             }
@@ -354,8 +403,10 @@ fun StationScreen(id: String) {
                 { entry -> entry.song?.let { nav.open(Route.Album(it.albumId)) } },
                 // A station's own playlist is listed nowhere and is the owner's to edit.
                 editable =
-                    nav.playlists.playlists.firstOrNull { it.id == station.playlistId }?.isEditable
-                        ?: true,
+                    station.smart != true &&
+                        nav.playlists.playlists
+                            .firstOrNull { it.id == station.playlistId }
+                            ?.isEditable ?: true,
             ) {
                 version++
             }
@@ -407,7 +458,7 @@ private fun ScheduleRow(p: StationProgram, on: Boolean) {
 }
 
 @Composable
-private fun <T> MenuField(
+fun <T> MenuField(
     label: String,
     value: String,
     options: List<T>,

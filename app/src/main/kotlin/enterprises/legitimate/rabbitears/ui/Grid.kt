@@ -72,6 +72,8 @@ fun Grid(kind: ItemKind) {
     var view by rememberSaveable(kind) { mutableStateOf(GridView.Titles) }
     var creating by remember { mutableStateOf(false) }
     var creatingCollection by remember { mutableStateOf(false) }
+    var creatingSmart by remember { mutableStateOf(false) }
+    var creatingSmartCollection by remember { mutableStateOf(false) }
     val selection = remember(kind) { Selection() }
     val selectKind =
         (if (tv) SelectKind.Show else SelectKind.Movie).takeIf { view == GridView.Titles }
@@ -88,7 +90,9 @@ fun Grid(kind: ItemKind) {
         }
     }
     if (creating) NewPlaylist(type) { creating = false }
+    if (creatingSmart) NewSmartPlaylist(type) { creatingSmart = false }
     if (creatingCollection) NewCollection { creatingCollection = false }
+    if (creatingSmartCollection) NewSmartCollection { creatingSmartCollection = false }
     val filters =
         listOfNotNull(
             GridFilter.All,
@@ -224,7 +228,7 @@ fun Grid(kind: ItemKind) {
                     }
                 }
             if (view == GridView.Playlists) {
-                playlistCells(type, nav) { creating = true }
+                playlistCells(type, nav, { creatingSmart = true }) { creating = true }
                 item(span = { GridItemSpan(maxLineSpan) }) { Box(Modifier.height(8.dp)) }
                 return@LazyVerticalGrid
             }
@@ -234,7 +238,9 @@ fun Grid(kind: ItemKind) {
                 return@LazyVerticalGrid
             }
             if (view == GridView.Collections) {
-                collectionCells(nav) { creatingCollection = true }
+                collectionCells(nav, { creatingSmartCollection = true }) {
+                    creatingCollection = true
+                }
                 item(span = { GridItemSpan(maxLineSpan) }) { Box(Modifier.height(8.dp)) }
                 return@LazyVerticalGrid
             }

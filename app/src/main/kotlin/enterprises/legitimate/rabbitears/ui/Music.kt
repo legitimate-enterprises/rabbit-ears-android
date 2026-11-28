@@ -108,6 +108,8 @@ fun MusicTab() {
     LaunchedEffect(nav.playlists) { if (!nav.playlists.loaded) nav.playlists.load() }
     var creating by remember { mutableStateOf(false) }
     if (creating) NewPlaylist(PlaylistKind.music) { creating = false }
+    var creatingSmart by remember { mutableStateOf(false) }
+    if (creatingSmart) NewSmartPlaylist(PlaylistKind.music) { creatingSmart = false }
     val wide = LocalWidth.current != WidthClass.Compact
     val pane =
         LocalWidth.current == WidthClass.Expanded &&
@@ -232,7 +234,9 @@ fun MusicTab() {
                             }
                         }
                     MusicView.Playlists ->
-                        playlistCells(PlaylistKind.music, nav) { creating = true }
+                        playlistCells(PlaylistKind.music, nav, { creatingSmart = true }) {
+                            creating = true
+                        }
                     MusicView.Stations -> stationCells(PlaylistKind.music, nav, wide)
                     MusicView.Songs ->
                         itemsIndexed(

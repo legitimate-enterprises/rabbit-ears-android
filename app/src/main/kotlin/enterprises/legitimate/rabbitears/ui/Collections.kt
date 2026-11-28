@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -52,14 +53,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.Collection
-import enterprises.legitimate.rabbitears.api.models.CollectionSource
 import enterprises.legitimate.rabbitears.api.models.DownloadTarget
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
 import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Catalog
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
+import enterprises.legitimate.rabbitears.kit.SmartDraft
 import enterprises.legitimate.rabbitears.kit.caption
+import enterprises.legitimate.rabbitears.kit.manageable
 import enterprises.legitimate.rabbitears.kit.moved
+import enterprises.legitimate.rabbitears.kit.moviesEditable
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 import kotlin.math.roundToInt
 import kotlinx.coroutines.launch
@@ -84,11 +87,19 @@ fun CollectionTile(c: Collection, modifier: Modifier = Modifier) {
 }
 
 /** The Movies tab's Collections view: New collection for adults, a note while empty, the tiles. */
-fun LazyGridScope.collectionCells(nav: Navigator, onNew: () -> Unit) {
+fun LazyGridScope.collectionCells(nav: Navigator, onNewSmart: () -> Unit, onNew: () -> Unit) {
     val all = nav.collections.collections
     if (!nav.app.isKid)
         item(span = { GridItemSpan(maxLineSpan) }) {
-            Row { Pill("New collection", onNew, icon = R.drawable.ic_playlist_add) }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Pill("New collection", onNew, icon = R.drawable.ic_playlist_add)
+                Pill(
+                    "New smart collection",
+                    onNewSmart,
+                    icon = R.drawable.ic_sparkle,
+                    enabled = !nav.app.offline,
+                )
+            }
         }
     if (nav.collections.loaded && all.isEmpty())
         item(span = { GridItemSpan(maxLineSpan) }) {
@@ -101,6 +112,19 @@ fun LazyGridScope.collectionCells(nav: Navigator, onNew: () -> Unit) {
 fun NewCollection(onDone: () -> Unit) {
     val model = LocalNav.current.collections
     NameDialog("New collection", "Create", "", model.error, { model.create(it) != null }, onDone)
+}
+
+/** A collection whose rules choose its movies. */
+@Composable
+fun NewSmartCollection(onDone: () -> Unit) {
+    val model = LocalNav.current.collections
+    val draft = remember { SmartDraft(null) }
+    SmartRulesDialog(
+        "New smart collection",
+        draft,
+        { model.create(draft) != null },
+        onDone = onDone,
+    )
 }
 
 /** Picks one of the household's custom collections, or names a new one, and adds the movie. */
@@ -202,7 +226,16 @@ fun CollectionScreen(id: String) {
     }
     val movies = loaded.value
     val adult = !nav.app.isKid
-    val editable = adult && collection?.source == CollectionSource.custom
+    val manageable = collection?.manageable(adult) == true
+    val editable = collection?.moviesEditable(adult) == true
+    var ruling by remember { mutableStateOf(false) }
+    if (ruling && collection != null)
+        EditRules(
+            { model.draft(collection) },
+            { model.saveRules(id, it).also { saved -> if (saved) version++ } },
+        ) {
+            ruling = false
+        }
     if (renaming && collection != null)
         NameDialog(
             "Rename collection",
@@ -229,13 +262,23 @@ fun CollectionScreen(id: String) {
                             collection = true,
                             name = collection.name,
                             extras =
-                                if (editable) {
+                                if (manageable) {
                                     { close ->
-                                        MenuAction("Edit order") {
-                                            close()
-                                            ordering = true
-                                        }
-                                        if (collection.customOrder == true)
+                                        if (collection.smart == true)
+                                            DropdownMenuItem(
+                                                { Text("Edit rules…") },
+                                                {
+                                                    close()
+                                                    ruling = true
+                                                },
+                                                enabled = !nav.app.offline,
+                                            )
+                                        if (editable)
+                                            MenuAction("Edit order") {
+                                                close()
+                                                ordering = true
+                                            }
+                                        if (editable && collection.customOrder == true)
                                             MenuAction("Reset to release order") {
                                                 close()
                                                 scope.launch {
@@ -271,6 +314,7 @@ fun CollectionScreen(id: String) {
                     )
                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Text(collection.name, style = MaterialTheme.typography.headlineMedium)
+                        if (collection.smart == true) SmartBadge()
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             Text(collection.caption, color = Palette.dim)
                             if (collection.customOrder == true)
