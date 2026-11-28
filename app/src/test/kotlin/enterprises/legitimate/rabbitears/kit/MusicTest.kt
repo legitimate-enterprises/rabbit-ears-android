@@ -46,6 +46,7 @@ object MusicJson {
 class MusicPlayerTest {
     class Output : AudioOutput {
         val loads = mutableListOf<Pair<String, String>>()
+        val arts = mutableListOf<String>()
         var stopped = 0
         override var positionMs = 0L
         override var isPaused = true
@@ -54,6 +55,7 @@ class MusicPlayerTest {
 
         override fun load(url: String, hls: Boolean, song: MusicSong, artUrl: String) {
             loads += url to song.id
+            arts += artUrl
         }
 
         override fun play() {
@@ -286,6 +288,22 @@ class MusicPlayerTest {
         player.outputFailed("unsupported")
         assertEquals(2, output.loads.size)
         assertEquals("Audio transcode", player.playback())
+    }
+
+    @Test
+    fun theLockScreenShowsTheSongsArtAtItsAddressElseItsAlbumsIdAddress() = runBlocking {
+        answers(7)
+        val songs = listOf(song("1").copy(posterUrl = "/api/v2/artwork/caa/a1.jpg"), song("2"))
+        player.play(songs, source = "x")
+        answers(8)
+        player.songEnded()
+        assertEquals(
+            listOf(
+                "http://media.example.com:8477/api/v2/artwork/caa/a1.jpg",
+                "http://media.example.com:8477/api/v2/items/50/artwork/poster",
+            ),
+            output.arts,
+        )
     }
 }
 

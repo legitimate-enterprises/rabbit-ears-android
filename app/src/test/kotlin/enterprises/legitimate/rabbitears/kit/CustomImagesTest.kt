@@ -42,6 +42,28 @@ class CustomImagesTest {
     }
 
     @Test
+    fun aChoiceIsPreviewedAtTheAddressItsEntryCarriesElseItsIdAddress() {
+        val heat =
+            Json.item("7", "movie", "Heat").removeSuffix("}") +
+                ""","posterUrl":"/api/v2/artwork/w500/p.jpg","backdropUrl":"/api/v2/artwork/w1280/b.jpg"}"""
+        val entries =
+            listOf(
+                    entry("1", ""","itemId":"7","item":$heat"""),
+                    entry("2", ""","itemId":"8","item":${Json.item("8", "movie")}"""),
+                )
+                .map { Serializer.kotlinxSerializationJson.decodeFromString<PlaylistEntry>(it) }
+        assertEquals(
+            listOf(
+                "/api/v2/artwork/w500/p.jpg",
+                "/api/v2/artwork/w1280/b.jpg",
+                "/api/v2/items/8/artwork/poster",
+                "/api/v2/items/8/artwork/backdrop",
+            ),
+            CustomImage.choices(entries).map { it.path },
+        )
+    }
+
+    @Test
     fun setsAnUploadAPickAndALinkThenRemoves() = runBlocking {
         server.on("PUT /profiles/1/playlists/3/image")
         server.on("PUT /stations/5/image")

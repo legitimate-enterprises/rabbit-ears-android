@@ -49,6 +49,7 @@ import enterprises.legitimate.rabbitears.api.models.MusicAlbum
 import enterprises.legitimate.rabbitears.api.models.MusicSong
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
 import enterprises.legitimate.rabbitears.kit.AlbumSort
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.MusicModel
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
@@ -211,7 +212,7 @@ fun MusicTab() {
                                 // The badge sits outside the circle's clip, on its square's corner.
                                 Box(Modifier.fillMaxWidth().aspectRatio(1f)) {
                                     Art(
-                                        ArtworkStore.item(artist.id),
+                                        ArtworkPath.item(artist.id, artist.posterUrl),
                                         artColor(artist.id),
                                         Modifier.matchParentSize().clip(CircleShape),
                                         PlaceholderKind.Artist,
@@ -321,7 +322,7 @@ fun AlbumTile(album: MusicAlbum, modifier: Modifier = Modifier, selection: Selec
     val nav = LocalNav.current
     Column(modifier.pick(selection, album.id) { nav.open(Route.Album(album.id)) }) {
         Art(
-            ArtworkStore.item(album.id),
+            ArtworkPath.item(album.id, album.posterUrl),
             artColor(album.id),
             Modifier.fillMaxWidth().aspectRatio(1f).clip(MaterialTheme.shapes.small),
             PlaceholderKind.Album,
@@ -356,7 +357,7 @@ private fun SongRow(
                 textAlign = TextAlign.End,
             )
         }
-        if (album) AlbumArt(song.albumId, 40.dp, 4.dp)
+        if (album) AlbumArt(song.albumId, song.posterUrl, 40.dp, 4.dp)
         Column(Modifier.weight(1f)) {
             Text(
                 song.title,
@@ -438,7 +439,7 @@ fun ArtistScreen(id: String) {
             MusicHeader(
                 {
                     Art(
-                        ArtworkStore.item(artist.id),
+                        ArtworkPath.item(artist.id, artist.posterUrl),
                         artColor(artist.id),
                         Modifier.size(112.dp).clip(CircleShape),
                         PlaceholderKind.Artist,
@@ -502,7 +503,7 @@ fun AlbumScreen(id: String) {
         },
     ) {
         item {
-            MusicHeader({ AlbumArt(album.id, 136.dp, 12.dp) }) {
+            MusicHeader({ AlbumArt(album.id, album.posterUrl, 136.dp, 12.dp) }) {
                 Text(
                     album.artistName,
                     Modifier.clickable { nav.open(Route.Artist(album.artistId)) },

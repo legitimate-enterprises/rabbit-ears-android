@@ -66,6 +66,7 @@ import enterprises.legitimate.rabbitears.api.models.StationTimeRange
 import enterprises.legitimate.rabbitears.api.models.StationTiming
 import enterprises.legitimate.rabbitears.api.models.StationVisibility
 import enterprises.legitimate.rabbitears.api.models.Weekday
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.StationForm
@@ -84,11 +85,10 @@ import java.util.Locale
 import kotlinx.coroutines.launch
 
 fun programArt(p: StationProgram): String =
-    p.song?.let { ArtworkStore.item(it.albumId) }
-        ?: ArtworkStore.item(
-            p.itemId,
-            if (p.kind == PlaylistEntryKind.movie) "backdrop" else "poster",
-        )
+    p.song?.let { ArtworkPath.item(it.albumId, it.posterUrl) }
+        ?: if (p.kind == PlaylistEntryKind.movie)
+            ArtworkPath.item(p.itemId, p.item?.backdropUrl, "backdrop")
+        else ArtworkPath.item(p.itemId, p.item?.posterUrl)
 
 @Composable
 fun StationIdentity(

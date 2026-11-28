@@ -41,7 +41,7 @@ fun OccasionScreen(occasion: ActiveOccasion) {
                         Catalog.title(title),
                         nav.catalog.catalog.caption(title),
                         { nav.open(Route.Details(title.id)) },
-                        { AlbumArt(title.id, 48.dp, 6.dp) },
+                        { AlbumArt(title.id, title.posterUrl, 48.dp, 6.dp) },
                         downloaded = isDownloaded(title.id),
                         held = Held.Title(title, null),
                     )

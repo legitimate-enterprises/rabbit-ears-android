@@ -46,14 +46,6 @@ class Api(
     /** What every read goes through, kept answers standing in for the server's. */
     cache: ResponseCache? = null,
 ) {
-    /**
-     * The artwork generation the latest response named. Images are asked for under it, so the cache
-     * keeps one until some image changes and the server says so on whatever is asked next.
-     */
-    @Volatile
-    var artworkGeneration: Long? = null
-        private set
-
     private val signed: OkHttpClient =
         base
             .newBuilder()
@@ -66,21 +58,14 @@ class Api(
                             if (ResponseCache.keptOnly.get() == true)
                                 throw IOException("The server is out of reach.")
                             val request = chain.request()
-                            val response =
-                                chain.proceed(
-                                    if (token == null) request
-                                    else
-                                        request
-                                            .newBuilder()
-                                            .header("Authorization", "Bearer $token")
-                                            .build(),
-                                )
-                            // A response from the cache names the generation it was stored under.
-                            if (response.networkResponse != null)
-                                response.header("Artwork-Generation")?.toLongOrNull()?.let {
-                                    if (it > 0) artworkGeneration = it
-                                }
-                            response
+                            chain.proceed(
+                                if (token == null) request
+                                else
+                                    request
+                                        .newBuilder()
+                                        .header("Authorization", "Bearer $token")
+                                        .build(),
+                            )
                         },
                     )
             }
@@ -117,7 +102,7 @@ class Api(
             throw e
         }
 
-    /** The bytes at a server path, such as `/api/v2/items/7/artwork/poster`, with the status. */
+    /** The bytes at a server path, such as `/api/v2/artwork/w500/abc.jpg`, with the status. */
     fun bytes(path: String): Fetched = runCatching {
         http.newCall(Request.Builder().url(endpoint.resolve(path)).build()).execute().use {
             Fetched(it.code, if (it.isSuccessful) it.body.bytes() else null)

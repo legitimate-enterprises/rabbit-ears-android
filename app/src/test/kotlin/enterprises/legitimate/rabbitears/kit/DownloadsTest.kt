@@ -205,6 +205,33 @@ class DownloadsTest {
     }
 
     @Test
+    fun aTitlesArtworkIsKeptAtTheAddressItsDataCarriesElseAtItsIdAddress() = runBlocking {
+        server.on("POST /profiles/1/downloads/resolve", body = resolution(title("1")))
+        server.on(
+            "GET /items/1",
+            body =
+                Json.item("1", "movie", "Dune").removeSuffix("}") +
+                    ""","posterUrl":"/api/v2/artwork/w500/p.jpg"}""",
+        )
+        server.on("GET /artwork/w500/p.jpg", body = "jpg")
+        server.on("GET /items/1/artwork/backdrop", 404)
+        downloads.add(
+            api,
+            downloads.plan(
+                api,
+                "1",
+                DownloadTarget(itemId = "1"),
+                "Dune",
+                DownloadQuality.original,
+            ),
+        )
+        assertEquals("jpg", DownloadMeta(store).art("/api/v2/artwork/w500/p.jpg")?.let(::String))
+        assertTrue(server.called("GET /items/1/artwork/poster").isEmpty())
+        assertEquals(1, server.called("GET /items/1/artwork/backdrop").size)
+        assertTrue(server.calls.none { it.query?.contains("v=") == true })
+    }
+
+    @Test
     fun syncFetchesMetadataThatFailedToArriveBefore() = runBlocking {
         server.on("POST /profiles/1/downloads/resolve", body = resolution(title("1")))
         server.on("GET /collections/9", 404)

@@ -64,6 +64,7 @@ import enterprises.legitimate.rabbitears.api.models.ItemKind
 import enterprises.legitimate.rabbitears.api.models.ItemRelated
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
 import enterprises.legitimate.rabbitears.api.models.Verdict
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.CapabilityGroup
 import enterprises.legitimate.rabbitears.kit.Catalog
 import enterprises.legitimate.rabbitears.kit.Editions
@@ -179,7 +180,7 @@ private val Wide: Boolean
 @Composable
 private fun Poster(item: Item, width: Dp, radius: Dp = 12.dp, progress: Double? = null) {
     Art(
-        ArtworkStore.item(item.id),
+        ArtworkPath.item(item.id, item.posterUrl),
         artColor(item.id),
         Modifier.width(width).height(width * 1.5f).clip(RoundedCornerShape(radius)),
         placeholderKind(item.kind.value),
@@ -304,9 +305,10 @@ private fun Cast(credits: ItemCredits?) {
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Art(
-                ArtworkStore.person(credit.personId),
+                ArtworkPath.person(credit.personId, credit.headshotUrl),
                 avatarColor(credit.personId),
                 Modifier.size(64.dp).clip(CircleShape),
+                PlaceholderKind.Person,
             )
             Text(
                 credit.name,
@@ -803,7 +805,7 @@ private fun EpisodeRow(item: Item, current: Boolean, wide: Boolean) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Art(
-                ArtworkStore.item(item.id),
+                ArtworkPath.item(item.id, item.posterUrl),
                 artColor(item.id),
                 Modifier.width(if (wide) 176.dp else 120.dp)
                     .height(if (wide) 99.dp else 68.dp)
@@ -897,7 +899,7 @@ private fun Episode(item: Item) {
     ) {
         item {
             Art(
-                ArtworkStore.item(item.id),
+                ArtworkPath.item(item.id, item.posterUrl),
                 artColor(item.id),
                 Modifier.widthIn(max = 720.dp)
                     .fillMaxWidth()

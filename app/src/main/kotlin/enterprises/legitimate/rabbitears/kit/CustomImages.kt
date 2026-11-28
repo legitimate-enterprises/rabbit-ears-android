@@ -42,8 +42,13 @@ sealed interface ImageSource {
     data class Link(val url: String) : ImageSource
 }
 
-/** One choice of "Pick a title's artwork". */
-data class ArtChoice(val itemId: String, val kind: ArtworkKind, val label: String)
+/** One choice of "Pick a title's artwork", previewed at [path]. */
+data class ArtChoice(
+    val itemId: String,
+    val kind: ArtworkKind,
+    val label: String,
+    val path: String,
+)
 
 /** An owner's Set image request: where it goes, and the playlist whose titles it may pick from. */
 data class ImageRequest(val target: ImageTarget, val profileId: String, val playlistId: String) {
@@ -69,7 +74,15 @@ object CustomImage {
             val kinds =
                 if (entry.item == null) listOf(ArtworkKind.poster)
                 else listOf(ArtworkKind.poster, ArtworkKind.backdrop)
-            kinds.map { ArtChoice(id, it, "${entry.title}, ${it.value}") }
+            kinds.map {
+                val url = if (it == ArtworkKind.backdrop) entry.item?.backdropUrl else entry.artUrl
+                ArtChoice(
+                    id,
+                    it,
+                    "${entry.title}, ${it.value}",
+                    ArtworkPath.item(id, url, it.value),
+                )
+            }
         }
     }
 }

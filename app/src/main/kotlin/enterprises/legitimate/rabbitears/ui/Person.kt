@@ -26,7 +26,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import enterprises.legitimate.rabbitears.api.models.Item
 import enterprises.legitimate.rabbitears.api.models.Person
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Format
+import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.placeholderKind
 import enterprises.legitimate.rabbitears.ui.theme.Palette
 
@@ -64,9 +66,10 @@ fun PersonScreen(id: String) {
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Art(
-                    ArtworkStore.person(person.id),
+                    ArtworkPath.person(person.id, person.headshotUrl),
                     avatarColor(person.id),
                     Modifier.size(112.dp).clip(CircleShape),
+                    PlaceholderKind.Person,
                 )
                 Text(person.name, style = MaterialTheme.typography.headlineMedium)
                 Text(Format.plural(titles.size, "title"), color = Palette.dim)

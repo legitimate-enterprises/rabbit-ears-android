@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.ItemKind
 import enterprises.legitimate.rabbitears.api.models.SearchResult
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Catalog
 import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
@@ -120,7 +121,7 @@ fun Search() {
                     song.title,
                     "${song.artistName} · ${song.albumTitle}",
                     { music?.scope?.launch { music.play(listOf(song), 0, "Search") } },
-                    { AlbumArt(song.albumId, 48.dp, 6.dp) },
+                    { AlbumArt(song.albumId, song.posterUrl, 48.dp, 6.dp) },
                     downloaded = isDownloaded(song.id),
                 )
             }
@@ -128,7 +129,7 @@ fun Search() {
         item { Strip("Albums", found.albums) { AlbumTile(it, Modifier.width(poster)) } }
         item {
             Strip("Artists", found.artists) {
-                Round(ArtworkStore.item(it.id), it.id, it.name, isDownloaded(it.id)) {
+                Round(ArtworkPath.item(it.id, it.posterUrl), it.id, it.name, isDownloaded(it.id)) {
                     nav.open(Route.Artist(it.id))
                 }
             }
@@ -137,7 +138,7 @@ fun Search() {
             Strip("Videos", found.videos) {
                 WideTile(
                     Held.Video(it),
-                    ArtworkStore.item(it.id),
+                    ArtworkPath.item(it.id, it.posterUrl),
                     it.title,
                     it.channelTitle,
                     { nav.open(Route.Video(it.id)) },
@@ -148,14 +149,20 @@ fun Search() {
         }
         item {
             Strip("Channels", found.channels) {
-                Round(ArtworkStore.item(it.id), it.id, it.title, isDownloaded(it.id)) {
+                Round(ArtworkPath.item(it.id, it.posterUrl), it.id, it.title, isDownloaded(it.id)) {
                     nav.open(Route.Channel(it.id))
                 }
             }
         }
         item {
             Strip("People", found.people) {
-                Round(ArtworkStore.person(it.id), it.id, it.name, false) {
+                Round(
+                    ArtworkPath.person(it.id, it.headshotUrl),
+                    it.id,
+                    it.name,
+                    false,
+                    PlaceholderKind.Person,
+                ) {
                     nav.open(Route.Person(it.id))
                 }
             }
@@ -164,7 +171,14 @@ fun Search() {
 }
 
 @Composable
-private fun Round(art: String, id: String, name: String, downloaded: Boolean, onClick: () -> Unit) {
+private fun Round(
+    art: String,
+    id: String,
+    name: String,
+    downloaded: Boolean,
+    kind: PlaceholderKind? = null,
+    onClick: () -> Unit,
+) {
     Column(
         Modifier.width(96.dp).clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -172,7 +186,7 @@ private fun Round(art: String, id: String, name: String, downloaded: Boolean, on
     ) {
         // The badge sits outside the circle's clip, on its square's corner.
         Box(Modifier.size(80.dp)) {
-            Art(art, avatarColor(id), Modifier.matchParentSize().clip(CircleShape))
+            Art(art, avatarColor(id), Modifier.matchParentSize().clip(CircleShape), kind)
             StatusBadges(downloaded)
         }
         Text(

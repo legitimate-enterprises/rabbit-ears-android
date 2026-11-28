@@ -86,6 +86,7 @@ import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.AudioDetails
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.AudioQueue
 import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.MusicPlayer
@@ -115,9 +116,9 @@ private fun rememberClock(player: MusicPlayer): Pair<Long, Long> {
 }
 
 @Composable
-fun AlbumArt(albumId: String, size: Dp, radius: Dp = 8.dp) {
+fun AlbumArt(albumId: String, url: String?, size: Dp, radius: Dp = 8.dp) {
     Art(
-        ArtworkStore.item(albumId),
+        ArtworkPath.item(albumId, url),
         artColor(albumId),
         Modifier.size(size).clip(RoundedCornerShape(radius)),
         PlaceholderKind.Album,
@@ -125,11 +126,12 @@ fun AlbumArt(albumId: String, size: Dp, radius: Dp = 8.dp) {
 }
 
 @Composable
-fun CollectionArt(id: String, size: Dp, radius: Dp = 8.dp) {
+fun CollectionArt(id: String, url: String?, size: Dp, radius: Dp = 8.dp) {
     Art(
-        ArtworkStore.collection(id),
+        ArtworkPath.collection(id, url),
         artColor(id),
         Modifier.size(size).clip(RoundedCornerShape(radius)),
+        PlaceholderKind.Collection,
     )
 }
 
@@ -197,7 +199,7 @@ private val CLOSE_FLING = 1000.dp
  * taking its space.
  */
 @Composable
-private fun FlipArt(albumId: String, audio: AudioDetails?) {
+private fun FlipArt(albumId: String, url: String?, audio: AudioDetails?) {
     var flipped by remember(audio == null) { mutableStateOf(false) }
     // The system's animation scale applies, so a phone set to remove animations turns it at once.
     val turn by animateFloatAsState(if (flipped) 180f else 0f, tween(FLIP_MS))
@@ -227,7 +229,7 @@ private fun FlipArt(albumId: String, audio: AudioDetails?) {
         ) {
             if (turn <= 90f || audio == null)
                 Art(
-                    ArtworkStore.item(albumId),
+                    ArtworkPath.item(albumId, url),
                     artColor(albumId),
                     Modifier.fillMaxSize().clip(shape),
                     PlaceholderKind.Album,
@@ -480,7 +482,7 @@ private fun QueueRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        AlbumArt(entry.song.albumId, 40.dp, 4.dp)
+        AlbumArt(entry.song.albumId, entry.song.posterUrl, 40.dp, 4.dp)
         Column(Modifier.weight(1f)) {
             Text(
                 entry.song.title,
@@ -537,7 +539,7 @@ fun MiniPlayer(player: MusicPlayer) {
             .clickable { nav.open(Route.NowPlaying()) },
     ) {
         Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            AlbumArt(song.albumId, 48.dp, 6.dp)
+            AlbumArt(song.albumId, song.posterUrl, 48.dp, 6.dp)
             Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
                 Text(
                     song.title,
@@ -602,7 +604,7 @@ fun NowPlayingBar(player: MusicPlayer) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                AlbumArt(song.albumId, 48.dp, 4.dp)
+                AlbumArt(song.albumId, song.posterUrl, 48.dp, 4.dp)
                 Column {
                     Text(
                         song.title,
@@ -655,7 +657,7 @@ fun NowPlayingPane(player: MusicPlayer, modifier: Modifier) {
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            AlbumArt(song.albumId, 120.dp, 12.dp)
+            AlbumArt(song.albumId, song.posterUrl, 120.dp, 12.dp)
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 if (player.queue.source.isNotEmpty())
                     Text(
@@ -728,7 +730,7 @@ fun NowPlaying(route: Route.NowPlaying) {
                 Modifier.widthIn(max = 480.dp).fillMaxHeight().padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                FlipArt(song.albumId, player.stream?.audio)
+                FlipArt(song.albumId, song.posterUrl, player.stream?.audio)
                 Column {
                     Title(song.title)
                     GoTo(song.artistName, 18.sp, FontWeight.SemiBold, Route.Artist(song.artistId))
@@ -807,7 +809,7 @@ private fun StationMini(player: MusicPlayer, tuner: StationTuner) {
             .clickable { nav.open(Route.NowPlaying()) },
     ) {
         Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-            if (song != null) AlbumArt(song.albumId, 48.dp, 6.dp)
+            if (song != null) AlbumArt(song.albumId, song.posterUrl, 48.dp, 6.dp)
             else
                 StationIdentity(
                     "",
@@ -900,7 +902,7 @@ private fun StationNowPlaying(player: MusicPlayer, tuner: StationTuner) {
                     )
                 } else {
                     Art(
-                        ArtworkStore.item(song.albumId),
+                        ArtworkPath.item(song.albumId, song.posterUrl),
                         artColor(song.albumId),
                         art,
                         PlaceholderKind.Album,
@@ -961,7 +963,7 @@ private fun StationNowPlaying(player: MusicPlayer, tuner: StationTuner) {
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
-                        AlbumArt(next.albumId, 40.dp, 4.dp)
+                        AlbumArt(next.albumId, next.posterUrl, 40.dp, 4.dp)
                         Column {
                             Text(next.title, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                             Text(

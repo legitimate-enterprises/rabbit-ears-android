@@ -30,8 +30,6 @@ import enterprises.legitimate.rabbitears.kit.DownloadMeta
 import enterprises.legitimate.rabbitears.kit.Fetched
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.ProfileColors
-import enterprises.legitimate.rabbitears.kit.artworkAddress
-import enterprises.legitimate.rabbitears.kit.placeholderOfPath
 import enterprises.legitimate.rabbitears.kit.remembersArtwork
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.Dispatchers
@@ -39,10 +37,10 @@ import kotlinx.coroutines.withContext
 
 /**
  * Artwork needs the device token, so it is fetched through the API's client and kept decoded in
- * memory, up to [CACHE_BYTES], with the client's disk cache beneath. An image the server does not
- * have stays missing; one that failed to arrive is asked for again the next time its tile appears.
- * When the server names a new artwork generation, what is held in memory, and what was missing, is
- * asked for again.
+ * memory by its address, up to [CACHE_BYTES], with the client's disk cache beneath. An image the
+ * server does not have stays missing; one that failed to arrive is asked for again the next time
+ * its tile appears. A changed image comes at a new address, so nothing held is ever asked for
+ * again.
  */
 class ArtworkStore(
     private val api: Api,
@@ -57,23 +55,11 @@ class ArtworkStore(
         }
 
     private val missing = ConcurrentHashMap.newKeySet<String>()
-    private var generation: Long? = null
 
     /** The image if it is in memory now, so a tile that has it needs no placeholder or fade. */
     fun peek(path: String): ImageBitmap? = cache.get(path)
 
-    private fun keepCurrent() {
-        val named = api.artworkGeneration
-        if (named == generation) return
-        if (generation != null) {
-            cache.evictAll()
-            missing.clear()
-        }
-        generation = named
-    }
-
     suspend fun load(path: String): ImageBitmap? {
-        keepCurrent()
         cache.get(path)?.let {
             return it
         }
@@ -81,9 +67,9 @@ class ArtworkStore(
         val (fetched, image) =
             withContext(Dispatchers.IO) {
                 val fetched =
-                    (if (unreachable()) Fetched(null, null)
-                        else api.bytes(artworkAddress(path, generation)))
-                        .let { if (it.status == null) Fetched(null, kept?.art(path)) else it }
+                    (if (unreachable()) Fetched(null, null) else api.bytes(path)).let {
+                        if (it.status == null) Fetched(null, kept?.art(path)) else it
+                    }
                 fetched to
                     runCatching {
                         fetched.body?.let { bytes ->
@@ -110,13 +96,6 @@ class ArtworkStore(
         const val MAX_WIDTH = 720
 
         val CACHE_BYTES = (Runtime.getRuntime().maxMemory() / 8).toInt()
-
-        fun item(id: String, kind: String = "poster") = "/api/v2/items/$id/artwork/$kind"
-
-        fun collection(id: String, kind: String = "poster") =
-            "/api/v2/collections/$id/artwork/$kind"
-
-        fun person(id: String) = "/api/v2/people/$id/artwork"
     }
 }
 
@@ -151,7 +130,7 @@ fun Art(
     color: Color,
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit = {},
-) = Art(path, color, modifier, path?.let(::placeholderOfPath), content)
+) = Art(path, color, modifier, null, content)
 
 /**
  * As above, with [kind]'s placeholder over the color until the image has loaded, and for good when

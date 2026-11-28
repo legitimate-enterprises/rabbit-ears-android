@@ -55,6 +55,7 @@ import enterprises.legitimate.rabbitears.api.models.Collection
 import enterprises.legitimate.rabbitears.api.models.CollectionSource
 import enterprises.legitimate.rabbitears.api.models.DownloadTarget
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Catalog
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.caption
@@ -68,7 +69,7 @@ fun CollectionTile(c: Collection, modifier: Modifier = Modifier) {
     val nav = LocalNav.current
     Column(modifier.clickable { nav.open(Route.Collection(c.id)) }) {
         Art(
-            ArtworkStore.collection(c.id),
+            ArtworkPath.collection(c.id, c.posterUrl),
             artColor(c.id),
             Modifier.fillMaxWidth().aspectRatio(2f / 3f).clip(MaterialTheme.shapes.small),
             PlaceholderKind.Collection,
@@ -261,7 +262,7 @@ fun CollectionScreen(id: String) {
                 Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     val width = if (LocalWidth.current == WidthClass.Expanded) 160.dp else 112.dp
                     Art(
-                        ArtworkStore.collection(id),
+                        ArtworkPath.collection(id, collection.posterUrl),
                         artColor(id),
                         Modifier.width(width)
                             .height(width * 1.5f)
@@ -320,7 +321,7 @@ fun CollectionScreen(id: String) {
                             color = Palette.dim,
                             textAlign = TextAlign.End,
                         )
-                        AlbumArt(movie.id, 48.dp, 6.dp)
+                        AlbumArt(movie.id, movie.posterUrl, 48.dp, 6.dp)
                         Column(Modifier.weight(1f)) {
                             Text(
                                 title,
@@ -391,7 +392,7 @@ fun CollectionScreen(id: String) {
                         Catalog.title(movie),
                         nav.catalog.catalog.caption(movie),
                         { nav.open(Route.Details(movie.id)) },
-                        { AlbumArt(movie.id, 48.dp, 6.dp) },
+                        { AlbumArt(movie.id, movie.posterUrl, 48.dp, 6.dp) },
                         "Remove from collection".takeIf { editable },
                         downloaded = isDownloaded(movie.id),
                         onRemove = remove,

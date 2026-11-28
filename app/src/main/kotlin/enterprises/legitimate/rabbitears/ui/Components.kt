@@ -74,6 +74,7 @@ import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.Account
 import enterprises.legitimate.rabbitears.api.models.Item
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Catalog
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.ProfileColors
@@ -320,7 +321,7 @@ fun PosterTile(
     Hold(held, selection, onClick, modifier) { gesture ->
         Column(gesture) {
             Art(
-                ArtworkStore.item(item.id),
+                ArtworkPath.item(item.id, item.posterUrl),
                 artColor(item.id),
                 Modifier.fillMaxWidth().aspectRatio(2f / 3f).clip(MaterialTheme.shapes.small),
                 kind,

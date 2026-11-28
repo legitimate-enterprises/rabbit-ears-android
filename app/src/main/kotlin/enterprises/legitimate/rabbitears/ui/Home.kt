@@ -37,6 +37,7 @@ import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.Item
 import enterprises.legitimate.rabbitears.api.models.ItemKind
 import enterprises.legitimate.rabbitears.api.models.YouTubeVideo
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Catalog
 import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
@@ -208,7 +209,7 @@ fun Home() {
                 Strip("New from your channels", newVideos) {
                     WideTile(
                         Held.Video(it),
-                        ArtworkStore.item(it.id),
+                        ArtworkPath.item(it.id, it.posterUrl),
                         it.title,
                         listOfNotNull(it.channelTitle, it.durationMs?.let(Format::minutes))
                             .joinToString(" · "),
@@ -267,7 +268,7 @@ private fun Resumable.pick(c: Catalog, nav: Navigator): Pick =
         is Resumable.Video ->
             Pick(
                 Held.Video(video),
-                ArtworkStore.item(video.id),
+                ArtworkPath.item(video.id, video.posterUrl),
                 video.title,
                 caption(video),
                 { nav.open(Route.Video(video.id)) },
@@ -284,7 +285,8 @@ private fun ResumableHero(c: Catalog, hero: Resumable, wide: Boolean) =
 
 /** A wide tile's image: an episode's still, else the title's backdrop. */
 private fun art(item: Item) =
-    ArtworkStore.item(item.id, if (item.kind == ItemKind.episode) "poster" else "backdrop")
+    if (item.kind == ItemKind.episode) ArtworkPath.item(item.id, item.posterUrl)
+    else ArtworkPath.item(item.id, item.backdropUrl, "backdrop")
 
 /** A video's caption: `Workbench Weekly · 18m left`. */
 private fun caption(video: YouTubeVideo) =
@@ -318,7 +320,7 @@ private fun VideoHero(video: YouTubeVideo, wide: Boolean) {
     val nav = LocalNav.current
     Hero(
         Held.Video(video),
-        ArtworkStore.item(video.id),
+        ArtworkPath.item(video.id, video.posterUrl),
         video.title,
         caption(video),
         video.resumeProgress(),

@@ -76,7 +76,7 @@ class DownloadMeta(private val store: DownloadStore) {
 
     fun collectionMovies(id: String) = get("movies-$id", ListSerializer(Item.serializer()))
 
-    /** The image at an artwork path, such as `/api/v2/items/7/artwork/poster`. */
+    /** The image at an artwork path, such as `/api/v2/artwork/w500/abc.jpg`. */
     fun art(path: String): ByteArray? = artFile(path).takeIf { it.exists() }?.readBytes()
 
     private fun artFile(path: String) =
@@ -117,17 +117,14 @@ class DownloadMeta(private val store: DownloadStore) {
         }
         attempt {
             request.target.collectionId?.let { id ->
-                put(
-                    "collection-$id",
-                    Collection.serializer(),
-                    api.call { collections.getCollection(id) },
-                )
+                val collection = api.call { collections.getCollection(id) }
+                put("collection-$id", Collection.serializer(), collection)
                 val movies = pages { o ->
                     api.call { collections.listCollectionMovies(id, PAGE, o ?: 0) }
                         .let { it.items to it.nextOffset }
                 }
                 put("movies-$id", ListSerializer(Item.serializer()), movies)
-                art(api, "/api/v2/collections/$id/artwork/poster")
+                art(api, ArtworkPath.collection(id, collection.posterUrl))
             }
         }
         val done = mutableSetOf<String>()
@@ -150,7 +147,7 @@ class DownloadMeta(private val store: DownloadStore) {
                     id = item.parentId
                 }
                 for (item in chain.asReversed()) {
-                    itemArt(api, item.id)
+                    itemArt(api, item.id, item.posterUrl, item.backdropUrl)
                     put("item-${item.id}", Item.serializer(), item)
                     done += "item-${item.id}"
                 }
@@ -158,20 +155,14 @@ class DownloadMeta(private val store: DownloadStore) {
             DownloadTitle.Kind.song -> {
                 val song = api.call { music.getMusicSong(title.itemId) }
                 once(done, "album-${song.albumId}") {
-                    put(
-                        "album-${song.albumId}",
-                        MusicAlbum.serializer(),
-                        api.call { music.getMusicAlbum(song.albumId) },
-                    )
-                    itemArt(api, song.albumId)
+                    val album = api.call { music.getMusicAlbum(song.albumId) }
+                    put("album-${song.albumId}", MusicAlbum.serializer(), album)
+                    itemArt(api, song.albumId, album.posterUrl)
                 }
                 once(done, "artist-${song.artistId}") {
-                    put(
-                        "artist-${song.artistId}",
-                        MusicArtist.serializer(),
-                        api.call { music.getMusicArtist(song.artistId) },
-                    )
-                    itemArt(api, song.artistId)
+                    val artist = api.call { music.getMusicArtist(song.artistId) }
+                    put("artist-${song.artistId}", MusicArtist.serializer(), artist)
+                    itemArt(api, song.artistId, artist.posterUrl)
                 }
                 if (song.albumArtistId != song.artistId)
                     once(done, "artist-${song.albumArtistId}") {
@@ -186,14 +177,11 @@ class DownloadMeta(private val store: DownloadStore) {
             DownloadTitle.Kind.video -> {
                 val video = api.call { youtube.getYouTubeVideo(title.itemId) }
                 once(done, "channel-${video.channelId}") {
-                    put(
-                        "channel-${video.channelId}",
-                        YouTubeChannel.serializer(),
-                        api.call { youtube.getYouTubeChannel(video.channelId) },
-                    )
-                    itemArt(api, video.channelId)
+                    val channel = api.call { youtube.getYouTubeChannel(video.channelId) }
+                    put("channel-${video.channelId}", YouTubeChannel.serializer(), channel)
+                    itemArt(api, video.channelId, channel.posterUrl)
                 }
-                itemArt(api, video.id)
+                itemArt(api, video.id, video.posterUrl)
                 put("video-${video.id}", YouTubeVideo.serializer(), video)
             }
         }
@@ -205,9 +193,13 @@ class DownloadMeta(private val store: DownloadStore) {
         done += key
     }
 
-    private suspend fun itemArt(api: Api, id: String) {
-        art(api, "/api/v2/items/$id/artwork/poster")
-        art(api, "/api/v2/items/$id/artwork/backdrop")
+    /**
+     * The poster and backdrop at the addresses the object carries. Music and YouTube objects carry
+     * no backdrop field, so theirs is asked for at the id address.
+     */
+    private suspend fun itemArt(api: Api, id: String, poster: String?, backdrop: String? = null) {
+        art(api, ArtworkPath.item(id, poster))
+        art(api, ArtworkPath.item(id, backdrop, "backdrop"))
     }
 
     private suspend fun art(api: Api, path: String) =

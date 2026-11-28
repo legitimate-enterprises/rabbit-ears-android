@@ -132,7 +132,7 @@ fun ImageDialog(request: ImageRequest, onDone: (Boolean) -> Unit) {
                         ) {
                             choices.orEmpty().forEach { choice ->
                                 Art(
-                                    ArtworkStore.item(choice.itemId, choice.kind.value),
+                                    choice.path,
                                     artColor(choice.itemId),
                                     Modifier.width(
                                             if (choice.kind == ArtworkKind.backdrop) 112.dp

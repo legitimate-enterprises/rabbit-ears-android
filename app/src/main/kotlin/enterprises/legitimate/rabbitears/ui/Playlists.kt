@@ -55,6 +55,7 @@ import enterprises.legitimate.rabbitears.api.models.PlaylistEntryKind
 import enterprises.legitimate.rabbitears.api.models.PlaylistKind
 import enterprises.legitimate.rabbitears.api.models.PlaylistShareAccess
 import enterprises.legitimate.rabbitears.api.models.Station
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.CustomImageModel
 import enterprises.legitimate.rabbitears.kit.Editions
 import enterprises.legitimate.rabbitears.kit.Format
@@ -65,6 +66,7 @@ import enterprises.legitimate.rabbitears.kit.PlaylistRun
 import enterprises.legitimate.rabbitears.kit.PlaylistSharesModel
 import enterprises.legitimate.rabbitears.kit.ProfileColors
 import enterprises.legitimate.rabbitears.kit.artId
+import enterprises.legitimate.rabbitears.kit.artUrl
 import enterprises.legitimate.rabbitears.kit.caption
 import enterprises.legitimate.rabbitears.kit.isEditable
 import enterprises.legitimate.rabbitears.kit.isOwned
@@ -95,7 +97,7 @@ fun PlaylistTile(p: Playlist, modifier: Modifier = Modifier) {
     val nav = LocalNav.current
     Column(modifier.clickable { nav.open(Route.Playlist(p.id)) }) {
         Art(
-            p.imageUrl ?: p.artItemId?.let { ArtworkStore.item(it) },
+            p.imageUrl ?: p.artItemId?.let { ArtworkPath.item(it, p.posterUrl) },
             artColor(p.id),
             Modifier.fillMaxWidth().aspectRatio(1f).clip(MaterialTheme.shapes.small),
             PlaceholderKind.Playlist,
@@ -496,8 +498,8 @@ private fun EntryRow(
         entry.caption,
         onOpen,
         {
-            entry.collectionId?.let { CollectionArt(it, 48.dp, 6.dp) }
-                ?: AlbumArt(entry.artId!!, 48.dp, 6.dp)
+            entry.collectionId?.let { CollectionArt(it, entry.artUrl, 48.dp, 6.dp) }
+                ?: AlbumArt(entry.artId!!, entry.artUrl, 48.dp, 6.dp)
         },
         "Remove from playlist".takeIf { editable },
         downloaded =

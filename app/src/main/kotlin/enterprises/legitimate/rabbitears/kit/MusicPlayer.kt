@@ -398,7 +398,7 @@ class MusicPlayer(
             api.endpoint.resolveStream(started.streamUrl),
             started.streamKind == PlaybackStream.StreamKind.hls,
             song,
-            api.endpoint.resolve("/api/v2/items/${song.albumId}/artwork/poster"),
+            api.endpoint.resolve(ArtworkPath.item(song.albumId, song.posterUrl)),
         )
         if (started.positionMs > 0) output.seek(started.positionMs)
         output.play()

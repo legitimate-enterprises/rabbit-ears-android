@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import enterprises.legitimate.rabbitears.R
 import enterprises.legitimate.rabbitears.api.models.DownloadTarget
 import enterprises.legitimate.rabbitears.api.models.YouTubeVideo
+import enterprises.legitimate.rabbitears.kit.ArtworkPath
 import enterprises.legitimate.rabbitears.kit.Format
 import enterprises.legitimate.rabbitears.kit.MediaSummary
 import enterprises.legitimate.rabbitears.kit.PlaceholderKind
@@ -170,7 +171,7 @@ fun YouTubeTab() {
                             // The badge sits outside the circle's clip, on its square's corner.
                             Box(Modifier.size(if (Wide) 120.dp else 96.dp)) {
                                 Art(
-                                    ArtworkStore.item(channel.id),
+                                    ArtworkPath.item(channel.id, channel.posterUrl),
                                     artColor(channel.id),
                                     Modifier.matchParentSize().clip(CircleShape),
                                     PlaceholderKind.Channel,
@@ -254,7 +255,7 @@ private fun VideoTile(
     Hold(Held.Video(video, changed), selection, { nav.open(Route.Video(video.id)) }) { gesture ->
         Column(gesture) {
             Art(
-                ArtworkStore.item(video.id),
+                ArtworkPath.item(video.id, video.posterUrl),
                 artColor(video.id),
                 Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(MaterialTheme.shapes.small),
                 PlaceholderKind.Video,
@@ -300,7 +301,7 @@ fun ChannelScreen(id: String) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Art(
-                        ArtworkStore.item(channel.id),
+                        ArtworkPath.item(channel.id, channel.posterUrl),
                         artColor(channel.id),
                         Modifier.size(if (Wide) 112.dp else 80.dp).clip(CircleShape),
                         PlaceholderKind.Channel,
@@ -381,7 +382,7 @@ fun VideoScreen(id: String) {
         val v = video ?: return@LazyColumn item { model.error?.let { Text(it) } }
         item {
             Art(
-                ArtworkStore.item(v.id),
+                ArtworkPath.item(v.id, v.posterUrl),
                 artColor(v.id),
                 Modifier.widthIn(max = 720.dp)
                     .fillMaxWidth()
@@ -402,8 +403,9 @@ fun VideoScreen(id: String) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
+                    // A video carries no address for its channel's avatar.
                     Art(
-                        ArtworkStore.item(v.channelId),
+                        ArtworkPath.item(v.channelId, null),
                         artColor(v.channelId),
                         Modifier.size(20.dp).clip(CircleShape),
                         PlaceholderKind.Channel,

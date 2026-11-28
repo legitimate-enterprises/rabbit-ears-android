@@ -107,6 +107,15 @@ val PlaylistEntry.caption: String
 val PlaylistEntry.artId: String?
     get() = song?.albumId ?: itemId
 
+/** The address of the entry's art that the object its kind names carries. */
+val PlaylistEntry.artUrl: String?
+    get() =
+        item?.posterUrl
+            ?: artist?.posterUrl
+            ?: album?.posterUrl
+            ?: song?.posterUrl
+            ?: collection?.posterUrl
+
 /** Whether the profile owns the playlist, and so alone renames, deletes and shares it. */
 val Playlist.isOwned: Boolean
     get() = access == PlaylistAccess.owner
