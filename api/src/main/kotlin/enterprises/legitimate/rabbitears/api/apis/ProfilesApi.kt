@@ -38,12 +38,15 @@ import enterprises.legitimate.rabbitears.api.models.DeviceLinkPage
 import enterprises.legitimate.rabbitears.api.models.Error
 import enterprises.legitimate.rabbitears.api.models.FavoriteKind
 import enterprises.legitimate.rabbitears.api.models.FavoritePage
+import enterprises.legitimate.rabbitears.api.models.FriendRequestInput
+import enterprises.legitimate.rabbitears.api.models.FriendRequestList
 import enterprises.legitimate.rabbitears.api.models.HouseholdAdultInput
 import enterprises.legitimate.rabbitears.api.models.HouseholdInvite
 import enterprises.legitimate.rabbitears.api.models.JoinCodeResendInput
 import enterprises.legitimate.rabbitears.api.models.MakeAdultInput
 import enterprises.legitimate.rabbitears.api.models.MusicRecentKind
 import enterprises.legitimate.rabbitears.api.models.MusicRecentPage
+import enterprises.legitimate.rabbitears.api.models.OutgoingFriendRequest
 import enterprises.legitimate.rabbitears.api.models.PinRequest
 import enterprises.legitimate.rabbitears.api.models.PlayInput
 import enterprises.legitimate.rabbitears.api.models.ProfileInput
@@ -84,6 +87,77 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
         val defaultBasePath: String by lazy {
             System.getProperties().getProperty(ApiClient.BASE_URL_KEY, "/api/v2")
         }
+    }
+
+    /**
+     * POST /friend-requests/{requestId}/accept
+     * The adult asked accepts: the two are friends, and the request goes with any between them the other way. A request the active adult received and lists is the only one they accept (404); a sender no longer to be had, as one revoked, is 409. Kids get 403.
+     * 
+     * @param requestId 
+     * @return void
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun acceptFriendRequest(requestId: kotlin.String) : Unit {
+        val localVarResponse = acceptFriendRequestWithHttpInfo(requestId = requestId)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> Unit
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * POST /friend-requests/{requestId}/accept
+     * The adult asked accepts: the two are friends, and the request goes with any between them the other way. A request the active adult received and lists is the only one they accept (404); a sender no longer to be had, as one revoked, is 409. Kids get 403.
+     * 
+     * @param requestId 
+     * @return ApiResponse<Unit?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Throws(IllegalStateException::class, IOException::class)
+    fun acceptFriendRequestWithHttpInfo(requestId: kotlin.String) : ApiResponse<Unit?> {
+        val localVariableConfig = acceptFriendRequestRequestConfig(requestId = requestId)
+
+        return request<Unit, Unit>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation acceptFriendRequest
+     *
+     * @param requestId 
+     * @return RequestConfig
+     */
+    fun acceptFriendRequestRequestConfig(requestId: kotlin.String) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.POST,
+            path = "/friend-requests/{requestId}/accept".replace("{"+"requestId"+"}", encodeURIComponent(requestId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
     }
 
     /**
@@ -607,6 +681,148 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
     }
 
     /**
+     * DELETE /friends/{profileId}
+     * Either friend ends a friendship, and the other is not told.
+     * Neither then offers the other as a target anew. What they shared already stays as it is: a playlist shared with the other stays shared until its owner stops sharing it, and a Watch together both are in plays on. One who is not the active adult&#39;s friend is 404. Kids get 403.
+     * @param profileId 
+     * @return void
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun deleteFriend(profileId: kotlin.String) : Unit {
+        val localVarResponse = deleteFriendWithHttpInfo(profileId = profileId)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> Unit
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * DELETE /friends/{profileId}
+     * Either friend ends a friendship, and the other is not told.
+     * Neither then offers the other as a target anew. What they shared already stays as it is: a playlist shared with the other stays shared until its owner stops sharing it, and a Watch together both are in plays on. One who is not the active adult&#39;s friend is 404. Kids get 403.
+     * @param profileId 
+     * @return ApiResponse<Unit?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Throws(IllegalStateException::class, IOException::class)
+    fun deleteFriendWithHttpInfo(profileId: kotlin.String) : ApiResponse<Unit?> {
+        val localVariableConfig = deleteFriendRequestConfig(profileId = profileId)
+
+        return request<Unit, Unit>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation deleteFriend
+     *
+     * @param profileId 
+     * @return RequestConfig
+     */
+    fun deleteFriendRequestConfig(profileId: kotlin.String) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.DELETE,
+            path = "/friends/{profileId}".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * DELETE /friend-requests/{requestId}
+     * The sender withdraws a request, or the adult asked declines it. A declined request leaves the decliner&#39;s list only: nothing the sender reads of it changes. A request the active adult does not list is 404. Kids get 403.
+     * 
+     * @param requestId 
+     * @return void
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun deleteFriendRequest(requestId: kotlin.String) : Unit {
+        val localVarResponse = deleteFriendRequestWithHttpInfo(requestId = requestId)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> Unit
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * DELETE /friend-requests/{requestId}
+     * The sender withdraws a request, or the adult asked declines it. A declined request leaves the decliner&#39;s list only: nothing the sender reads of it changes. A request the active adult does not list is 404. Kids get 403.
+     * 
+     * @param requestId 
+     * @return ApiResponse<Unit?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Throws(IllegalStateException::class, IOException::class)
+    fun deleteFriendRequestWithHttpInfo(requestId: kotlin.String) : ApiResponse<Unit?> {
+        val localVariableConfig = deleteFriendRequestRequestConfig(requestId = requestId)
+
+        return request<Unit, Unit>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation deleteFriendRequest
+     *
+     * @param requestId 
+     * @return RequestConfig
+     */
+    fun deleteFriendRequestRequestConfig(requestId: kotlin.String) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.DELETE,
+            path = "/friend-requests/{requestId}".replace("{"+"requestId"+"}", encodeURIComponent(requestId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
      * DELETE /household/device-links/{linkId}
      * An adult deletes one of the household&#39;s links. A device it linked stays signed in.
      * 
@@ -968,6 +1184,88 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
         return RequestConfig(
             method = RequestMethod.DELETE,
             path = "/profiles/{profileId}/allowed-items/{itemId}".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"itemId"+"}", encodeURIComponent(itemId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * DELETE /profiles/{profileId}/watch-state/{itemId}/position
+     * Dismiss from in progress, forgetting where to resume.
+     * positionMs becomes 0, so the item is no longer in progress anywhere; watched, playCount, lastPlayedAt and editionId stay. Playing it again starts at the beginning. A state not in progress is left as it is.
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was dismissed, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A state that changed later stays, and the answer is still 204. (optional)
+     * @return void
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun dismissWatchState(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime? = null) : Unit {
+        val localVarResponse = dismissWatchStateWithHttpInfo(profileId = profileId, itemId = itemId, at = at)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> Unit
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * DELETE /profiles/{profileId}/watch-state/{itemId}/position
+     * Dismiss from in progress, forgetting where to resume.
+     * positionMs becomes 0, so the item is no longer in progress anywhere; watched, playCount, lastPlayedAt and editionId stay. Playing it again starts at the beginning. A state not in progress is left as it is.
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was dismissed, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A state that changed later stays, and the answer is still 204. (optional)
+     * @return ApiResponse<Unit?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Throws(IllegalStateException::class, IOException::class)
+    fun dismissWatchStateWithHttpInfo(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : ApiResponse<Unit?> {
+        val localVariableConfig = dismissWatchStateRequestConfig(profileId = profileId, itemId = itemId, at = at)
+
+        return request<Unit, Unit>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation dismissWatchState
+     *
+     * @param profileId 
+     * @param itemId 
+     * @param at When it was dismissed, as a device that was offline knows it; a time ahead of the server&#39;s is taken as now. A state that changed later stays, and the answer is still 204. (optional)
+     * @return RequestConfig
+     */
+    fun dismissWatchStateRequestConfig(profileId: kotlin.String, itemId: kotlin.String, at: java.time.OffsetDateTime?) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (at != null) {
+                    put("at", listOf(parseDateToQueryString<java.time.OffsetDateTime>(at)))
+                }
+            }
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.DELETE,
+            path = "/profiles/{profileId}/watch-state/{itemId}/position".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())).replace("{"+"itemId"+"}", encodeURIComponent(itemId.toString())),
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,
@@ -1604,6 +1902,160 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
         return RequestConfig(
             method = RequestMethod.GET,
             path = "/profiles/{profileId}/favorites".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * GET /friend-requests
+     * The friend requests the active adult received and has not declined, and those they sent, newest first, until each expires. Kids get 403.
+     * 
+     * @return FriendRequestList
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun listFriendRequests() : FriendRequestList {
+        val localVarResponse = listFriendRequestsWithHttpInfo()
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as FriendRequestList
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * GET /friend-requests
+     * The friend requests the active adult received and has not declined, and those they sent, newest first, until each expires. Kids get 403.
+     * 
+     * @return ApiResponse<FriendRequestList?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun listFriendRequestsWithHttpInfo() : ApiResponse<FriendRequestList?> {
+        val localVariableConfig = listFriendRequestsRequestConfig()
+
+        return request<Unit, FriendRequestList>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation listFriendRequests
+     *
+     * @return RequestConfig
+     */
+    fun listFriendRequestsRequestConfig() : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/friend-requests",
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * GET /friends
+     * The active adult&#39;s friends, by name. Friends offer each other as share and Watch together targets off TVs, and are never in each other&#39;s households. Kids get 403. &#x60;email&#x60; and &#x60;householdId&#x60; are left out.
+     * 
+     * @param limit  (optional, default to 50)
+     * @param offset  (optional, default to 0)
+     * @return AccountPage
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun listFriends(limit: kotlin.Int? = 50, offset: kotlin.Int? = 0) : AccountPage {
+        val localVarResponse = listFriendsWithHttpInfo(limit = limit, offset = offset)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as AccountPage
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * GET /friends
+     * The active adult&#39;s friends, by name. Friends offer each other as share and Watch together targets off TVs, and are never in each other&#39;s households. Kids get 403. &#x60;email&#x60; and &#x60;householdId&#x60; are left out.
+     * 
+     * @param limit  (optional, default to 50)
+     * @param offset  (optional, default to 0)
+     * @return ApiResponse<AccountPage?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun listFriendsWithHttpInfo(limit: kotlin.Int?, offset: kotlin.Int?) : ApiResponse<AccountPage?> {
+        val localVariableConfig = listFriendsRequestConfig(limit = limit, offset = offset)
+
+        return request<Unit, AccountPage>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation listFriends
+     *
+     * @param limit  (optional, default to 50)
+     * @param offset  (optional, default to 0)
+     * @return RequestConfig
+     */
+    fun listFriendsRequestConfig(limit: kotlin.Int?, offset: kotlin.Int?) : RequestConfig<Unit> {
+        val localVariableBody = null
+        val localVariableQuery: MultiValueMap = mutableMapOf<kotlin.String, kotlin.collections.List<kotlin.String>>()
+            .apply {
+                if (limit != null) {
+                    put("limit", listOf(limit.toString()))
+                }
+                if (offset != null) {
+                    put("offset", listOf(offset.toString()))
+                }
+            }
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.GET,
+            path = "/friends",
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,
@@ -2951,6 +3403,80 @@ open class ProfilesApi(basePath: kotlin.String = defaultBasePath, client: Call.F
         return RequestConfig(
             method = RequestMethod.POST,
             path = "/profiles/{profileId}/join-code".replace("{"+"profileId"+"}", encodeURIComponent(profileId.toString())),
+            query = localVariableQuery,
+            headers = localVariableHeaders,
+            requiresAuthentication = true,
+            body = localVariableBody
+        )
+    }
+
+    /**
+     * POST /friend-requests
+     * Asks whoever holds an email to be friends; the answer says nothing of them.
+     * The adult who holds the email, unless it is the sender, receives the request. The answer, and all the sender can later read of the request, is the same whoever holds the email: no one, an adult who has not answered or has declined, a pending or revoked adult, the sender themself, a friend already, or an adult who asked the sender first or ended a friendship with them. The request stays as sent among the sender&#39;s until it expires, 30 days on, or the sender withdraws it; it goes early only when accepted. A second request to an email while one is listed answers that one. Emails compare as sign-in compares them, ignoring case and surrounding space. More than 20 requests from one adult within a day answer 429. Kids get 403.
+     * @param friendRequestInput 
+     * @return OutgoingFriendRequest
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     * @throws UnsupportedOperationException If the API returns an informational or redirection response
+     * @throws ClientException If the API returns a client error response
+     * @throws ServerException If the API returns a server error response
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class, UnsupportedOperationException::class, ClientException::class, ServerException::class)
+    fun sendFriendRequest(friendRequestInput: FriendRequestInput) : OutgoingFriendRequest {
+        val localVarResponse = sendFriendRequestWithHttpInfo(friendRequestInput = friendRequestInput)
+
+        return when (localVarResponse.responseType) {
+            ResponseType.Success -> (localVarResponse as Success<*>).data as OutgoingFriendRequest
+            ResponseType.Informational -> throw UnsupportedOperationException("Client does not support Informational responses.")
+            ResponseType.Redirection -> throw UnsupportedOperationException("Client does not support Redirection responses.")
+            ResponseType.ClientError -> {
+                val localVarError = localVarResponse as ClientError<*>
+                throw ClientException("Client error : ${localVarError.statusCode} ${localVarError.message.orEmpty()}", localVarError.statusCode, localVarResponse)
+            }
+            ResponseType.ServerError -> {
+                val localVarError = localVarResponse as ServerError<*>
+                throw ServerException("Server error : ${localVarError.statusCode} ${localVarError.message.orEmpty()} ${localVarError.body}", localVarError.statusCode, localVarResponse)
+            }
+        }
+    }
+
+    /**
+     * POST /friend-requests
+     * Asks whoever holds an email to be friends; the answer says nothing of them.
+     * The adult who holds the email, unless it is the sender, receives the request. The answer, and all the sender can later read of the request, is the same whoever holds the email: no one, an adult who has not answered or has declined, a pending or revoked adult, the sender themself, a friend already, or an adult who asked the sender first or ended a friendship with them. The request stays as sent among the sender&#39;s until it expires, 30 days on, or the sender withdraws it; it goes early only when accepted. A second request to an email while one is listed answers that one. Emails compare as sign-in compares them, ignoring case and surrounding space. More than 20 requests from one adult within a day answer 429. Kids get 403.
+     * @param friendRequestInput 
+     * @return ApiResponse<OutgoingFriendRequest?>
+     * @throws IllegalStateException If the request is not correctly configured
+     * @throws IOException Rethrows the OkHttp execute method exception
+     */
+    @Suppress("UNCHECKED_CAST")
+    @Throws(IllegalStateException::class, IOException::class)
+    fun sendFriendRequestWithHttpInfo(friendRequestInput: FriendRequestInput) : ApiResponse<OutgoingFriendRequest?> {
+        val localVariableConfig = sendFriendRequestRequestConfig(friendRequestInput = friendRequestInput)
+
+        return request<FriendRequestInput, OutgoingFriendRequest>(
+            localVariableConfig
+        )
+    }
+
+    /**
+     * To obtain the request config of the operation sendFriendRequest
+     *
+     * @param friendRequestInput 
+     * @return RequestConfig
+     */
+    fun sendFriendRequestRequestConfig(friendRequestInput: FriendRequestInput) : RequestConfig<FriendRequestInput> {
+        val localVariableBody = friendRequestInput
+        val localVariableQuery: MultiValueMap = mutableMapOf()
+        val localVariableHeaders: MutableMap<String, String> = mutableMapOf()
+        localVariableHeaders["Content-Type"] = "application/json"
+        localVariableHeaders["Accept"] = "application/json"
+
+        return RequestConfig(
+            method = RequestMethod.POST,
+            path = "/friend-requests",
             query = localVariableQuery,
             headers = localVariableHeaders,
             requiresAuthentication = true,
