@@ -3,6 +3,7 @@ package enterprises.legitimate.rabbitears.kit
 import com.sun.net.httpserver.HttpServer
 import enterprises.legitimate.rabbitears.api.infrastructure.Serializer
 import enterprises.legitimate.rabbitears.api.models.Item
+import enterprises.legitimate.rabbitears.api.models.YouTubeVideo
 import java.net.InetSocketAddress
 import java.nio.file.Files
 import java.util.Collections
@@ -60,6 +61,21 @@ class ArtworkCacheTest {
         assertEquals("/api/v2/items/1/artwork/backdrop", ArtworkPath.item("1", null, "backdrop"))
         assertEquals("/api/v2/collections/1/artwork/poster", ArtworkPath.collection("1", null))
         assertEquals("/api/v2/people/1/artwork", ArtworkPath.person("1", null))
+    }
+
+    @Test
+    fun aVideosChannelAvatarIsAtTheAddressTheVideoCarriesElseTheChannelsIdAddress() {
+        fun video(extra: String) =
+            Serializer.kotlinxSerializationJson.decodeFromString(
+                YouTubeVideo.serializer(),
+                """{"id":"5","libraryId":"2","channelId":"30","channelTitle":"Workbench",""" +
+                    """"title":"V","watched":false,"positionMs":0,"addedAt":"${Json.T}"$extra}""",
+            )
+        assertEquals(
+            "/api/v2/artwork/youtube/c.jpg",
+            video(""","channelPosterUrl":"/api/v2/artwork/youtube/c.jpg"""").channelArt,
+        )
+        assertEquals("/api/v2/items/30/artwork/poster", video("").channelArt)
     }
 
     @Test

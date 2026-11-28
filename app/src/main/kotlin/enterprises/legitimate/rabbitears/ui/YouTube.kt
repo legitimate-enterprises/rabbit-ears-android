@@ -57,6 +57,7 @@ import enterprises.legitimate.rabbitears.kit.PlaceholderKind
 import enterprises.legitimate.rabbitears.kit.SelectKind
 import enterprises.legitimate.rabbitears.kit.Selection
 import enterprises.legitimate.rabbitears.kit.VideoSort
+import enterprises.legitimate.rabbitears.kit.channelArt
 import enterprises.legitimate.rabbitears.kit.channelParts
 import enterprises.legitimate.rabbitears.kit.published
 import enterprises.legitimate.rabbitears.kit.resumeProgress
@@ -403,9 +404,8 @@ fun VideoScreen(id: String) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    // A video carries no address for its channel's avatar.
                     Art(
-                        ArtworkPath.item(v.channelId, null),
+                        v.channelArt,
                         artColor(v.channelId),
                         Modifier.size(20.dp).clip(CircleShape),
                         PlaceholderKind.Channel,

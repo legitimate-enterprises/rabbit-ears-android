@@ -194,3 +194,7 @@ fun Format.channelParts(channel: YouTubeChannel, today: LocalDate = LocalDate.no
         "${channel.unwatchedCount} unwatched".takeIf { channel.unwatchedCount > 0 },
         channel.lastVideoOn?.let { "Last video ${published(it, today)}" },
     )
+
+/** Where the video's channel avatar is asked for. */
+val YouTubeVideo.channelArt: String
+    get() = ArtworkPath.item(channelId, channelPosterUrl)
